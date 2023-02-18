@@ -1,6 +1,6 @@
-FROM ubuntu
+FROM ubuntu:22.04
 
-# Prep Toolchain
+# Prep Workspace
 RUN apt-get update && apt-get clean &&\
 	apt-get install -y \
 				curl \
@@ -12,29 +12,33 @@ RUN apt-get update && apt-get clean &&\
 				libusb-1.0 &&\
 	apt update && apt clean &&\
 	apt install -y \
-				default-jre
+				default-jre &&\
 
 # Prep Folders
-RUN mkdir /opt/gcc-arm-none-eabi &&\
+	mkdir /opt/gcc-arm-none-eabi &&\
+	mkdir /opt/STM32CubeProgrammer &&\
 	mkdir /opt/ST &&\
+	mkdir /opt/ARM
 
-# Get ARM Toolchain
-	ARM_TOOLCHAIN_VERSION=$(curl -s https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads | grep -Po '<h4>Version \K.+(?=</h4>)')  &&\
-	curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_TOOLCHAIN_VERSION}/binrel/arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi.tar.xz"
+# Get ARM Toolchain (download latest on build - very slow)
+#	ARM_TOOLCHAIN_VERSION=$(curl -s https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads | grep -Po '<h4>Version \K.+(?=</h4>)')  &&\
+#	curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_TOOLCHAIN_VERSION}/binrel/arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi.tar.xz"
 
 # Get ST Toolchain
 COPY /ST /opt/ST
+COPY /ARM /opt/ARM
 
 # Install ARM Toolchain
-RUN tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi &&\
-	rm gcc-arm-none-eabi.tar.xz
+RUN tar xf /opt/ARM/gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi &&\
 
 # Install ST Toolchain
-RUN java -jar /opt/ST/SetupSTM32CubeProgrammer-2.10.0.exe &&\
-	dpkg -i st-stlink-server-2.1.0-1-linux-amd64.deb
-#	cd ~/STMicroelectronics/STM32Cube/STM32CubeProgrammer/ &&\
-#	cp ./Drivers/rules/*.rules /etc/udev/rules.d/
+	tar xf /opt/ST/STM32CubeProgrammer.tar.xz -C /opt/STM32CubeProgrammer &&\
+
+# Clean Up
+	rm /opt/STM32CubeProgrammer.tar.xz &&\
+	rm -r /opt/ARM
 
 # Add Toolchain to path
 ENV PATH="$PATH:/opt/gcc-arm-none-eabi/bin"
-ENV PATH="$PATH:/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin/"
+ENV PATH="$PATH:/opt/STM32CubeProgrammer/bin/"
+ENV PATH="$PATH:/opt/ST-Link/bin/"
