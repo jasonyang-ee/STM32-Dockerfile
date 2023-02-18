@@ -35,7 +35,7 @@ RUN tar xf /opt/ARM/gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-ar
 	tar xf /opt/ST/STM32CubeProgrammer.tar.xz -C /opt/STM32CubeProgrammer &&\
 
 # Clean Up
-	rm /opt/STM32CubeProgrammer.tar.xz &&\
+	rm /opt/ST/STM32CubeProgrammer.tar.xz &&\
 	rm -r /opt/ARM &&\
 	rm -r /opt/ST
 
