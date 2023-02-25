@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build Ubuntu",
+			"command": "docker",
+			"args": [
+				"build",
+				"-t",
+				"stm32_ubuntu",
+				"Ubuntu/."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Alpine",
+			"command": "docker",
+			"args": [
+				"build",
+				"-t",
+				"stm32_alpine",
+				"Alpine/."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		}
+	]
+}

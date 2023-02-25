@@ -15,7 +15,8 @@ RUN mkdir ${TOOLS_PATH} \
 RUN rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \
 	&& rm -rf ${TOOLS_PATH}/share/doc \
-	&& apk del curl
+	&& apk del curl \
+	&& cd home
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"
