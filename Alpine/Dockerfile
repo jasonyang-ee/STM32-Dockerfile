@@ -4,7 +4,15 @@ ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=12.2.rel1
 
 # Prep basic packages
-RUN apk --no-cache add make g++ gcc cmake git stlink curl ninja
+RUN apk --no-cache add \
+	make \
+	g++ \
+	gcc \
+	cmake \
+	git \
+	stlink \
+	curl \
+	ninja
 				
 # Get ARM Toolchain
 RUN mkdir ${TOOLS_PATH} \
