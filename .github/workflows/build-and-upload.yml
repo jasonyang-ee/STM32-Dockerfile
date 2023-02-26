@@ -13,8 +13,10 @@ jobs:
     - name: Build image
       run: |
         docker build -t stm32_ubuntu:latest Ubuntu/.
+        docker build -t stm32_alpine:latest Alpine/.
 
     - name: Upload image
       uses: ishworkh/docker-image-artifact-upload@v1
       with:
         image: "stm32_ubuntu:latest"
+        image: "stm32_alpine:latest"
