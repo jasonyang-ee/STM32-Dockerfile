@@ -5,13 +5,11 @@ ARG ARM_VERSION=12.2.rel1
 
 # Prep basic packages
 RUN apt update && apt-get clean && apt-get install -y \
-	xz-utils \
-	curl \
 	build-essential \
+	cmake ninja-build \
 	git \
-	cmake \
-	ninja-build \
-	stlink-tools
+	stlink-tools \
+	xz-utils curl
 				
 # Get ARM Toolchain
 RUN mkdir ${TOOLS_PATH} \

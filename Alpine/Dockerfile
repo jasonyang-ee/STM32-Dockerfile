@@ -1,18 +1,15 @@
-FROM alpine:3.14
+FROM alpine:3.17.2
 
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=12.2.rel1
 
 # Prep basic packages
 RUN apk --no-cache add \
-	make \
-	g++ \
-	gcc \
-	cmake \
+	gcompat libc6-compat libstdc++ g++ gcc \
+	make cmake ninja \
 	git \
 	stlink \
-	curl \
-	ninja
+	bash curl
 				
 # Get ARM Toolchain
 RUN mkdir ${TOOLS_PATH} \
@@ -23,11 +20,10 @@ RUN mkdir ${TOOLS_PATH} \
 RUN rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \
 	&& rm -rf ${TOOLS_PATH}/share/doc \
-	&& apk del curl \
-	&& cd home
+	&& apk del curl
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"
 
 ADD build.sh /usr/local/bin/build.sh
-ENTRYPOINT ["bin/bash", "build.sh"]
+ENTRYPOINT ["bin/bash", "/usr/local/bin/build.sh"]

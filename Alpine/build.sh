@@ -5,6 +5,8 @@ if [[ $# -gt 0 ]]
 then
 	cd /home
 	git clone ${URL} .
+	mkdir build
+	mkdir build/Debug
 	cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="/home/cmake/gcc-arm-none-eabi.cmake" "-B /home/build/Debug/" -G Ninja
 	cmake --build /home/build/Debug/ -j 10
 	echo '                                            ^'
