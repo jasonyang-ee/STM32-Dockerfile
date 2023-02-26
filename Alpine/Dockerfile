@@ -28,3 +28,6 @@ RUN rm gcc-arm-none-eabi.tar.xz \
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"
+
+ADD build.sh /usr/local/bin/build.sh
+ENTRYPOINT ["bin/bash", "build.sh"]

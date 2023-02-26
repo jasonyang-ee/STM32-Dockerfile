@@ -1,5 +1,14 @@
 # Docker Build for STM32 Toolchain
 
+Image
+```
+docker pull jasonyangee/stm32_ubuntu
+docker pull jasonyangee/stm32_alpine
+```
+
+Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
+
+Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 ## Packages
 
@@ -31,29 +40,23 @@ If pulling latest version is desired, insert this line before `curl` command
 ```
 
 
-## Project Import
-
-Cloud:
-```shell
-git clone {URL}
-```
-
-Local:
-```CMD
-docker cp SOURCE/. containerID:/home/
-```
-
-
 
 
 ## Building
 
-### Recommended building method:
+### Recommended Building Using Exec Form:
 
-CMAKE using VS Code: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+```
+docker run jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+```
 
 
 ### Optional Manual Building:
+
+Override ENTRYPOINT to keep interactive mode live:
+```
+docker run -it --entrypoint bin/bash jasonyangee/stm32_ubuntu:latest
+```
 
 Initialize cmake:
 ```shell
@@ -67,7 +70,7 @@ cmake --build build/Debug/ -j 10
 
 Note:
 
-building path `build/Debug/`
+Target Binary Path: `build/Debug/`
 
 
 
