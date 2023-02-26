@@ -12,7 +12,7 @@
 
 ## Compiler
 
- - ARM GNU x86_64-arm-none-eabi
+ - ARM GNU x86_64-arm-none-eabi  (939 MB)
 
 
 
@@ -35,12 +35,12 @@ If pulling latest version is desired, insert this line before `curl` command
 
 Cloud:
 ```shell
-$ git clone {URL}
+git clone {URL}
 ```
 
 Local:
 ```CMD
-> docker cp SOURCE/. containerID:/home/
+docker cp SOURCE/. containerID:/home/
 ```
 
 
@@ -57,12 +57,12 @@ CMAKE using VS Code: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 Initialize cmake:
 ```shell
-$ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="cmake/gcc-arm-none-eabi.cmake" "-B build/Debug/" -G Ninja
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="cmake/gcc-arm-none-eabi.cmake" "-B build/Debug/" -G Ninja
 ```
 
 Compile:
 ```shell
-$ cmake --build build/Debug/ -j 10
+cmake --build build/Debug/ -j 10
 ```
 
 Note:
@@ -78,16 +78,16 @@ Tool Details: https://github.com/stlink-org/stlink
 Confirm Connnection:
 
 ```shell
-$ st-info probe
+st-info probe
 ```
 
 Manual Flash:
 
 ```shell
-$ st-flash write {TARGET.bin} 0x8000000 --reset
+st-flash write {TARGET.bin} 0x8000000 --reset
 ```
 
 Manual Reset:
 ```shell
-$ st-flash reset
+st-flash reset
 ```
