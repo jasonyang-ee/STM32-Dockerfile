@@ -22,8 +22,10 @@ RUN mkdir ${TOOLS_PATH} \
 RUN rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \
 	&& rm -rf ${TOOLS_PATH}/share/doc \
-	&& apt remove -y xz-utils curl \
-	&& cd home
+	&& apt remove -y xz-utils curl
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"
+
+ADD build.sh /usr/local/bin/build.sh
+ENTRYPOINT ["bin/bash", "build.sh"]

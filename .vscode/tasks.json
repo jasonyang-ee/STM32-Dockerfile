@@ -8,7 +8,7 @@
 			"args": [
 				"build",
 				"-t",
-				"stm32_ubuntu",
+				"jasonyangee/stm32_ubuntu",
 				"Ubuntu/."
 			],
 			"options": {
@@ -23,7 +23,7 @@
 			"args": [
 				"build",
 				"-t",
-				"stm32_alpine",
+				"jasonyangee/stm32_alpine",
 				"Alpine/."
 			],
 			"options": {
