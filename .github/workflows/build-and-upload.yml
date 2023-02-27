@@ -42,8 +42,8 @@ jobs:
         context: .
         file: ./Dockerfile.ubuntu
         push: true
-        tags: |
-              ${{ steps.meta-ubuntu.outputs.tags }}
+        tags: ${{ steps.meta-ubuntu.outputs.tags }}
+        labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
     - name: Build Push for Alpine
       uses: docker/build-push-action@v4
@@ -51,5 +51,5 @@ jobs:
         context: .
         file: ./Dockerfile.alpine
         push: true
-        tags: |
-              ${{ steps.meta-alpine.outputs.tags }}
+        tags: ${{ steps.meta-alpine.outputs.tags }}
+        labels: ${{ steps.meta-alpine.outputs.labels }}
