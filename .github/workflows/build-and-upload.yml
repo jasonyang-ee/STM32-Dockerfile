@@ -14,24 +14,23 @@ jobs:
     - name: Checkout project
       uses: actions/checkout@v3
       
+    - name: Docker meta
+        id: meta-ubuntu
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            jasonyangee/stm32_ubuntu
+          tags: |
+            type=refs,event=tag
+
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Docker meta
-        id: meta-ubuntu
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            stm32_ubuntu
-          tags: |
-            type=refs,event=tag
-            type=raw,value=latest
+    # - name: Set up Docker Buildx
+    #   uses: docker/setup-buildx-action@v2
 
     - name: Build Push for Ubuntu
       uses: docker/build-push-action@v4
