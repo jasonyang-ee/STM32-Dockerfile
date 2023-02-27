@@ -19,11 +19,10 @@ RUN mkdir ${TOOLS_PATH} \
 # Clean Up
 RUN rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \
-	&& rm -rf ${TOOLS_PATH}/share/doc \
-	&& apk del curl
+	&& rm -rf ${TOOLS_PATH}/share/doc
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"
 
 ADD build.sh /usr/local/bin/build.sh
-ENTRYPOINT ["/bin/bash", "/usr/local/bin/build.sh"]
+ENTRYPOINT ["/usr/local/bin/build.sh"]
