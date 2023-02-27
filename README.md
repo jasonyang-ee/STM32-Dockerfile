@@ -1,3 +1,6 @@
+[![Build and Push to Docker Hub](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build-and-upload.yml/badge.svg?branch=main)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build-and-upload.yml)
+
+
 # Docker Build for STM32 Toolchain
 
 ### Image
