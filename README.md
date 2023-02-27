@@ -57,10 +57,17 @@ stm32_alpine:latest",
 ```
 3. `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Alpine` or `Build Ubuntu`.
 
+### Build on Github Action
 
+Spacial Note:
 
+If you are developing on Windows, you will have to make spacial care to the bash script permission setting.
 
+Run this command locally to update the file premision and push to git repo.
 
+```cmd
+git update-index --chmod=+x ./build.sh 
+```
 
 
 
