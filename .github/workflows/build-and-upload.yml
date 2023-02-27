@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v3
       
     - name: Docker meta
-        id: meta-ubuntu
+        id: meta
         uses: docker/metadata-action@v4
         with:
           images: |
@@ -39,4 +39,4 @@ jobs:
         file: ./Dockerfile.ubuntu
         push: true
         tags: |
-              ${{ steps.meta-ubuntu.outputs.tags }}
+              ${{ steps.meta.outputs.tags }}
