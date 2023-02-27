@@ -1,7 +1,7 @@
 on:
   push:
-    branches:
-      - "main"
+    tags:
+      - "*"
 
 jobs:
   build_and_upload:
@@ -17,13 +17,3 @@ jobs:
     - name: Build Alpine
       run: |
         docker build -t stm32_alpine:latest Alpine/.
-
-    - name: Upload Ubuntu
-      uses: ishworkh/docker-image-artifact-upload@v1
-      with:
-        image: "stm32_ubuntu:latest"
-
-    - name: Upload Alpine
-      uses: ishworkh/docker-image-artifact-upload@v1
-      with:
-        image: "stm32_alpine:latest"

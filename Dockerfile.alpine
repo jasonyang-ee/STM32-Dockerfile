@@ -10,7 +10,7 @@ RUN apk --no-cache add \
 	git \
 	stlink \
 	bash curl
-				
+
 # Get ARM Toolchain
 RUN mkdir ${TOOLS_PATH} \
 	&& curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-x86_64-arm-none-eabi.tar.xz" \
@@ -26,4 +26,4 @@ RUN rm gcc-arm-none-eabi.tar.xz \
 ENV PATH="$PATH:${TOOLS_PATH}/bin"
 
 ADD build.sh /usr/local/bin/build.sh
-ENTRYPOINT ["bin/bash", "/usr/local/bin/build.sh"]
+ENTRYPOINT ["/bin/bash", "/usr/local/bin/build.sh"]
