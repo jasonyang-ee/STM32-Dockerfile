@@ -1,7 +1,11 @@
+name: 'Build and Push to Docker Hub'
+
 on:
   push:
+    branches:
+      - 'main'
     tags:
-      - "*"
+      - '*'
 
 jobs:
   Build_Upload:
