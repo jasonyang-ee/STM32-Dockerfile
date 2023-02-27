@@ -13,6 +13,8 @@ then
 			echo '                                            ^'
 			echo 'Build Completed                             |'
 			echo 'Target Binaery in __________________________|'
+		else
+			exit $?
 		fi
 	else
 		echo 'No Project Repo URL Found. Please Supply Project Files to Build'
@@ -29,6 +31,8 @@ else
 			echo '                                            ^'
 			echo 'Build Completed                             |'
 			echo 'Target Binaery in __________________________|'
+		else
+			exit $?
 		fi
 	fi
 fi
