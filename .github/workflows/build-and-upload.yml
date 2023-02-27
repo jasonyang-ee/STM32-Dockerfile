@@ -2,6 +2,8 @@ name: 'Build and Push to Docker Hub'
 
 on:
   push:
+    branches:
+      - 'main'
     tags:
       - '*'
 
@@ -21,6 +23,16 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
+    - name: Docker meta
+        id: meta-ubuntu
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            stm32_ubuntu
+          tags: |
+            type=refs,event=tag
+            type=raw,value=latest
+
     - name: Build Push for Ubuntu
       uses: docker/build-push-action@v4
       with:
@@ -28,15 +40,4 @@ jobs:
         file: ./Dockerfile.ubuntu
         push: true
         tags: |
-              ${{ secrets.DOCKERHUB_USERNAME }}/stm32_ubuntu:$GITHUB_REF_NAME
-              ${{ secrets.DOCKERHUB_USERNAME }}/stm32_ubuntu:latest
-
-    - name: Build Push for Alpine
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./Dockerfile.alpine
-        push: true
-        tags: |
-              ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine:$GITHUB_REF_NAME
-              ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine:$latest
+              ${{ steps.meta-ubuntu.outputs.tags }}
