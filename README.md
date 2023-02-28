@@ -1,9 +1,9 @@
 [![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
 [![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
-# Docker Build for STM32 Toolchain
+# 1. Docker Build for STM32 Toolchain
 
-### Image
+## 1.1. Image
 ```
 docker pull jasonyangee/stm32_ubuntu
 docker pull jasonyangee/stm32_alpine
@@ -13,7 +13,7 @@ Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
 
 Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
-## Packages
+## 1.2. Packages
 
 - build-essential
 - git
@@ -22,15 +22,15 @@ Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 - stlink-tools
 
 
-## Compiler
+## 1.3. Compiler
 
  - ARM GNU x86_64-arm-none-eabi  (939 MB)
 
 
 
-## User Modifications
+## 1.4. User Modifications
 
-**Check ARM releases at here: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/**
+**Check ARM releases at here: <https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/>**
 
 - Modify `TOOLS_PATH=/opt/gcc-arm-none-eabi` for changing compiler default folder.
 
@@ -44,7 +44,7 @@ Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 
 
-## Build Docker
+## 1.5. Build Docker
 
 If you choose to build from this Dockerfile, a pre-configured VS Code Tasks has been setup to build automatically.
 
@@ -68,9 +68,9 @@ stm32_alpine:latest",
 
 
 
-# Use Image to Build STM32 Binary Locally
+# 2. Use Image to Build STM32 Binary Locally
 
-## Recommended Building Using Docker Entrypoint Exec Form:
+## 2.1. Recommended Building Using Docker Entrypoint Exec Form:
 
 - Format:
 ```bash
@@ -90,7 +90,7 @@ docker cp builder:/home/build/{TARGET_NAME}.hex
 ```
 
 
-## Manual Building:
+## 2.2. Manual Building:
 
 - Override ENTRYPOINT to keep interactive mode live:
 ```
@@ -113,7 +113,7 @@ cmake --build build/ -j 10
 
 
 
-## Build STM32 Binary in Github Action
+## 2.3. Build STM32 Binary in Github Action
 
 This is using Docker Hug to host images. Github action will pull Docker Hub images on every build.
 
@@ -160,30 +160,30 @@ It is a good practice to include build result badge in application repo.
 
 
 
-## ST-Link
+## 2.4. ST-Link
 
 Tool Details: https://github.com/stlink-org/stlink
 
 Using Windows machine is difficault to expose USB device to container. Using WSL maybe the only option for now. See next section.
 
-Confirm Connnection:
+- Confirm Connnection:
 
 ```shell
 st-info probe
 ```
 
-Manual Flash:
+- Manual Flash:
 
 ```shell
 st-flash write {TARGET.bin} 0x8000000 --reset
 ```
 
-Manual Reset:
+- Manual Reset:
 ```shell
 st-flash reset
 ```
 
-### Prepare USB passthrough to WSL Docker container
+### 2.4.1. Prepare USB passthrough to WSL Docker container
 Follow this:
 https://learn.microsoft.com/en-us/windows/wsl/connect-usb
 
@@ -228,7 +228,7 @@ usbipd wsl list
 
 
 
-### Run Docker container
+### 2.4.2. Run Docker container
 
 - Run WSL Ubuntu:
 ```shell
