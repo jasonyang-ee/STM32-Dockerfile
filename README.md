@@ -1,4 +1,5 @@
-[![Build and Push to Docker Hub](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/blank.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/blank.yml)
+[![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
+[![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
 # Docker Build for STM32 Toolchain
 

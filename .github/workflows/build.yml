@@ -1,9 +1,9 @@
-name: 'Build and Push to Docker Hub'
+name: 'Build'
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - 'main'
 
 jobs:
   Build_Upload:
@@ -41,7 +41,7 @@ jobs:
       with:
         context: .
         file: ./Dockerfile.ubuntu
-        push: true
+        push: false
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
         labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
@@ -50,6 +50,6 @@ jobs:
       with:
         context: .
         file: ./Dockerfile.alpine
-        push: true
+        push: false
         tags: ${{ steps.meta-alpine.outputs.tags }}
         labels: ${{ steps.meta-alpine.outputs.labels }}
