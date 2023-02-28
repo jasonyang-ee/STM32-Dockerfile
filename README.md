@@ -1,5 +1,4 @@
-[![Build and Push to Docker Hub](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build-and-upload.yml/badge.svg?branch=main)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build-and-upload.yml)
-
+[![Build and Push to Docker Hub](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/blank.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/blank.yml)
 
 # Docker Build for STM32 Toolchain
 
@@ -60,17 +59,10 @@ stm32_alpine:latest",
 ```
 3. `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Alpine` or `Build Ubuntu`.
 
-### Build on Github Action
 
-Spacial Note:
 
-If you are developing on Windows, you will have to make spacial care to the bash script permission setting.
 
-Run this command locally to update the file premision and push to git repo.
 
-```cmd
-git update-index --chmod=+x ./build.sh 
-```
 
 
 
