@@ -9,7 +9,7 @@
 - `3.0`: ARM toolchain downloaded from Linux packages instead. Image size is bigger than v2.0. Not recommended.
 - `3.1`: Reverting back to ARM toolchain direct downloaded from website.
 - `3.2`: Add Github on premise server support. No TLS certification checking for https clone. 
-
+- `3.3`: Removed args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH=""
 
 
 # 1. Docker Container for STM32 CMake Compiling
@@ -91,7 +91,7 @@ jobs:
     - name: BUILD
       run: build.sh
 
-	- name: Upload Binary .elf
+    - name: Upload Binary .elf
       uses: actions/upload-artifact@v2
       with:
         name: BINARY.elf
