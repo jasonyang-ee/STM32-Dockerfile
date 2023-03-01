@@ -7,7 +7,7 @@ then
 		cd /home
 		git clone $1 .
 		git config --global http.sslverify false
-		cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="/home/cmake/gcc-arm-none-eabi.cmake" "-B /home/build/" -G Ninja
+		cmake -DCMAKE_BUILD_TYPE=Release "-B /home/build/" -G Ninja
 		cmake --build /home/build/ -j 10
 		if [[ $? -eq 0 ]]
 		then
@@ -25,7 +25,7 @@ then
 else
 	if [[ $GITHUB_ACTIONS == true ]]
 	then
-		cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="$GITHUB_WORKSPACE/cmake/gcc-arm-none-eabi.cmake" "-B $GITHUB_WORKSPACE/build" -G Ninja
+		cmake -DCMAKE_BUILD_TYPE=Release "-B $GITHUB_WORKSPACE/build" -G Ninja
 		cmake --build $GITHUB_WORKSPACE/build -j 10
 		if [[ $? -eq 0 ]]
 		then

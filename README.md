@@ -41,6 +41,12 @@ Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.
 
+The CMake has the following initialization variable enforced.
+
+```
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="${sourceDir}/cmake/gcc-arm-none-eabi.cmake" "-B /home/build/" -G Ninja
+```
+
 ## 2.1. Build Locally With Git Repo Link
 
 - Format:
@@ -91,7 +97,7 @@ jobs:
         name: BINARY.elf
         path: ${{ github.workspace }}/build/*.elf
 
-    - name: Upload Binary .bin
+	- name: Upload Binary .bin
       uses: actions/upload-artifact@v2
       with:
         name: BINARY.bin
@@ -123,23 +129,27 @@ If you choose to build this image from Dockerfile.
 
 ## 3.2. Pre Configured VS Code Tasks has been setup to build automatically
 
-1. Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
+- Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
 ```
 stm32_ubuntu:latest",
 stm32_alpine:latest",
 ```
-3. `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Alpine` or `Build Ubuntu`.
+- `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Alpine` or `Build Ubuntu`.
+
+
+
+## 3.3. Build Bash Command Example
+
+```bash
+docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
+docker build -t stm32_alpine:latest -f Dockerfile.alpine .
+```
 
 
 
 
 
-
-
-
-
-
-## 3.3. Manual Image Usage
+# 4. Manual Image Usage
 
 - Override ENTRYPOINT to keep interactive mode live:
 ```
@@ -168,9 +178,11 @@ On pushing of the branch main, Github will automatically test build your applica
 
 
 
-# 4. ST-Link
+# 5. ST-Link
 
-## 4.1. Flash Device in Manual Usage
+ST Link Programmer has not yet been automated.
+
+## 5.1. Flash Device in Manual Usage
 
 Tool Details: https://github.com/stlink-org/stlink
 
@@ -195,7 +207,7 @@ st-flash write {TARGET.bin} 0x8000000 --reset
 st-flash reset
 ```
 
-## 4.2. Prepare USB Passthrough to WSL Docker Container
+## 5.2. Prepare USB Passthrough to WSL Docker Container
 Follow this:
 https://learn.microsoft.com/en-us/windows/wsl/connect-usb
 
@@ -234,7 +246,7 @@ usbipd wsl list
 
 
 
-## 4.3. Run Docker Container in WSL
+## 5.3. Run Docker Container in WSL
 
 - Run WSL Ubuntu:
 ```shell
