@@ -62,4 +62,4 @@ jobs:
 
     - name: Test
       run: |
-        docker run ${{ imageid }} ${{ env.TEST_REPO }}
+        docker run ${{ steps.output-ubuntu.imageid }} ${{ env.TEST_REPO }}
