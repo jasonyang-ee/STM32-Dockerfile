@@ -39,6 +39,7 @@ jobs:
           type=ref,event=tag
 
     - name: Build Push for Ubuntu
+      id: output-ubuntu
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -48,6 +49,7 @@ jobs:
         labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
     - name: Build Push for Alpine
+      id: output-alpine
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -58,4 +60,4 @@ jobs:
 
     - name: Test
       run: |
-        docker run ${{ imageid:latest }} ${{ env.TEST_REPO }}
+        docker run ${{ output-ubuntu.imageid:latest }} ${{ env.TEST_REPO }}
