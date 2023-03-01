@@ -1,19 +1,31 @@
 [![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
 [![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
-# 1. Docker Build for STM32 Toolchain
 
-## 1.1. Image
-```
-docker pull jasonyangee/stm32_ubuntu
-docker pull jasonyangee/stm32_alpine
-```
+# Tags
+
+- `1.0`: No Entrypoint. All build has to be done manually with docker run -it command.
+- `2.0`: With Entrypoint. Git repo auto import and build implemented. And, Github Action Supported.
+- `3.0`: ARM toolchain downloaded from Linux packages instead. Image size is bigger than v2.0. Not recommended.
+- `3.1`: Reverting back to ARM toolchain direct downloaded from website.
+- `3.2`: Add Github on premise server support. No TLS certification checking for https clone. 
+
+
+
+# 1. Docker Container for STM32 CMake Compiling
+
+## 1.1. Dockerfile
 
 Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
 
 Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
-## 1.2. Packages
+## 1.2. Compiler
+
+ - ARM GNU x86_64-arm-none-eabi  (939 MB)
+
+
+## 1.3. Packages
 
 - build-essential
 - git
@@ -22,55 +34,14 @@ Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 - stlink-tools
 
 
-## 1.3. Compiler
-
- - ARM GNU x86_64-arm-none-eabi  (939 MB)
 
 
 
-## 1.4. User Modifications
+# 2. Use of This Image
 
-**Check ARM releases at here: <https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/>**
+This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.
 
-- Modify `TOOLS_PATH=/opt/gcc-arm-none-eabi` for changing compiler default folder.
-
-- Modify `ARM_VERSION=12.2.rel1` for enforcing compiler version.
-
-- If pulling latest version is desired, insert this line before `curl` command
-
-```docker
-&& ARM_VERSION=$(curl -s https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads | grep -Po '<h4>Version \K.+(?=</h4>)') \
-```
-
-
-
-## 1.5. Build Docker
-
-If you choose to build from this Dockerfile, a pre-configured VS Code Tasks has been setup to build automatically.
-
-1. Modify the image build tag to be your Docker Hub username in `.vscode/tasks.json`
-```
-"jasonyangee/stm32_ubuntu:latest",
-"jasonyangee/stm32_alpine:latest",
-```
-2. Or, you may choose to build for local use only like this
-```
-stm32_ubuntu:latest",
-stm32_alpine:latest",
-```
-3. `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Alpine` or `Build Ubuntu`.
-
-
-
-
-
-
-
-
-
-# 2. Use Image to Build STM32 Binary Locally
-
-## 2.1. Recommended Building Using Docker Entrypoint Exec Form:
+## 2.1. Build Locally With Git Repo Link
 
 - Format:
 ```bash
@@ -90,45 +61,19 @@ docker cp builder:/home/build/{TARGET_NAME}.hex
 ```
 
 
-## 2.2. Manual Building:
 
-- Override ENTRYPOINT to keep interactive mode live:
-```
-docker run -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
-```
+## 2.2. Build Online With Github Action
 
-- `cd` to your desired work directory
+In the application Github repo, create file `.github\workflows\build.yml` with the following.
 
-- Copy your files either using `Docker cp` or `git clone`
-
-- Initialize cmake:
-```shell
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="cmake/gcc-arm-none-eabi.cmake" "-B build/" -G Ninja
-```
-
-- Compile:
-```shell
-cmake --build build/ -j 10
-```
-
-
-
-## 2.3. Build STM32 Binary in Github Action
-
-This is using Docker Hug to host images. Github action will pull Docker Hub images on every build.
-
-The build is only to verify the compilation. Unit Test is not implemented yet.
-
-In the application repo, create file `.github\workflows\build.yml` with the following:
+This action script will build and upload binary outout to artifact for download.
 
 ```yml
-name: 'Build Binary Ubuntu'
+name: 'Build with Ubuntu Container'
 on:
   push:
     branches:
       - main
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   BUILD_RELEASE:
@@ -139,32 +84,99 @@ jobs:
     - uses: actions/checkout@v3
     - name: BUILD
       run: build.sh
+
+	- name: Upload Binary .elf
+      uses: actions/upload-artifact@v2
+      with:
+        name: BINARY.elf
+        path: ${{ github.workspace }}/build/*.elf
+
+    - name: Upload Binary .bin
+      uses: actions/upload-artifact@v2
+      with:
+        name: BINARY.bin
+        path: ${{ github.workspace }}/build/*.bin
 ```
+
+
+
+
+
+
+# 3. Build Image from Dockerfile
+
+If you choose to build this image from Dockerfile.
+
+
+## 3.1. User Modifications
+
+**Check ARM releases at here: <https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/>**
+
+- Modify `ARM_VERSION=12.2.rel1` for enforcing compiler version.
+
+- If pulling latest version is desired, insert this line before `curl` command
+
+```docker
+&& ARM_VERSION=$(curl -s https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads | grep -Po '<h4>Version \K.+(?=</h4>)') \
+```
+
+
+## 3.2. Pre Configured VS Code Tasks has been setup to build automatically
+
+1. Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
+```
+stm32_ubuntu:latest",
+stm32_alpine:latest",
+```
+3. `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Alpine` or `Build Ubuntu`.
+
+
+
+
+
+
+
+
+
+
+## 3.3. Manual Image Usage
+
+- Override ENTRYPOINT to keep interactive mode live:
+```
+docker run -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+```
+
+- `cd` to your desired work directory
+
+- Copy your files either using `> Docker cp` or `$ git clone`
+
+- Initialize CMake:
+```bash
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="cmake/gcc-arm-none-eabi.cmake" "-B build/" -G Ninja
+```
+
+- Compile:
+```bash
+cmake --build build/ -j 10
+```
+
+
+
+
 
 On pushing of the branch main, Github will automatically test build your application.
 
-It is a good practice to include build result badge in application repo.
-
-1. Nevigate to the action page, select the build workflow, and click create status badge:
-
-![badge](/README_image/badge.png)
-
-2. Copy the badge markdown string:
-
-![badge](/README_image/badgeMD.png)
-
-3. Paste it to the top of your application README.md file to show build result
-
-![badge](/README_image/badgeResult.png)
 
 
+# 4. ST-Link
 
-
-## 2.4. ST-Link
+## 4.1. Flash Device in Manual Usage
 
 Tool Details: https://github.com/stlink-org/stlink
 
-Using Windows machine is difficault to expose USB device to container. Using WSL maybe the only option for now. See next section.
+Using Windows machine is difficault to expose USB device to container.
+
+Using WSL maybe the only option for now. See next section.
 
 - Confirm Connnection:
 
@@ -183,7 +195,7 @@ st-flash write {TARGET.bin} 0x8000000 --reset
 st-flash reset
 ```
 
-### 2.4.1. Prepare USB passthrough to WSL Docker container
+## 4.2. Prepare USB Passthrough to WSL Docker Container
 Follow this:
 https://learn.microsoft.com/en-us/windows/wsl/connect-usb
 
@@ -202,12 +214,6 @@ sudo apt install linux-tools-5.4.0-77-generic hwdata
 sudo update-alternatives --install /usr/local/bin/usbip usbip /usr/lib/linux-tools/5.4.0-77-generic/usbip 20
 ```
 
-Optionally
-```shell
-sudo apt update
-sudo apt upgrade
-sudo apt autoremove
-```
 
 - Run cmd (admin mode) on Windows:
 
@@ -217,7 +223,7 @@ usbipd list
 
 ![](README_image/bind.png)
 
-Note the ST-Link ID and bind it
+- Note the ST-Link ID and bind it
 ```cmd
 usbipd bind --busid 3-5
 usbipd attach --busid 3-5
@@ -228,7 +234,7 @@ usbipd wsl list
 
 
 
-### 2.4.2. Run Docker container
+## 4.3. Run Docker Container in WSL
 
 - Run WSL Ubuntu:
 ```shell
