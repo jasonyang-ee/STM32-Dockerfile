@@ -6,6 +6,7 @@ then
 	then
 		cd /home
 		git clone $1 .
+		git config --global http.sslverify false
 		cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="/home/cmake/gcc-arm-none-eabi.cmake" "-B /home/build/" -G Ninja
 		cmake --build /home/build/ -j 10
 		if [[ $? -eq 0 ]]
