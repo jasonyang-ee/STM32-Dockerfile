@@ -53,7 +53,7 @@ jobs:
         username: ${{ secrets.USER_GITHUB_PERSONAL }}
         password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
 
-    - name: Build Push for Ubuntu
+    - name: Build and Push for Ubuntu
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -63,7 +63,7 @@ jobs:
         labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
 
-    - name: Build Push for Alpine
+    - name: Build and Push for Alpine
       uses: docker/build-push-action@v4
       with:
         context: .

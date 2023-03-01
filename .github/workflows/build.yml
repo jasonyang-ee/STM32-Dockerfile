@@ -27,7 +27,7 @@ jobs:
         images: |
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32_ubuntu
         tags: |
-          type=ref,event=tag
+          type=ref,event=branch
 
     - name: Docker meta alpine
       id: meta-alpine
@@ -36,9 +36,9 @@ jobs:
         images: |
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine
         tags: |
-          type=ref,event=tag
+          type=ref,event=branch
 
-    - name: Build Push for Ubuntu
+    - name: Build and Load for Ubuntu
       id: output-ubuntu
       uses: docker/build-push-action@v4
       with:
@@ -49,7 +49,7 @@ jobs:
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
         labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
-    - name: Build Push for Alpine
+    - name: Build and Load for Alpine
       id: output-alpine
       uses: docker/build-push-action@v4
       with:
@@ -60,6 +60,10 @@ jobs:
         tags: ${{ steps.meta-alpine.outputs.tags }}
         labels: ${{ steps.meta-alpine.outputs.labels }}
 
-    - name: Test
+    - name: Test Ubuntu
       run: |
         docker run ${{ steps.output-ubuntu.imageid }} ${{ env.TEST_REPO }}
+
+    - name: Test Alpine
+      run: |
+        docker run ${{ steps.output-alpine.imageid }} ${{ env.TEST_REPO }}
