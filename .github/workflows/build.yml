@@ -58,4 +58,4 @@ jobs:
 
     - name: Test
       run: |
-        docker run ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine:latest ${{ env.TEST_REPO }}
+        docker run ${{ imageid:latest }} ${{ env.TEST_REPO }}
