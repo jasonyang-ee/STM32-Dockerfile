@@ -45,6 +45,7 @@ jobs:
         context: .
         file: ./Dockerfile.ubuntu
         push: false
+        load: true
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
         labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
@@ -55,6 +56,7 @@ jobs:
         context: .
         file: ./Dockerfile.alpine
         push: false
+        load: true
         tags: ${{ steps.meta-alpine.outputs.tags }}
         labels: ${{ steps.meta-alpine.outputs.labels }}
 
