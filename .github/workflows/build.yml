@@ -1,4 +1,4 @@
-name: 'Build'
+name: 'Test'
 
 on:
   push:
@@ -7,9 +7,10 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  TEST_REPO: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 jobs:
-  Build_Upload:
+  Build_Test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,3 +55,7 @@ jobs:
         push: false
         tags: ${{ steps.meta-alpine.outputs.tags }}
         labels: ${{ steps.meta-alpine.outputs.labels }}
+
+    - name: Test
+      run: |
+        docker run ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine:latest ${{ env.TEST_REPO }}
