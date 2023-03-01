@@ -62,8 +62,8 @@ jobs:
 
     - name: Test Ubuntu
       run: |
-        docker run ${{ steps.output-ubuntu.imageid }} ${{ env.TEST_REPO }}
+        docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO }}
 
     - name: Test Alpine
       run: |
-        docker run ${{ steps.output-alpine.imageid }} ${{ env.TEST_REPO }}
+        docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO }}
