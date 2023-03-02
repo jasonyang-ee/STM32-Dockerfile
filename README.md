@@ -286,3 +286,13 @@ st-info --probe
 Note: `--privileged` is necessary to allow device port passthrough
 
 ![stlinked](README_image/stlinked.png)
+
+
+
+# Github Action Variables
+
+vars.REGISTRY = Github package link (private: ghcr.io  -  org: ghcr.io/Org_Name)
+DOCKERHUB_TOKEN = Docker Hub login token
+DOCKERHUB_USERNAME = Docker Hub username
+TOKEN_GITHUB_PERSONAL = Github package token
+USER_GITHUB_PERSONAL = Github package username
