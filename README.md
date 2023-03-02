@@ -127,7 +127,7 @@ jobs:
         name: BINARY.elf
         path: ${{ github.workspace }}/build/*.elf
 
-	- name: Upload Binary .bin
+	  - name: Upload Binary .bin
       uses: actions/upload-artifact@v2
       with:
         name: BINARY.bin
@@ -278,7 +278,7 @@ usbipd wsl list
 
 - Run WSL Ubuntu:
 ```shell
-docker run -it --privileged jasonyangee/stm32_ubuntu:latest
+docker run -it --privileged --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
 st-info --probe
 ```
 Note: `--privileged` is necessary to allow device port passthrough
