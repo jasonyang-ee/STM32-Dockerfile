@@ -6,7 +6,6 @@ on:
       - 'main'
 
 env:
-  REGISTRY: ghcr.io
   TEST_REPO: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 jobs:
@@ -30,14 +29,14 @@ jobs:
       id: meta-ubuntu
       uses: docker/metadata-action@v4
       with:
-        images: ${{ secrets.DOCKERHUB_USERNAME }}/stm32_ubuntu
+        images: stm32_ubuntu
         tags: type=ref,event=branch
 
     - name: Docker meta alpine
       id: meta-alpine
       uses: docker/metadata-action@v4
       with:
-        images: ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine
+        images: stm32_alpine
         tags: type=ref,event=branch
 
     - name: Build and Load for Ubuntu

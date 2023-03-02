@@ -12,6 +12,8 @@
 - `3.3`: Removed args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH=""
 - `4.0`: Add Local Mounted Volume Support. Add Help Menu.
 - `4.1`: Modify Action Test. Bug Fixs.
+- `4.2`: Modify Action Test. Bug Fixs.
+- `4.3`: Modify Action Test. Bug Fixs.
 
 
 # 1. Docker Container for STM32 CMake Compiling
@@ -284,3 +286,13 @@ st-info --probe
 Note: `--privileged` is necessary to allow device port passthrough
 
 ![stlinked](README_image/stlinked.png)
+
+
+
+# Github Action Variables
+
+vars.REGISTRY = Github package link (private: ghcr.io  -  org: ghcr.io/Org_Name)
+DOCKERHUB_TOKEN = Docker Hub login token
+DOCKERHUB_USERNAME = Docker Hub username
+TOKEN_GITHUB_PERSONAL = Github package token
+USER_GITHUB_PERSONAL = Github package username
