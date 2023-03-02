@@ -20,23 +20,13 @@ jobs:
     - name: Checkout project
       uses: actions/checkout@v3
       
-    - name: Docker meta ubuntu
-      id: meta-ubuntu
+    - name: Docker meta
+      id: meta
       uses: docker/metadata-action@v4
       with:
         images: |
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32_ubuntu
           ${{ env.REGISTRY }}/${{ secrets.USER_GITHUB_PERSONAL }}/stm32_ubuntu
-        tags: |
-          type=ref,event=tag
-
-    - name: Docker meta alpine
-      id: meta-alpine
-      uses: docker/metadata-action@v4
-      with:
-        images: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine
-          ${{ env.REGISTRY }}/${{ secrets.USER_GITHUB_PERSONAL }}/stm32_alpine
         tags: |
           type=ref,event=tag
 
@@ -59,15 +49,5 @@ jobs:
         context: .
         file: ./Dockerfile.ubuntu
         push: true
-        tags: ${{ steps.meta-ubuntu.outputs.tags }}
-        labels: ${{ steps.meta-ubuntu.outputs.labels }}
-
-
-    - name: Build and Push for Alpine
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./Dockerfile.alpine
-        push: true
-        tags: ${{ steps.meta-alpine.outputs.tags }}
-        labels: ${{ steps.meta-alpine.outputs.labels }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}

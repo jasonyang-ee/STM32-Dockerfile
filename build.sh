@@ -30,22 +30,26 @@ then
 		fi
 	elif [[ $1 == "--help" ]]
 	then
+		echo ''
 		echo 'Local Container Use Format:'
-		echo 'URL:    docker run jasonyangee/stm32_ubuntu:latest {Github Repo URL}'
-		echo 'Mount:  docker run -v "Local/Host/Project/Path":"/build" jasonyangee/stm32_ubuntu:latest'
+		echo 'URL:      $ docker run jasonyangee/stm32_ubuntu:latest {Github Repo URL}'
+		echo 'Mount:    $ docker run -v "Local/Host/Project/Path":"/build" jasonyangee/stm32_ubuntu:latest'
 		echo ''
 		echo 'Remote Repo Use Format:'
-		echo 'docker run jasonyangee/stm32_ubuntu:latest {Github URL}'
+		echo 'docker run jasonyangee/stm32_ubuntu:latest {Github_URL}'
 		echo ''
 		echo 'Github Action Use Format:'
 		echo '- uses: actions/checkout@v3'
 		echo '- run: build.sh'
-
+		echo ''
+		echo 'Add Debug / Release build-type at the end to overwrit default "Release" type'
+		echo 'Example:  $ docker run jasonyangee/stm32_ubuntu:latest {Github_URL} Debug'
 	else
 		echo ''
-		echo 'No Project Repo URL Found in First Argument'
-		echo 'Example: docker run jasonyangee/stm32_ubuntu:latest {Github URL}'
+		echo 'Format Error. No Project Repo URL Found in 1st Argument'
+		echo 'Example:  $ docker run jasonyangee/stm32_ubuntu:latest {Github_URL}'
 	fi
+# If using in Github Action
 elif [[ $GITHUB_ACTIONS == true ]]
 then
 	echo 'debug 3'
@@ -59,11 +63,12 @@ then
 	else
 		exit $?
 	fi
+# If Supplying Mounted Volume
 elif [ -d "/build" ] && [ -n "$(ls -A "/build")" ]
 then
 	cd /build
 	cmake -DCMAKE_BUILD_TYPE=$TYPE "-B /build/build/" -G Ninja
 	cmake --build $1/build/ -j 10
 else
-	echo 'Format Error. To get full use example run > docker run jasonyangee/stm32_ubuntu:latest help'
+	echo 'Format Error. Type --help to Get More Info > docker run jasonyangee/stm32_ubuntu:latest --help'
 fi

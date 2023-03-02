@@ -10,6 +10,7 @@
 - `3.1`: Reverting back to ARM toolchain direct downloaded from website.
 - `3.2`: Add Github on premise server support. No TLS certification checking for https clone. 
 - `3.3`: Removed args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH=""
+- `4.0`: Add Local Mounted Volume Support. Add Help Menu.
 
 
 # 1. Docker Container for STM32 CMake Compiling
@@ -41,11 +42,18 @@ Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.
 
-The CMake has the following initialization variable enforced.
+`CMAKE_TOOLCHAIN_FILE` must be defined in your project CMakeList.txt file.
 
+Default build type is `Release`.
+
+
+- Help Menu
 ```
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="${sourceDir}/cmake/gcc-arm-none-eabi.cmake" "-B /home/build/" -G Ninja
+docker run jasonyangee/stm32_ubuntu:latest --help
 ```
+
+
+
 
 ## 2.1. Build Locally With Git Repo Link
 
@@ -71,6 +79,8 @@ docker cp builder:/home/build/{TARGET_NAME}.hex
 
 ## Build Locally With Mounted Volume
 
+Replace the `Local/Host/Project/Path` with your actual project folder path on local machine.
+
 - Format:
 ```bash
 docker run -v "Local/Host/Project/Path":"/build" jasonyangee/stm32_ubuntu:latest /build
@@ -78,11 +88,8 @@ docker run -v "Local/Host/Project/Path":"/build" jasonyangee/stm32_ubuntu:latest
 
 - Example:
 ```bash
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/build" jasonyangee/stm32_ubuntu:latest /build
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/build" jasonyangee/stm32_ubuntu:latest
 ```
-
-The container path `/build` just has to be repeated
-
 
 
 
@@ -152,9 +159,8 @@ If you choose to build this image from Dockerfile.
 - Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
 ```
 stm32_ubuntu:latest",
-stm32_alpine:latest",
 ```
-- `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Alpine` or `Build Ubuntu`.
+- `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Ubuntu`.
 
 
 
@@ -162,7 +168,6 @@ stm32_alpine:latest",
 
 ```bash
 docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
-docker build -t stm32_alpine:latest -f Dockerfile.alpine .
 ```
 
 
@@ -270,7 +275,7 @@ usbipd wsl list
 
 - Run WSL Ubuntu:
 ```shell
-docker run -it --privileged jasonyangee/stm32_alpine:latest
+docker run -it --privileged jasonyangee/stm32_ubuntu:latest
 st-info --probe
 ```
 Note: `--privileged` is necessary to allow device port passthrough
