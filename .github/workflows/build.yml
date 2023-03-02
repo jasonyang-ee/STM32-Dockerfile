@@ -6,7 +6,6 @@ on:
       - 'main'
 
 env:
-  REGISTRY: ghcr.io
   TEST_REPO: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 jobs:

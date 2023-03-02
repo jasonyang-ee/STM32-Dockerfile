@@ -5,10 +5,6 @@ on:
     tags:
       - '*'
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   Build_Upload:
     runs-on: ubuntu-latest
@@ -26,7 +22,7 @@ jobs:
       with:
         images: |
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32_ubuntu
-          ${{ env.REGISTRY }}/${{ secrets.USER_GITHUB_PERSONAL }}/stm32_ubuntu
+          ${{ var.REGISTRY }}/${{ secrets.USER_GITHUB_PERSONAL }}/stm32_ubuntu
         tags: type=ref,event=tag
 
     - name: Docker meta alpine
@@ -35,7 +31,7 @@ jobs:
       with:
         images: |
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine
-          ${{ env.REGISTRY }}/${{ secrets.USER_GITHUB_PERSONAL }}/stm32_alpine
+          ${{ var.REGISTRY }}/${{ secrets.USER_GITHUB_PERSONAL }}/stm32_alpine
         tags: type=ref,event=tag
 
     - name: Login to Docker Hub
