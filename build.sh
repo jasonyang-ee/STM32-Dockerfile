@@ -66,6 +66,14 @@ elif [ -d "/build" ] && [ -n "$(ls -A "/build")" ]
 then
 	cmake -DCMAKE_BUILD_TYPE=$TYPE "-S /build" "-B /build/build/" -G Ninja
 	cmake --build /build/build -j 10
+	if [[ $? -eq 0 ]]
+	then
+		echo '                                            ^'
+		echo 'Build Completed                             |'
+		echo 'Target Binaery in __________________________|'
+	else
+		exit $?
+	fi
 else
 	echo ''
 	echo 'Format Error'

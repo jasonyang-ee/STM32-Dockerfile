@@ -71,4 +71,7 @@ jobs:
         docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO }}
 
     - name: Test Ubuntu Volume
-      run: docker run -v "${{ github.workspace }}/project":"/build" ${{ steps.result.outputs.imageid }}
+      run: docker run -v "${{ github.workspace }}/project":"/build" ${{ steps.output-ubuntu.outputs.imageid }}
+
+    - name: Test Ubuntu Volume
+      run: docker run -v "${{ github.workspace }}/project":"/build" ${{ steps.output-alpine.outputs.imageid }}
