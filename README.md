@@ -1,5 +1,5 @@
-[![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/test.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
-[![Push](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/Upload.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
+[![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
+[![Push](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
 
 # Tags
@@ -11,7 +11,7 @@
 - `3.2`: Add Github on premise server support. No TLS certification checking for https clone. 
 - `3.3`: Removed args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH=""
 - `4.0`: Add Local Mounted Volume Support. Add Help Menu.
-- `4.1`: Modify Action Test.
+- `4.1`: Modify Action Test. Bug Fixs.
 
 
 # 1. Docker Container for STM32 CMake Compiling
@@ -49,7 +49,7 @@ Default build type is `Release`.
 
 
 - Help Menu
-```
+```bash
 docker run jasonyangee/stm32_ubuntu:latest --help
 ```
 
@@ -82,9 +82,11 @@ docker cp builder:/home/build/{TARGET_NAME}.hex
 
 Replace the `Local/Host/Project/Path` with your actual project folder path on local machine.
 
+Binary Output `.bin` `.elf` `.hex` are located in your `project/path/build`.
+
 - Format:
 ```bash
-docker run -v "Local/Host/Project/Path":"/build" jasonyangee/stm32_ubuntu:latest /build
+docker run -v "{Local/Host/Project/Path}":"/build" IMAGE:VERSION /build
 ```
 
 - Example:

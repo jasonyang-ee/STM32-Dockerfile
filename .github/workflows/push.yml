@@ -51,7 +51,7 @@ jobs:
         username: ${{ secrets.USER_GITHUB_PERSONAL }}
         password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
 
-    - name: Build and Load for Ubuntu
+    - name: Build and Upload for Ubuntu
       id: output-ubuntu
       uses: docker/build-push-action@v4
       with:
@@ -61,7 +61,7 @@ jobs:
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
         labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
-    - name: Build and Load for Alpine
+    - name: Build and Upload for Alpine
       id: output-alpine
       uses: docker/build-push-action@v4
       with:
