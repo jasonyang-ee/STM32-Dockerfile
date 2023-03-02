@@ -19,15 +19,12 @@ jobs:
     steps:
     - name: Checkout project
       uses: actions/checkout@v3
-      with:
-        repository: ${{ github.repository }}
-        path: 'main'
 
     - name: Checkout example repo
       uses: actions/checkout@v3
       with:
         repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
-        path: 'project'
+        path: project
       
     - name: Docker meta
       id: meta
@@ -41,7 +38,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        file: ${{ github.workspace }}/main/Dockerfile.ubuntu
+        file: ${{ github.workspace }}/Dockerfile.ubuntu
         push: false
         load: true
         tags: ${{ steps.meta.outputs.tags }}
