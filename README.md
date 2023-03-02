@@ -68,6 +68,26 @@ docker cp builder:/home/build/{TARGET_NAME}.hex
 
 
 
+
+## Build Locally With Mounted Volume
+
+- Format:
+```bash
+docker run -v "Local/Host/Project/Path":"/build" jasonyangee/stm32_ubuntu:latest /build
+```
+
+- Example:
+```bash
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/build" jasonyangee/stm32_ubuntu:latest /build
+```
+
+The container path `/build` just has to be repeated
+
+
+
+
+
+
 ## 2.2. Build Online With Github Action
 
 In the application Github repo, create file `.github\workflows\build.yml` with the following.
