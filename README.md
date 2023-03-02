@@ -11,6 +11,7 @@
 - `3.2`: Add Github on premise server support. No TLS certification checking for https clone. 
 - `3.3`: Removed args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH=""
 - `4.0`: Add Local Mounted Volume Support. Add Help Menu.
+- `4.1`: Modify Action Test.
 
 
 # 1. Docker Container for STM32 CMake Compiling

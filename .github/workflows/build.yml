@@ -20,13 +20,14 @@ jobs:
     - name: Checkout project
       uses: actions/checkout@v3
         with:
+          repository: ${{ github.repository }}
           path: main
 
-    - name: Checkout tools repo
+    - name: Checkout example repo
       uses: actions/checkout@v3
         with:
           repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
-            path: project
+          path: project
       
     - name: Docker meta
       id: meta
@@ -40,7 +41,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        file: main/Dockerfile.ubuntu
+        file: ${{ github.workspace }}/main/Dockerfile.ubuntu
         push: false
         load: true
         tags: ${{ steps.meta.outputs.tags }}
@@ -48,6 +49,6 @@ jobs:
 
     - name: Test Ubuntu
       run: docker run ${{ steps.result.outputs.imageid }} ${{ env.TEST_REPO }}
-      
+
     - name: Test Ubuntu
-      run: docker run -v "/project":"/build" ${{ steps.result.outputs.imageid }}
+      run: docker run -v "${{ github.workspace }}/project":"/build" ${{ steps.result.outputs.imageid }}
