@@ -14,7 +14,6 @@ if [[ $# -eq 1 ]]
 then
 	if [[ $1 == "http"* ]]
 	then
-		echo 'debug 1'
 		cd /home
 		git clone $1 .
 		git config --global http.sslverify false
@@ -52,7 +51,6 @@ then
 # If using in Github Action
 elif [[ $GITHUB_ACTIONS == true ]]
 then
-	echo 'debug 3'
 	cmake -DCMAKE_BUILD_TYPE=$TYPE "-B $GITHUB_WORKSPACE/build" -G Ninja
 	cmake --build $GITHUB_WORKSPACE/build -j 10
 	if [[ $? -eq 0 ]]
@@ -66,9 +64,10 @@ then
 # If Supplying Mounted Volume
 elif [ -d "/build" ] && [ -n "$(ls -A "/build")" ]
 then
-	cd /build
-	cmake -DCMAKE_BUILD_TYPE=$TYPE "-B /build/build/" -G Ninja
-	cmake --build $1/build/ -j 10
+	cmake -DCMAKE_BUILD_TYPE=$TYPE "-S /build" "-B /build/build/" -G Ninja
+	cmake --build /build/build -j 10
 else
-	echo 'Format Error. Type --help to Get More Info > docker run jasonyangee/stm32_ubuntu:latest --help'
+	echo ''
+	echo 'Format Error'
+	echo '--help to Get More Info > docker run jasonyangee/stm32_ubuntu:latest --help'
 fi

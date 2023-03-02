@@ -17,6 +17,23 @@
 				"cwd": "${workspaceFolder}"
 			},
 			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Alpine",
+			"command": "docker",
+			"args": [
+				"build",
+				"-t",
+				"stm32_alpine:latest",
+				"-f",
+				"Dockerfile.alpine",
+				"."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
 		}
 	]
 }
