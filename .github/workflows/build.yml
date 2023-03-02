@@ -62,11 +62,11 @@ jobs:
         tags: ${{ steps.meta-alpine.outputs.tags }}
         labels: ${{ steps.meta-alpine.outputs.labels }}
 
-    - name: Test Ubuntu Native
+    - name: Test Ubuntu URL
       run: |
         docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO }}
 
-    - name: Test Alpine Native
+    - name: Test Alpine URL
       run: |
         docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO }}
 
