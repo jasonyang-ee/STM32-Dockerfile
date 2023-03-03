@@ -192,7 +192,7 @@ docker run -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
 
 - Initialize CMake:
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH="cmake/gcc-arm-none-eabi.cmake" "-B build/" -G Ninja
+cmake -DCMAKE_BUILD_TYPE=Release "-B build/" -G Ninja
 ```
 
 - Compile:
@@ -291,8 +291,10 @@ Note: `--privileged` is necessary to allow device port passthrough
 
 # Github Action Variables
 
-vars.REGISTRY = Github package link (private: ghcr.io  -  org: ghcr.io/Org_Name)
-DOCKERHUB_TOKEN = Docker Hub login token
-DOCKERHUB_USERNAME = Docker Hub username
-TOKEN_GITHUB_PERSONAL = Github package token
-USER_GITHUB_PERSONAL = Github package username
+```c
+vars.REGISTRY					// Github package link (private: ghcr.io  -  org: ghcr.io/Org_Name)
+secrete.DOCKERHUB_TOKEN			// Docker Hub login token
+secrete.DOCKERHUB_USERNAME		// Docker Hub username
+secrete.TOKEN_GITHUB_PERSONAL	// Github package token
+secrete.USER_GITHUB_PERSONAL	// Github package username
+```
