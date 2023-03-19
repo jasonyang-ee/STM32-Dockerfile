@@ -29,6 +29,8 @@ This docker image auto clone an online git repo and compile the CMake & Ninja su
 docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32_ubuntu:latest {Git_Repo_URL}
 ```
 
+![Run](Doc/img/run_time.gif)
+
 ## 2.1. Dockerfile
 
 Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
