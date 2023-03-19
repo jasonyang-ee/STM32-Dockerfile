@@ -2,7 +2,7 @@
 [![Push](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
 
-# Tags
+# 1. Tags
 
 - `1.0`: No Entrypoint. All build has to be done manually with docker run -it command.
 - `2.0`: With Entrypoint. Git repo auto import and build implemented. And, Github Action Supported.
@@ -14,43 +14,63 @@
 - `4.1`: Modify Action Test. Bug Fixs.
 - `4.2`: Modify Action Test. Bug Fixs.
 - `4.3`: Modify Action Test. Bug Fixs.
+- `4.4`: Bug fix of volume mount path as arguments. Now has correct support on mounted project.
 
 
-# 1. Docker Container for STM32 CMake Compiling
 
-## 1.1. Dockerfile
+
+# 2. Docker Container for STM32 CMake Compiling
+
+
+
+## 2.1. Dockerfile
 
 Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
 
 Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
-## 1.2. Compiler
+Public Registry:
+> ghcr.io/jasonyang-ee/stm32_alpine:latest
 
- - ARM GNU x86_64-arm-none-eabi  (939 MB)
+> ghcr.io/jasonyang-ee/stm32_ubuntu:latest
 
+> jasonyangee/stm32_alpine:latest
 
-## 1.3. Packages
-
-- build-essential
-- git
-- cmake
-- ninja-build
-- stlink-tools
+> jasonyangee/stm32_ubuntu:latest
 
 
 
+## 2.2. Docker Image Compiler Environment
+
+- [ARM GNU x86_64-arm-none-eabi](https://packages.ubuntu.com/jammy/gcc-arm-none-eabi)
+- Ubuntu: [build-essential](https://packages.ubuntu.com/focal/build-essential)
+- Alpine: [gcompat](https://pkgs.alpinelinux.org/package/edge/community/x86_64/gcompat) & [libc6-compat](https://pkgs.alpinelinux.org/package/edge/main/x86_64/libc6-compat) & [libstdc++](https://pkgs.alpinelinux.org/package/edge/main/x86_64/libstdc++) & [g++](https://pkgs.alpinelinux.org/package/edge/main/x86_64/g++) & [gcc](https://pkgs.alpinelinux.org/package/edge/main/x86_64/gcc)
+- [git](https://git-scm.com/)
+- [cmake](https://cmake.org/)
+- [ninja-build](https://ninja-build.org/)
+- [stlink-tools](https://github.com/stlink-org/stlink)
 
 
-# 2. Use of This Image
+
+
+
+# 3. Use of This Image
 
 This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.
 
-`CMAKE_TOOLCHAIN_FILE` must be defined in your project CMakeList.txt file.
+The entrypoint bash script executes basically two commands:
+```bash
+cmake -DCMAKE_BUILD_TYPE=$TYPE -B /home/build/" -G Ninja
+cmake --build /home/build -j 10
+```
 
-Default build type is `Release`.
+- `CMAKE_TOOLCHAIN_FILE` must be defined in your project CMakeList.txt file.
+- Default build type is `Release`.
 
 
-- Help Menu
+
+## 3.1. Help Menu
+Example usage format can be viewed with `--help` command.
 ```bash
 docker run jasonyangee/stm32_ubuntu:latest --help
 ```
@@ -58,16 +78,18 @@ docker run jasonyangee/stm32_ubuntu:latest --help
 
 
 
-## 2.1. Build Locally With Git Repo Link
+## 3.2. Use Locally With Git Repo Link
 
 - Format:
 ```bash
-docker run IMAGE:VERSION {Git_Repo_URL}
+docker run {IMAGE:VERSION} {Git_Repo_URL}
+docker run {IMAGE:VERSION} {Git_Repo_URL} {Build_Type}
 ```
 
 - Example:
 ```bash
 docker run --name builder jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+docker run --name builder jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
 ```
 
 - Optionally, you can copy out the binary files:
@@ -80,31 +102,51 @@ docker cp builder:/home/build/{TARGET_NAME}.hex
 
 
 
-## Build Locally With Mounted Volume
+## 3.3. Use Locally With Mounted Volume
 
-Replace the `Local/Host/Project/Path` with your actual project folder path on local machine.
+`Local_Project_Full_Path` is the folder path on local host machine.
 
-Binary Output `.bin` `.elf` `.hex` are located in your `project/path/build`.
+`/proj` is the folder in docker container. It can be any none-existing folder name in root. Repeating this path as 1st argument for entrypoint will invoke the auto compile process.
+
+Binary Output `.bin` `.elf` `.hex` `.map` are located in `Local_Project_Path/build`.
 
 - Format:
 ```bash
-docker run -v "{Local/Host/Project/Path}":"/build" IMAGE:VERSION /build
+docker run -v "{Local_Project_Full_Path}":"/proj" {IMAGE:VERSION} /proj
+docker run -v "{Local_Project_Full_Path}":"/proj" {IMAGE:VERSION} /proj {Build_Type}
 ```
 
 - Example:
 ```bash
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/build" jasonyangee/stm32_ubuntu:latest
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/proj" jasonyangee/stm32_ubuntu:latest /proj
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/proj" jasonyangee/stm32_ubuntu:latest /proj Debug
 ```
 
 
 
 
 
-## 2.2. Build Online With Github Action
+## 3.4. Use Online With Github Action
 
-In the application Github repo, create file `.github\workflows\build.yml` with the following.
+In the application Github repo, create file `.github\workflows\build.yml` with the following script.
 
-This action script will build and upload binary outout to artifact for download.
+This action script will build and upload binary outout to artifact.
+
+In the Github Action use case, docker image entrypoint 1st argument will overwrite build_type.
+
+- Short Example:
+```yml
+- uses: actions/checkout@v3
+- name: BUILD
+  run: build.sh
+```
+```yml
+- uses: actions/checkout@v3
+- name: BUILD
+  run: build.sh Debug
+```
+
+- Full Script:
 
 ```yml
 name: 'Build with Ubuntu Container'
@@ -129,7 +171,7 @@ jobs:
         name: BINARY.elf
         path: ${{ github.workspace }}/build/*.elf
 
-	  - name: Upload Binary .bin
+    - name: Upload Binary .bin
       uses: actions/upload-artifact@v2
       with:
         name: BINARY.bin
@@ -141,35 +183,35 @@ jobs:
 
 
 
-# 3. Build Image from Dockerfile
+# 4. Build Image from Dockerfile
 
-If you choose to build this image from Dockerfile.
+If you choose to build your own image from Dockerfile.
 
 
-## 3.1. User Modifications
+## 4.1. User Modifications
 
 **Check ARM releases at here: <https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/>**
 
 - Modify `ARM_VERSION=12.2.rel1` for enforcing compiler version.
 
-- If pulling latest version is desired, insert this line before `curl` command
+- If pulling latest version is desired, insert this line before `curl` command in dockerfile.
 
 ```docker
 && ARM_VERSION=$(curl -s https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads | grep -Po '<h4>Version \K.+(?=</h4>)') \
 ```
 
 
-## 3.2. Pre Configured VS Code Tasks has been setup to build automatically
+## 4.2. Auto Build Using VS Code Tasks
 
+- `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Ubuntu`.
 - Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
 ```
 stm32_ubuntu:latest",
 ```
-- `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Ubuntu`.
 
 
 
-## 3.3. Build Bash Command Example
+## 4.3. Manual Build Bash Command Example
 
 ```bash
 docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
@@ -179,16 +221,15 @@ docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
 
 
 
-# 4. Manual Image Usage
+# 5. Manual Image Usage
 
-- Override ENTRYPOINT to keep interactive mode live:
+- Override ENTRYPOINT to keep interactive mode live.
+- Import project folder with volume mount.
 ```
-docker run -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/build" -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
 ```
 
-- `cd` to your desired work directory
-
-- Copy your files either using `> Docker cp` or `$ git clone`
+- Run `build.sh` to invoke auto compiling process.
 
 - Initialize CMake:
 ```bash
@@ -208,11 +249,11 @@ On pushing of the branch main, Github will automatically test build your applica
 
 
 
-# 5. ST-Link
+# 6. ST-Link
 
 ST Link Programmer has not yet been automated.
 
-## 5.1. Flash Device in Manual Usage
+## 6.1. Flash Device in Manual Usage
 
 Tool Details: https://github.com/stlink-org/stlink
 
@@ -237,7 +278,7 @@ st-flash write {TARGET.bin} 0x8000000 --reset
 st-flash reset
 ```
 
-## 5.2. Prepare USB Passthrough to WSL Docker Container
+## 6.2. Prepare USB Passthrough to WSL Docker Container
 Follow this:
 https://learn.microsoft.com/en-us/windows/wsl/connect-usb
 
@@ -276,7 +317,7 @@ usbipd wsl list
 
 
 
-## 5.3. Run Docker Container in WSL
+## 6.3. Run Docker Container in WSL
 
 - Run WSL Ubuntu:
 ```shell
@@ -289,7 +330,9 @@ Note: `--privileged` is necessary to allow device port passthrough
 
 
 
-# Github Action Variables
+# 7. Github Action Variables
+
+For those who want to setup your own github action to auto publish variation of this dockerfile to your own docker registry. You may copy my action yml file setup and setup the following github variables.
 
 ```c
 vars.REGISTRY					// Github package link (private: ghcr.io  -  org: ghcr.io/Org_Name)
