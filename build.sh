@@ -16,7 +16,7 @@ then
 		cd /home
 		git clone $1 .
 		git config --global http.sslverify false # Accept internal github server with self https certs
-		cmake -DCMAKE_BUILD_TYPE=$TYPE "-B /home/build/" -G Ninja
+		cmake -DCMAKE_BUILD_TYPE=$TYPE -B /home/build/ -G Ninja
 		cmake --build /home/build/ -j 10
 		if [[ $? -eq 0 ]]
 		then
@@ -28,7 +28,7 @@ then
 		fi
 	elif [[ -d $1 ]] # Volume mounted case
 	then
-		cmake -DCMAKE_BUILD_TYPE=$TYPE "-S $1" "-B $1/build/" -G Ninja
+		cmake -DCMAKE_BUILD_TYPE=$TYPE -S $1 -B $1/build/ -G Ninja
 		cmake --build $1/build -j 10
 		if [[ $? -eq 0 ]]
 		then
@@ -75,7 +75,7 @@ then
 		TYPE=Release
 	fi
 	# Starting of compile
-	cmake -DCMAKE_BUILD_TYPE=$TYPE "-B $GITHUB_WORKSPACE/build" -G Ninja
+	cmake -DCMAKE_BUILD_TYPE=$TYPE -B $GITHUB_WORKSPACE/build -G Ninja
 	cmake --build $GITHUB_WORKSPACE/build -j 10
 	if [[ $? -eq 0 ]]
 	then
@@ -90,4 +90,5 @@ else
 	echo ''
 	echo 'Format error. Missing arguments. Use --help to Get More Info.'
 	echo '$ docker run jasonyangee/stm32_ubuntu:latest --help'
+	exit 0
 fi
