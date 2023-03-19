@@ -75,7 +75,7 @@ jobs:
     - name: Test Ubuntu Volume
       run: |
         docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu.outputs.imageid }} /proj
-        rm -r ${{ github.workspace }}/project/build
+        sudo rm -r ${{ github.workspace }}/project/build
 
     - name: Test Alpine Volume
       run: docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine.outputs.imageid }} /proj Debug
