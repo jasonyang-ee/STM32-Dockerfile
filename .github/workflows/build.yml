@@ -79,3 +79,11 @@ jobs:
 
     - name: Test Alpine Volume
       run: docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine.outputs.imageid }} /proj Debug
+      
+    - name: Test Ubuntu Hybrid
+      run: |
+        docker run -v "${{ github.workspace }}/project":"/home" ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        sudo rm -r ${{ github.workspace }}/project/build
+
+    - name: Test Alpine Hybrid
+      run: docker run -v "${{ github.workspace }}/project":"/home" ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug

@@ -15,13 +15,19 @@
 - `4.2`: Modify Action Test. Bug Fixs.
 - `4.3`: Modify Action Test. Bug Fixs.
 - `4.4`: Bug fix of volume mount path as arguments. Now has correct support on mounted project.
+- `5.0`: Support hybrid git repo and local mounted volume compile. This avoided needing to copy binary file in the end.
 
 
 
 
-# 2. Docker Container for STM32 CMake Compiling
+# 2. Docker Container for STM32 CMake & Ninja Compiling
 
+-- TLDR --
 
+This docker image auto clone an online git repo and compile the CMake & Ninja supported STM32 project locally on your computer with mounted volume.
+```bash
+docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32_ubuntu:latest {Git_Repo_URL}
+```
 
 ## 2.1. Dockerfile
 
@@ -53,8 +59,7 @@ Public Registry:
 
 
 
-
-# 3. Use of This Image
+# 3. Basics of This Image
 
 This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.
 
@@ -75,10 +80,13 @@ Example usage format can be viewed with `--help` command.
 docker run jasonyangee/stm32_ubuntu:latest --help
 ```
 
+# 4. Use of This Image
 
 
 
-## 3.2. Use Locally With Git Repo Link
+## 4.1. Use Locally With Git Repo Link
+
+This is intended for testing compile only. It is recommended to `Use Locally Hybrid` for getting binary files.
 
 - Format:
 ```bash
@@ -94,19 +102,19 @@ docker run --name builder jasonyangee/stm32_ubuntu:latest https://github.com/jas
 
 - Optionally, you can copy out the binary files:
 ```bash
-docker cp builder:/home/build/{TARGET_NAME}.elf
-docker cp builder:/home/build/{TARGET_NAME}.bin
-docker cp builder:/home/build/{TARGET_NAME}.hex
+docker cp builder:/home/build/{TARGET_NAME}.elf {DEST_PATH}
+docker cp builder:/home/build/{TARGET_NAME}.bin {DEST_PATH}
+docker cp builder:/home/build/{TARGET_NAME}.hex {DEST_PATH}
 ```
 
 
 
 
-## 3.3. Use Locally With Mounted Volume
+## 4.2. Use Locally With Mounted Volume
 
-`Local_Project_Full_Path` is the folder path on local host machine.
+`Local_Project_Full_Path` is the existing project folder path on your local host machine.
 
-`/proj` is the folder in docker container. It can be any none-existing folder name in root. Repeating this path as 1st argument for entrypoint will invoke the auto compile process.
+`/proj` is the folder in docker container. It can be any none-Linux-system-folder name in root. Repeating this folder name as 1st argument for entrypoint will invoke the auto compile process. Using `/home` is recommended to avoid confusions between the three different use case.
 
 Binary Output `.bin` `.elf` `.hex` `.map` are located in `Local_Project_Path/build`.
 
@@ -118,15 +126,35 @@ docker run -v "{Local_Project_Full_Path}":"/proj" {IMAGE:VERSION} /proj {Build_T
 
 - Example:
 ```bash
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/proj" jasonyangee/stm32_ubuntu:latest /proj
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE2":"/proj" jasonyangee/stm32_ubuntu:latest /proj Debug
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" jasonyangee/stm32_ubuntu:latest /proj
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" jasonyangee/stm32_ubuntu:latest /proj Debug
+```
+
+
+
+## 4.3. Use Locally Hybrid
+
+Due to hybrid usage and simplicity of required arguments, the container compile folder must be defined as `/home` to work.
+
+`Local_Project_Full_Path` is any empty folder path on local host machine. If no folder existed, one will be created.
+
+- Format:
+```bash
+docker run -v "{Local_Full_Path}":"/home" {IMAGE:VERSION} {Git_Repo_URL}
+docker run -v "{Local_Full_Path}":"/home" {IMAGE:VERSION} {Git_Repo_URL} {Build_Type}
+```
+
+- Example:
+```bash
+docker run -v "F:\test_compile":"/home" jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+docker run -v "F:\test_compile":"/home" jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
 ```
 
 
 
 
 
-## 3.4. Use Online With Github Action
+## 4.4. Use Online With Github Action
 
 In the application Github repo, create file `.github\workflows\build.yml` with the following script.
 
@@ -183,12 +211,12 @@ jobs:
 
 
 
-# 4. Build Image from Dockerfile
+# 5. Build Image from Dockerfile
 
 If you choose to build your own image from Dockerfile.
 
 
-## 4.1. User Modifications
+## 5.1. User Modifications
 
 **Check ARM releases at here: <https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/>**
 
@@ -201,7 +229,7 @@ If you choose to build your own image from Dockerfile.
 ```
 
 
-## 4.2. Auto Build Using VS Code Tasks
+## 5.2. Auto Build Using VS Code Tasks
 
 - `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Ubuntu`.
 - Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
@@ -211,7 +239,7 @@ stm32_ubuntu:latest",
 
 
 
-## 4.3. Manual Build Bash Command Example
+## 5.3. Manual Build Bash Command Example
 
 ```bash
 docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
@@ -221,7 +249,7 @@ docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
 
 
 
-# 5. Manual Image Usage
+# 6. Manual Image Usage
 
 - Override ENTRYPOINT to keep interactive mode live.
 - Import project folder with volume mount.
@@ -249,11 +277,11 @@ On pushing of the branch main, Github will automatically test build your applica
 
 
 
-# 6. ST-Link
+# 7. ST-Link
 
 ST Link Programmer has not yet been automated.
 
-## 6.1. Flash Device in Manual Usage
+## 7.1. Flash Device in Manual Usage
 
 Tool Details: https://github.com/stlink-org/stlink
 
@@ -278,7 +306,7 @@ st-flash write {TARGET.bin} 0x8000000 --reset
 st-flash reset
 ```
 
-## 6.2. Prepare USB Passthrough to WSL Docker Container
+## 7.2. Prepare USB Passthrough to WSL Docker Container
 Follow this:
 https://learn.microsoft.com/en-us/windows/wsl/connect-usb
 
@@ -304,7 +332,7 @@ sudo update-alternatives --install /usr/local/bin/usbip usbip /usr/lib/linux-too
 usbipd list
 ```
 
-![](README_image/bind.png)
+![](Doc/img/bind.png)
 
 - Note the ST-Link ID and bind it
 ```cmd
@@ -313,11 +341,11 @@ usbipd attach --busid 3-5
 usbipd wsl list
 ```
 
-![](README_image/attached.png)
+![](Doc/img/attached.png)
 
 
 
-## 6.3. Run Docker Container in WSL
+## 7.3. Run Docker Container in WSL
 
 - Run WSL Ubuntu:
 ```shell
@@ -326,11 +354,11 @@ st-info --probe
 ```
 Note: `--privileged` is necessary to allow device port passthrough
 
-![stlinked](README_image/stlinked.png)
+![stlinked](Doc/img/stlinked.png)
 
 
 
-# 7. Github Action Variables
+# 8. Github Action Variables
 
 For those who want to setup your own github action to auto publish variation of this dockerfile to your own docker registry. You may copy my action yml file setup and setup the following github variables.
 
