@@ -29,7 +29,7 @@ This docker image auto clone an online git repo and compile the CMake & Ninja su
 docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32_ubuntu:latest {Git_Repo_URL}
 ```
 
-![Run](Doc/img/run_time.gif)
+> ![Run](Doc/img/run_time.gif)
 
 ## 2.1. Dockerfile
 
@@ -183,7 +183,7 @@ name: 'Build with Ubuntu Container'
 on:
   push:
     branches:
-      - main
+      - 'main'
 
 jobs:
   BUILD_RELEASE:
@@ -253,54 +253,42 @@ docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
 
 # 6. Manual Image Usage
 
-- Override ENTRYPOINT to keep interactive mode live.
-- Import project folder with volume mount.
+- Using volume mount and override ENTRYPOINT to keep interactive mode live
 ```
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/build" -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
 ```
 
-- Run `build.sh` to invoke auto compiling process.
-
-- Initialize CMake:
+- Run build script to invoke auto compiling process.
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release "-B build/" -G Ninja
+build.sh /proj
 ```
 
-- Compile:
+- Or optionally, manualy build your project:
 ```bash
-cmake --build build/ -j 10
+cmake -B build -G Ninja
+cmake --build build
 ```
 
-
-
-
-
-On pushing of the branch main, Github will automatically test build your application.
 
 
 
 # 7. ST-Link
 
-ST Link Programmer has not yet been automated.
+ST Link Programmer has not yet been automated. Using `st-link` requires manual image usage adding `--privileged` from previous section to keep interactive mode live, then you will have to find a way to passthrough USB port into container as described in next section.
 
 ## 7.1. Flash Device in Manual Usage
 
 Tool Details: https://github.com/stlink-org/stlink
 
-Using Windows machine is difficault to expose USB device to container.
-
-Using WSL maybe the only option for now. See next section.
 
 - Confirm Connnection:
-
 ```shell
 st-info probe
 ```
 
 - Manual Flash:
-
 ```shell
-st-flash write {TARGET.bin} 0x8000000 --reset
+st-flash write {TARGET.bin} 0x8000000
 ```
 
 - Manual Reset:
@@ -309,6 +297,11 @@ st-flash reset
 ```
 
 ## 7.2. Prepare USB Passthrough to WSL Docker Container
+
+Using Windows machine is difficault to expose USB device to container.
+
+Using WSL maybe the only option for now.
+
 Follow this:
 https://learn.microsoft.com/en-us/windows/wsl/connect-usb
 
@@ -334,40 +327,61 @@ sudo update-alternatives --install /usr/local/bin/usbip usbip /usr/lib/linux-too
 usbipd list
 ```
 
-![](Doc/img/bind.png)
+> ![](Doc/img/bind.png)
 
-- Note the ST-Link ID and bind it
+- Note the ST-Link ID and bind it on Windows CMD:
 ```cmd
 usbipd bind --busid 3-5
-usbipd attach --busid 3-5
+usbipd wsl attach --busid 3-5
 usbipd wsl list
 ```
+> ![](Doc/img/attached.png)
 
-![](Doc/img/attached.png)
+- Onced a device has been binded, for all future connection, you will only need to attach.
+
+```cmd
+usbipd list
+usbipd wsl attach --busid 3-5
+```
 
 
 
-## 7.3. Run Docker Container in WSL
+## 7.3. Run Docker Container in WSL and Flash STM32
 
-- Run WSL Ubuntu:
+Finally, with all of the above understanding, we can combine all and excute the mixed docker run commands:
+
+1. Attach USB device into WSL from Windows CMD (Admin).
+2. Start WSL.
+3. Check for ST Link Connection.
+4. Overwrite entrypoint and volume mount an existing project on WSL.
+5. Invoke docker auto build with the mounted volume.
+6. Flash STM32
+
 ```shell
-docker run -it --privileged --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
-st-info --probe
+usbipd list
+usbipd wsl attach --busid 3-5
+usbipd wsl list
+wsl
+cd {WSL_USER_PATH}
+ls
+sudo st-info --probe
+docker run -v {WSL_PROJECT_PATH}:{CONTAINER_PROJECT_PATH} -it --privileged --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+build.sh {CONTAINER_PROJECT_PATH}
+st-flash write {PATH_TO_TARGET.BIN} 0x8000000
 ```
 Note: `--privileged` is necessary to allow device port passthrough
 
-![stlinked](Doc/img/stlinked.png)
-
+> ![run_wsl](Doc/img/run_wsl.gif)
 
 
 # 8. Github Action Variables
 
-For those who want to setup your own github action to auto publish variation of this dockerfile to your own docker registry. You may copy my action yml file setup and setup the following github variables.
+For those who want to setup your own github action to auto publish variation of this dockerfile to your own docker registry. You may copy my action yml file setup and define the following github variables.
 
 ```c
-vars.REGISTRY					// Github package link (private: ghcr.io  -  org: ghcr.io/Org_Name)
-secrete.DOCKERHUB_TOKEN			// Docker Hub login token
-secrete.DOCKERHUB_USERNAME		// Docker Hub username
+vars.REGISTRY			// Github package link (private: ghcr.io  -  org: ghcr.io/Org_Name)
+secrete.DOCKERHUB_TOKEN		// Docker Hub login token
+secrete.DOCKERHUB_USERNAME	// Docker Hub username
 secrete.TOKEN_GITHUB_PERSONAL	// Github package token
 secrete.USER_GITHUB_PERSONAL	// Github package username
 ```
