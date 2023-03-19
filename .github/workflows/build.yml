@@ -6,7 +6,8 @@ on:
       - 'main'
 
 env:
-  TEST_REPO: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+  TEST_REPO_URL: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+  TEST_REPO: jasonyang-ee/STM32-CMAKE-TEMPLATE
 
 jobs:
   Build_Test:
@@ -63,14 +64,22 @@ jobs:
 
     - name: Test Ubuntu URL
       run: |
-        docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO }}
+        docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+
+    - name: Test Ubuntu URL Debug
+      run: |
+        docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Test Alpine URL
       run: |
-        docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO }}
+        docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+
+    - name: Test Alpine URL Debug
+      run: |
+        docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Test Ubuntu Volume
-      run: docker run -v "${{ github.workspace }}/project":"/build" ${{ steps.output-ubuntu.outputs.imageid }}
+      run: docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu.outputs.imageid }} /proj
 
-    - name: Test Ubuntu Volume
-      run: docker run -v "${{ github.workspace }}/project":"/build" ${{ steps.output-alpine.outputs.imageid }}
+    - name: Test Alpine Volume
+      run: docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine.outputs.imageid }} /proj
