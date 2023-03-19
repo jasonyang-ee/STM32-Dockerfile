@@ -67,7 +67,7 @@ This image is intended for building STM32 Microcontroller C/C++ Project Configur
 
 The entrypoint bash script executes basically two commands:
 ```bash
-cmake -DCMAKE_BUILD_TYPE=$TYPE -B /home/build/" -G Ninja
+cmake -DCMAKE_BUILD_TYPE=Release -B /home/build/ -G Ninja
 cmake --build /home/build -j 10
 ```
 
