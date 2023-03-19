@@ -6,7 +6,7 @@
 
 - `1.0`: No Entrypoint. All build has to be done manually with docker run -it command.
 - `2.0`: With Entrypoint. Git repo auto import and build implemented. And, Github Action Supported.
-- `3.0`: ARM toolchain downloaded from Linux packages instead. Image size is bigger than v2.0. Not recommended.
+- `3.0`: ARM toolchain downloaded from Linux packages instead. Image size is bigger than v2.0.
 - `3.1`: Reverting back to ARM toolchain direct downloaded from website.
 - `3.2`: Add Github on premise server support. No TLS certification checking for https clone. 
 - `3.3`: Removed args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH=""
@@ -15,14 +15,14 @@
 - `4.2`: Modify Action Test. Bug Fixs.
 - `4.3`: Modify Action Test. Bug Fixs.
 - `4.4`: Bug fix of volume mount path as arguments. Now has correct support on mounted project.
-- `5.0`: Support hybrid git repo and local mounted volume compile. This avoided needing to copy binary file in the end.
+- `5.0`: Supports hybrid git repo URL + local mounted compile. This provides completed compile experience.
 
 
 
 
 # 2. Docker Container for STM32 CMake & Ninja Compiling
 
--- TLDR --
+-+- TL;DR -+-
 
 This docker image auto clone an online git repo and compile the CMake & Ninja supported STM32 project locally on your computer with mounted volume.
 ```bash
