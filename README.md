@@ -212,6 +212,42 @@ jobs:
 
 
 
+## 4.5. Use Locally Distributed to Team
+
+In case of team usage, it is possible to distribute a fine tuned docker image to standardize an oranization wide compile environment.
+
+1. In VS Code, install extensions:
+   - Dev Containers [(ms-vscode-remote.remote-containers)](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+   - Docker [(ms-azuretools.vscode-docker)](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
+
+2. Start VS Code with your project folder on local computer.
+
+3. On an individual command windows (Don't run it in VS Code to avoid accidental exit), run docker container as next step.
+
+4. Docker run using volume mount and override ENTRYPOINT to keep interactive mode live.
+```bash
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+```
+
+5. Attach VS Code onto the container.
+
+6. Continue any of your dev works. Reminder: this dev container workspace is real-time synced by docker volume mount. Don't delete files thinking it has no effects to local machine.
+
+7. Build by command using the docker image entrypoint bash script.
+```bash
+build.sh /proj
+```
+
+8. Or, you can install those VS Code extentions: CMake Tools to build like as if it's on local computer.
+
+> ![DEVcontainer](Doc/img/container.gif)
+
+
+
+
+
+
+
 
 # 5. Build Image from Dockerfile
 
@@ -253,7 +289,7 @@ docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
 
 # 6. Manual Image Usage
 
-- Using volume mount and override ENTRYPOINT to keep interactive mode live
+- Docker using volume mount and override ENTRYPOINT to keep interactive mode live
 ```
 docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
 ```
