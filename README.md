@@ -16,6 +16,7 @@
 - `4.3`: Modify Action Test. Bug Fixs.
 - `4.4`: Bug fix of volume mount path as arguments. Now has correct support on mounted project.
 - `5.0`: Supports hybrid git repo URL + local mounted compile. This provides completed compile experience.
+- `5.1`: Add Archlinux image and unified tags under stm32-builder. *OLD IMAGES ARE REMOVED*
 
 
 
@@ -26,7 +27,7 @@
 
 This docker image auto clone an online git repo and compile the CMake & Ninja supported STM32 project locally on your computer with mounted volume.
 ```bash
-docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32_ubuntu:latest {Git_Repo_URL}
+docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:Ubuntu-latest {Git_Repo_URL}
 ```
 
 > ![Run](Doc/img/run_time.gif)
@@ -38,13 +39,17 @@ Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
 Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 Public Registry:
-> ghcr.io/jasonyang-ee/stm32_alpine:latest
+> ghcr.io/jasonyang-ee/stm32-builder:Ubuntu-latest
 
-> ghcr.io/jasonyang-ee/stm32_ubuntu:latest
+> ghcr.io/jasonyang-ee/stm32-builder:Alpine-latest
 
-> jasonyangee/stm32_alpine:latest
+> ghcr.io/jasonyang-ee/stm32-builder:Arch-latest
 
-> jasonyangee/stm32_ubuntu:latest
+> jasonyangee/stm32-builder:Ubuntu-latest
+
+> jasonyangee/stm32-builder:Alpine-latest
+
+> jasonyangee/stm32-builder:Arch-latest
 
 
 
@@ -79,7 +84,7 @@ cmake --build /home/build -j 10
 ## 3.1. Help Menu
 Example usage format can be viewed with `--help` command.
 ```bash
-docker run jasonyangee/stm32_ubuntu:latest --help
+docker run jasonyangee/stm32-builder:Ubuntu-latest --help
 ```
 
 # 4. Use of This Image
@@ -98,8 +103,8 @@ docker run {IMAGE:VERSION} {Git_Repo_URL} {Build_Type}
 
 - Example:
 ```bash
-docker run --name builder jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
-docker run --name builder jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
+docker run --name builder jasonyangee/stm32-builder:Ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+docker run --name builder jasonyangee/stm32-builder:Ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
 ```
 
 - Optionally, you can copy out the binary files:
@@ -128,8 +133,8 @@ docker run -v "{Local_Project_Full_Path}":"/proj" {IMAGE:VERSION} /proj {Build_T
 
 - Example:
 ```bash
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" jasonyangee/stm32_ubuntu:latest /proj
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" jasonyangee/stm32_ubuntu:latest /proj Debug
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" jasonyangee/stm32-builder:Ubuntu-latest /proj
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" jasonyangee/stm32-builder:Ubuntu-latest /proj Debug
 ```
 
 
@@ -148,8 +153,8 @@ docker run -v "{Local_Full_Path}":"/home" {IMAGE:VERSION} {Git_Repo_URL} {Build_
 
 - Example:
 ```bash
-docker run -v "F:\test_compile":"/home" jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
-docker run -v "F:\test_compile":"/home" jasonyangee/stm32_ubuntu:latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
+docker run -v "F:\test_compile":"/home" jasonyangee/stm32-builder:Ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+docker run -v "F:\test_compile":"/home" jasonyangee/stm32-builder:Ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
 ```
 
 
@@ -189,7 +194,7 @@ jobs:
   BUILD_RELEASE:
     runs-on: ubuntu-latest
     container:
-      image: 'jasonyangee/stm32_ubuntu:latest'
+      image: 'jasonyangee/stm32-builder:Ubuntu-latest'
     steps:
     - uses: actions/checkout@v3
     - name: BUILD
@@ -226,7 +231,7 @@ In case of team usage, it is possible to distribute a fine tuned docker image to
 
 4. Docker run using volume mount and override ENTRYPOINT to keep interactive mode live.
 ```bash
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32-builder:Ubuntu-latest
 ```
 
 5. Attach VS Code onto the container.
@@ -272,7 +277,7 @@ If you choose to build your own image from Dockerfile.
 - `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Ubuntu`.
 - Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
 ```
-stm32_ubuntu:latest",
+stm32-builder:Ubuntu-latest",
 ```
 
 
@@ -280,7 +285,7 @@ stm32_ubuntu:latest",
 ## 5.3. Manual Build Bash Command Example
 
 ```bash
-docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
+docker build -t stm32-builder:Ubuntu-latest -f Dockerfile.ubuntu .
 ```
 
 
@@ -291,7 +296,7 @@ docker build -t stm32_ubuntu:latest -f Dockerfile.ubuntu .
 
 - Docker using volume mount and override ENTRYPOINT to keep interactive mode live
 ```
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32-builder:Ubuntu-latest
 ```
 
 - Run build script to invoke auto compiling process.
@@ -401,7 +406,7 @@ wsl
 cd {WSL_USER_PATH}
 ls
 sudo st-info --probe
-docker run -v {WSL_PROJECT_PATH}:{CONTAINER_PROJECT_PATH} -it --privileged --entrypoint /bin/bash jasonyangee/stm32_ubuntu:latest
+docker run -v {WSL_PROJECT_PATH}:{CONTAINER_PROJECT_PATH} -it --privileged --entrypoint /bin/bash jasonyangee/stm32-builder:Ubuntu-latest
 build.sh {CONTAINER_PROJECT_PATH}
 st-flash write {PATH_TO_TARGET.BIN} 0x8000000
 ```
