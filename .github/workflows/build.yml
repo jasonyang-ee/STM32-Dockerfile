@@ -79,9 +79,11 @@ jobs:
 
     - name: Test Volume
       run: |
-        docker run -v "${{ github.workspace }}/project":"/proj1" ${{ steps.output-ubuntu.outputs.imageid }} /proj1
-        docker run -v "${{ github.workspace }}/project":"/proj2" ${{ steps.output-alpine.outputs.imageid }} /proj2 Debug
-        docker run -v "${{ github.workspace }}/project":"/proj3" ${{ steps.output-arch.outputs.imageid }} /proj3 Debug
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu.outputs.imageid }} /proj
+        sudo rm -r ${{ github.workspace }}/project/build
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine.outputs.imageid }} /proj Debug
+        sudo rm -r ${{ github.workspace }}/project/build
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj Debug
       
     - name: Test Ubuntu Hybrid
       run: |
