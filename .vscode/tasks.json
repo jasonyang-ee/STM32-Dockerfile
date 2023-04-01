@@ -8,7 +8,7 @@
 			"args": [
 				"build",
 				"-t",
-				"stm32_ubuntu:latest",
+				"stm32-builder:Ubuntu-latest",
 				"-f",
 				"Dockerfile.ubuntu",
 				"."
@@ -25,9 +25,26 @@
 			"args": [
 				"build",
 				"-t",
-				"stm32_alpine:latest",
+				"stm32-builder:Alpine-latest",
 				"-f",
 				"Dockerfile.alpine",
+				"."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Arch",
+			"command": "docker",
+			"args": [
+				"build",
+				"-t",
+				"stm32-builder:Arch-latest",
+				"-f",
+				"Dockerfile.arch",
 				"."
 			],
 			"options": {

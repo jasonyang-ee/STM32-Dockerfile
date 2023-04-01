@@ -25,20 +25,6 @@ jobs:
       with:
         repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
         path: project
-      
-    - name: Docker meta ubuntu
-      id: meta-ubuntu
-      uses: docker/metadata-action@v4
-      with:
-        images: stm32_ubuntu
-        tags: type=ref,event=branch
-
-    - name: Docker meta alpine
-      id: meta-alpine
-      uses: docker/metadata-action@v4
-      with:
-        images: stm32_alpine
-        tags: type=ref,event=branch
 
     - name: Build and Load for Ubuntu
       id: output-ubuntu
@@ -48,8 +34,7 @@ jobs:
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         push: false
         load: true
-        tags: ${{ steps.meta-ubuntu.outputs.tags }}
-        labels: ${{ steps.meta-ubuntu.outputs.labels }}
+        tags: test
 
     - name: Build and Load for Alpine
       id: output-alpine
@@ -59,35 +44,47 @@ jobs:
         file: ${{ github.workspace }}/Dockerfile.alpine
         push: false
         load: true
-        tags: ${{ steps.meta-alpine.outputs.tags }}
-        labels: ${{ steps.meta-alpine.outputs.labels }}
+        tags: test
+
+    - name: Build and Load for Arch
+      id: output-arch
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: ${{ github.workspace }}/Dockerfile.arch
+        push: false
+        load: true
+        tags: test
 
     - name: Test Default
-      run: docker run ${{ steps.output-ubuntu.outputs.imageid }}
+      run: |
+        docker run ${{ steps.output-ubuntu.outputs.imageid }}
+        docker run ${{ steps.output-alpine.outputs.imageid }}
+        docker run ${{ steps.output-arch.outputs.imageid }}
 
     - name: Test --help
-      run: docker run ${{ steps.output-ubuntu.outputs.imageid }} --help
+      run: |
+        docker run ${{ steps.output-ubuntu.outputs.imageid }} --help
+        docker run ${{ steps.output-alpine.outputs.imageid }} --help
+        docker run ${{ steps.output-arch.outputs.imageid }} --help
 
-    - name: Test Ubuntu URL
+    - name: Test URL
       run: |
         docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
-
-    - name: Test Alpine URL
-      run: |
         docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
-    - name: Test Ubuntu Volume
+    - name: Test Volume
       run: |
-        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu.outputs.imageid }} /proj
-        sudo rm -r ${{ github.workspace }}/project/build
-
-    - name: Test Alpine Volume
-      run: docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine.outputs.imageid }} /proj Debug
+        docker run -v "${{ github.workspace }}/project":"/proj1" ${{ steps.output-ubuntu.outputs.imageid }} /proj1
+        docker run -v "${{ github.workspace }}/project":"/proj2" ${{ steps.output-alpine.outputs.imageid }} /proj2 Debug
+        docker run -v "${{ github.workspace }}/project":"/proj3" ${{ steps.output-arch.outputs.imageid }} /proj3 Debug
       
     - name: Test Ubuntu Hybrid
-      run: docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-
-    - name: Test Alpine Hybrid
-      run: docker run -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+      run: |
+        docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run -v "${{ github.workspace }}/hybrid3":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug

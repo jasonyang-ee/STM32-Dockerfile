@@ -21,18 +21,31 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/stm32_ubuntu
-          ${{ vars.REGISTRY }}/stm32_ubuntu
+          ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
+          ${{ vars.REGISTRY }}/stm32-builder
         tags: type=ref,event=tag
+        flavor: prefix=Ubuntu-,onlatest=true
 
     - name: Docker meta alpine
       id: meta-alpine
       uses: docker/metadata-action@v4
       with:
         images: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/stm32_alpine
-          ${{ vars.REGISTRY }}/stm32_alpine
+          ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
+          ${{ vars.REGISTRY }}/stm32-builder
         tags: type=ref,event=tag
+        flavor: prefix=Alpine-,onlatest=true
+
+    - name: Docker meta arch
+      id: meta-arch
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
+          ${{ vars.REGISTRY }}/stm32-builder
+        tags: type=ref,event=tag
+        flavor: prefix=Arch-,onlatest=true
+
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
@@ -66,3 +79,13 @@ jobs:
         push: true
         tags: ${{ steps.meta-alpine.outputs.tags }}
         labels: ${{ steps.meta-alpine.outputs.labels }}
+
+    - name: Build and Upload for Arch
+      id: output-arch
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: ${{ github.workspace }}/Dockerfile.arch
+        push: true
+        tags: ${{ steps.meta-arch.outputs.tags }}
+        labels: ${{ steps.meta-arch.outputs.labels }}
