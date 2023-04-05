@@ -17,8 +17,10 @@
 - `4.4`: Bug fix of volume mount path as arguments. Now has correct support on mounted project.
 - `5.0`: Supports hybrid git repo URL + local mounted compile. This provides completed compile experience.
 - `5.1`: Add Archlinux image and unified tags under stm32-builder. *OLD IMAGES ARE REMOVED*
+- `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
 
 
+Recommandation: Use `5.0` for light weight and `5.1` when necessary.
 
 
 # 2. Docker Container for STM32 CMake & Ninja Compiling
@@ -225,27 +227,38 @@ In case of team usage, it is possible to distribute a fine tuned docker image to
    - Dev Containers [(ms-vscode-remote.remote-containers)](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
    - Docker [(ms-azuretools.vscode-docker)](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
 
-2. Start VS Code with your project folder on local computer.
+2. Creat folder `.devcontainer` and add the example `devcontainer.json` file in this project.
+   
+3. `Ctrl` + `p` select `Dev Containers: Report in Container`.
 
-3. On an individual command windows (Don't run it in VS Code to avoid accidental exit), run docker container as next step.
+4. Build using VS Code Extension or using bash script `build.sh .`.
 
-4. Docker run using volume mount and override ENTRYPOINT to keep interactive mode live.
-```bash
-docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32-builder:Ubuntu-latest
-```
+> ![DEVcontainer New](Doc/img/new_container.gif)
 
-5. Attach VS Code onto the container.
 
-6. Continue any of your dev works. Reminder: this dev container workspace is real-time synced by docker volume mount. Don't delete files thinking it has no effects to local machine.
 
-7. Build by command using the docker image entrypoint bash script.
-```bash
-build.sh /proj
-```
-
-8. Or, you can install those VS Code extentions: CMake Tools to build like as if it's on local computer.
-
-> ![DEVcontainer](Doc/img/container.gif)
+### Depreciated Methos
+>> 2. Start VS Code with your project folder on local computer.
+>> 
+>> 3. On an individual command windows (Don't run it in VS Code to avoid accidental exit), run docker container as next step.
+>> 
+>> 4. Docker run using volume mount and override ENTRYPOINT to keep interactive mode live.
+>> ```bash
+>> docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" -it --entrypoint /bin/bash jasonyangee/stm32-builder:Ubuntu-latest
+>> ```
+>> 
+>> 5. Attach VS Code onto the container.
+>> 
+>> 6. Continue any of your dev works. Reminder: this dev container workspace is real-time synced by docker volume mount. Don't >>delete files thinking it  has no effects to local machine.
+>> 
+>> 7. Build by command using the docker image entrypoint bash script.
+>> ```bash
+>> build.sh /proj
+>> ```
+>> 
+>> 8. Or, you can install those VS Code extentions: CMake Tools to build like as if it's on local computer.
+>> 
+>> > ![DEVcontainer](Doc/img/container.gif)
 
 
 
@@ -357,6 +370,7 @@ wsl --shutdown
 - Run (restart) WSL Ubuntu:
 
 ```shell
+sudo apt update
 sudo apt install linux-tools-5.4.0-77-generic hwdata
 sudo update-alternatives --install /usr/local/bin/usbip usbip /usr/lib/linux-tools/5.4.0-77-generic/usbip 20
 ```
