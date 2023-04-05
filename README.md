@@ -227,17 +227,24 @@ In case of team usage, it is possible to distribute a fine tuned docker image to
    - Dev Containers [(ms-vscode-remote.remote-containers)](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
    - Docker [(ms-azuretools.vscode-docker)](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
 
-2. Creat folder `.devcontainer` and add the example `devcontainer.json` file in this project.
-   
-3. `Ctrl` + `p` select `Dev Containers: Report in Container`.
+2. Turn on dev container setting: `Execute In WSL`
+> ![setting](Doc/img/container_setting.png)
 
-4. Build using VS Code Extension or using bash script `build.sh .`.
+3. Attach your hardware usb port as describe below in section `7.2`.
+
+3. Creat folder `.devcontainer` and add the example `devcontainer.json` file in this project.
+   
+4. `Ctrl` + `p` select `Dev Containers: Report in Container`.
+
+5. Build using VS Code Extension or using bash script `build.sh .`.
+
+6. Flash the device as described in section `7`
 
 > ![DEVcontainer New](Doc/img/new_container.gif)
 
 
 
-### Depreciated Methos
+### 4.5.1. Depreciated Methos
 >> 2. Start VS Code with your project folder on local computer.
 >> 
 >> 3. On an individual command windows (Don't run it in VS Code to avoid accidental exit), run docker container as next step.
@@ -337,7 +344,7 @@ Tool Details: https://github.com/stlink-org/stlink
 
 - Confirm Connnection:
 ```shell
-st-info probe
+st-info --probe
 ```
 
 - Manual Flash:
