@@ -1,5 +1,5 @@
-[![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
-[![Push](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
+[![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
+[![Push](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
 
 # 1. Tags
@@ -20,7 +20,7 @@
 - `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
 
 
-Recommandation: Use `5.0` for light weight and `5.1` when necessary.
+Recommandation: Use `5.1` for light weight and `5.2` when necessary.
 
 
 # 2. Docker Container for STM32 CMake & Ninja Compiling
