@@ -2,7 +2,7 @@
 [![Push](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
 
-# 1. Tags
+# Tags
 
 - `1.0`: No Entrypoint. All build has to be done manually with docker run -it command.
 - `2.0`: With Entrypoint. Git repo auto import and build implemented. And, Github Action Supported.
@@ -18,12 +18,41 @@
 - `5.0`: Supports hybrid git repo URL + local mounted compile. This provides completed compile experience.
 - `5.1`: Add Archlinux image and unified tags under stm32-builder. *OLD IMAGES ARE REMOVED*
 - `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
+- `Latest`: `5.2`
 
 
 Recommandation: Use `5.1` for light weight and `5.2` when necessary.
 
+### Table of Content
 
-# 2. Docker Container for STM32 CMake & Ninja Compiling
+- [Tags](#tags)
+		- [Table of Content](#table-of-content)
+- [Docker Container for STM32 CMake \& Ninja Compiling](#docker-container-for-stm32-cmake--ninja-compiling)
+	- [Dockerfile](#dockerfile)
+	- [Docker Image Compiler Environment](#docker-image-compiler-environment)
+- [Basics of This Image](#basics-of-this-image)
+	- [Help Menu](#help-menu)
+- [Use of This Image](#use-of-this-image)
+	- [Use Locally With Git Repo Link](#use-locally-with-git-repo-link)
+	- [Use Locally With Mounted Volume](#use-locally-with-mounted-volume)
+	- [Use Locally Hybrid](#use-locally-hybrid)
+	- [Use Online With Github Action](#use-online-with-github-action)
+	- [Use Locally Distributed to Team](#use-locally-distributed-to-team)
+		- [Depreciated Methos](#depreciated-methos)
+- [Build Image from Dockerfile](#build-image-from-dockerfile)
+	- [User Modifications](#user-modifications)
+	- [Auto Build Using VS Code Tasks](#auto-build-using-vs-code-tasks)
+	- [Manual Build Bash Command Example](#manual-build-bash-command-example)
+- [Manual Image Usage](#manual-image-usage)
+- [ST-Link](#st-link)
+	- [Flash Device in Manual Usage](#flash-device-in-manual-usage)
+	- [Prepare USB Passthrough to WSL Docker Container](#prepare-usb-passthrough-to-wsl-docker-container)
+	- [Run Docker Container in WSL and Flash STM32](#run-docker-container-in-wsl-and-flash-stm32)
+- [Github Action Variables](#github-action-variables)
+
+
+
+# Docker Container for STM32 CMake & Ninja Compiling
 
 -+- TL;DR -+-
 
@@ -34,7 +63,7 @@ docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:Ubuntu-lates
 
 > ![Run](Doc/img/run_time.gif)
 
-## 2.1. Dockerfile
+## Dockerfile
 
 Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
 
@@ -55,7 +84,7 @@ Public Registry:
 
 
 
-## 2.2. Docker Image Compiler Environment
+## Docker Image Compiler Environment
 
 - [ARM GNU x86_64-arm-none-eabi](https://packages.ubuntu.com/jammy/gcc-arm-none-eabi)
 - Ubuntu: [build-essential](https://packages.ubuntu.com/focal/build-essential)
@@ -68,7 +97,7 @@ Public Registry:
 
 
 
-# 3. Basics of This Image
+# Basics of This Image
 
 This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.
 
@@ -83,17 +112,17 @@ cmake --build /home/build -j 10
 
 
 
-## 3.1. Help Menu
+## Help Menu
 Example usage format can be viewed with `--help` command.
 ```bash
 docker run jasonyangee/stm32-builder:Ubuntu-latest --help
 ```
 
-# 4. Use of This Image
+# Use of This Image
 
 
 
-## 4.1. Use Locally With Git Repo Link
+## Use Locally With Git Repo Link
 
 This is intended for testing compile only. It is recommended to `Use Locally Hybrid` for getting binary files.
 
@@ -119,7 +148,7 @@ docker cp builder:/home/build/{TARGET_NAME}.hex {DEST_PATH}
 
 
 
-## 4.2. Use Locally With Mounted Volume
+## Use Locally With Mounted Volume
 
 `Local_Project_Full_Path` is the existing project folder path on your local host machine.
 
@@ -141,7 +170,7 @@ docker run -v "F:\Project\STM32-CMAKE-TEMPLATE":"/proj" jasonyangee/stm32-builde
 
 
 
-## 4.3. Use Locally Hybrid
+## Use Locally Hybrid
 
 Due to hybrid usage and simplicity of required arguments, the container compile folder must be defined as `/home` to work.
 
@@ -163,7 +192,7 @@ docker run -v "F:\test_compile":"/home" jasonyangee/stm32-builder:Ubuntu-latest 
 
 
 
-## 4.4. Use Online With Github Action
+## Use Online With Github Action
 
 In the application Github repo, create file `.github\workflows\build.yml` with the following script.
 
@@ -219,7 +248,7 @@ jobs:
 
 
 
-## 4.5. Use Locally Distributed to Team
+## Use Locally Distributed to Team
 
 In case of team usage, it is possible to distribute a fine tuned docker image to standardize an oranization wide compile environment.
 
@@ -244,7 +273,7 @@ In case of team usage, it is possible to distribute a fine tuned docker image to
 
 
 
-### 4.5.1. Depreciated Methos
+### Depreciated Methos
 >> 2. Start VS Code with your project folder on local computer.
 >> 
 >> 3. On an individual command windows (Don't run it in VS Code to avoid accidental exit), run docker container as next step.
@@ -274,12 +303,12 @@ In case of team usage, it is possible to distribute a fine tuned docker image to
 
 
 
-# 5. Build Image from Dockerfile
+# Build Image from Dockerfile
 
 If you choose to build your own image from Dockerfile.
 
 
-## 5.1. User Modifications
+## User Modifications
 
 **Check ARM releases at here: <https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/>**
 
@@ -292,7 +321,7 @@ If you choose to build your own image from Dockerfile.
 ```
 
 
-## 5.2. Auto Build Using VS Code Tasks
+## Auto Build Using VS Code Tasks
 
 - `Ctrl + Shift + p` and enter `run task` and choose the build options: `Build Ubuntu`.
 - Modify the build arguments in `.vscode/tasks.json` if you wish to have different image name.
@@ -302,7 +331,7 @@ stm32-builder:Ubuntu-latest",
 
 
 
-## 5.3. Manual Build Bash Command Example
+## Manual Build Bash Command Example
 
 ```bash
 docker build -t stm32-builder:Ubuntu-latest -f Dockerfile.ubuntu .
@@ -312,7 +341,7 @@ docker build -t stm32-builder:Ubuntu-latest -f Dockerfile.ubuntu .
 
 
 
-# 6. Manual Image Usage
+# Manual Image Usage
 
 - Docker using volume mount and override ENTRYPOINT to keep interactive mode live
 ```
@@ -333,11 +362,11 @@ cmake --build build
 
 
 
-# 7. ST-Link
+# ST-Link
 
 ST Link Programmer has not yet been automated. Using `st-link` requires manual image usage adding `--privileged` from previous section to keep interactive mode live, then you will have to find a way to passthrough USB port into container as described in next section.
 
-## 7.1. Flash Device in Manual Usage
+## Flash Device in Manual Usage
 
 Tool Details: https://github.com/stlink-org/stlink
 
@@ -357,7 +386,7 @@ st-flash write {TARGET.bin} 0x8000000
 st-flash reset
 ```
 
-## 7.2. Prepare USB Passthrough to WSL Docker Container
+## Prepare USB Passthrough to WSL Docker Container
 
 Using Windows machine is difficault to expose USB device to container.
 
@@ -408,7 +437,7 @@ usbipd wsl attach --busid 3-5
 
 
 
-## 7.3. Run Docker Container in WSL and Flash STM32
+## Run Docker Container in WSL and Flash STM32
 
 Finally, with all of the above understanding, we can combine all and excute the mixed docker run commands:
 
@@ -436,7 +465,7 @@ Note: `--privileged` is necessary to allow device port passthrough
 > ![run_wsl](Doc/img/run_wsl.gif)
 
 
-# 8. Github Action Variables
+# Github Action Variables
 
 For those who want to setup your own github action to auto publish variation of this dockerfile to your own docker registry. You may copy my action yml file setup and define the following github variables.
 
