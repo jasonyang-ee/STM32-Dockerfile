@@ -2,8 +2,15 @@ name: 'Upload'
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - "*"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
 
 jobs:
   Build_Upload:
@@ -65,6 +72,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        platforms: linux/amd64,linux/arm64, linux/riscv64, linux/arm/v7, linux/arm/v6
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         push: true
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
@@ -75,6 +83,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        platforms: linux/amd64,linux/arm64, linux/riscv64, linux/arm/v7, linux/arm/v6
         file: ${{ github.workspace }}/Dockerfile.alpine
         push: true
         tags: ${{ steps.meta-alpine.outputs.tags }}
@@ -85,6 +94,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        platforms: linux/amd64,linux/arm64, linux/riscv64, linux/arm/v7, linux/arm/v6
         file: ${{ github.workspace }}/Dockerfile.arch
         push: true
         tags: ${{ steps.meta-arch.outputs.tags }}
