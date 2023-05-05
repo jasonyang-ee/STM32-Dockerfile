@@ -3,7 +3,7 @@ FROM alpine:3.17.2
 ARG TARGETPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=12.2.rel1
-ARG ARM_ARCH
+ARG ARM_ARCH=x86_64
 
 # Prep basic packages to build STM32 CMake project
 RUN apk --no-cache add \
@@ -13,11 +13,10 @@ RUN apk --no-cache add \
 	stlink \
 	bash curl
 
-RUN if [ "$TARGETPLATFORM"="linux/arm64/v8" ]; then export ARM_ARCH=aarch64; \
-    elif [ "$TARGETPLATFORM"="linux/arm/v7" ]; then export ARM_ARCH=aarch64; \
-    elif [ "$TARGETPLATFORM"="linux/arm/v6" ]; then export ARM_ARCH=aarch64; \
-    elif [ "$TARGETPLATFORM"="linux/amd64" ]; then export ARM_ARCH=x86_64; \
-    else export ARM_ARCH=x86_64; \
+RUN if [ "$TARGETPLATFORM" = "linux/arm64/v8" ]; then export ARM_ARCH=aarch64; \
+    elif [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then export ARM_ARCH=aarch64; \
+    elif [ "$TARGETPLATFORM" = "linux/arm/v6" ]; then export ARM_ARCH=aarch64; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
     fi
 
 # Get ARM Toolchain
