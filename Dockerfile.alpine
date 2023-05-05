@@ -13,10 +13,10 @@ RUN apk --no-cache add \
 	stlink \
 	bash curl
 
-RUN if [ $TARGETPLATFORM="linux/arm64/v8" ]; then ARM_ARCH="aarch64"; \
-    elif [ $TARGETPLATFORM="linux/arm/v7" ]; then ARM_ARCH="aarch64"; \
-    elif [ $TARGETPLATFORM="linux/arm/v6" ]; then ARM_ARCH="aarch64"; \
-    elif [ $TARGETPLATFORM="linux/amd64" ]; then ARM_ARCH="x86_64"; \
+RUN if [ "$TARGETPLATFORM"="linux/arm64/v8" ]; then ARM_ARCH="aarch64"; \
+    elif [ "$TARGETPLATFORM"="linux/arm/v7" ]; then ARM_ARCH="aarch64"; \
+    elif [ "$TARGETPLATFORM"="linux/arm/v6" ]; then ARM_ARCH="aarch64"; \
+    elif [ "$TARGETPLATFORM"="linux/amd64" ]; then ARM_ARCH="x86_64"; \
     else ARM_ARCH="x86_64"; \
     fi
 

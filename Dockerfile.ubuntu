@@ -13,11 +13,13 @@ RUN apt-get update && apt-get install -y \
 	stlink-tools \
 	xz-utils curl
 
-RUN if [ $TARGETPLATFORM="linux/arm64/v8" ]; then ARM_ARCH="aarch64"; \
-    elif [ $TARGETPLATFORM="linux/arm/v7" ]; then ARM_ARCH="aarch64"; \
-    elif [ $TARGETPLATFORM="linux/amd64" ]; then ARM_ARCH="x86_64"; \
+RUN if [ "$TARGETPLATFORM"="linux/arm64/v8" ]; then ARM_ARCH="aarch64"; \
+    elif [ "$TARGETPLATFORM"="linux/arm/v7" ]; then ARM_ARCH="aarch64"; \
+    elif [ "$TARGETPLATFORM"="linux/amd64" ]; then ARM_ARCH="x86_64"; \
     else ARM_ARCH="x86_64"; \
     fi
+
+RUN echo "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz"
 
 # Get ARM Toolchain
 RUN mkdir ${TOOLS_PATH} \
