@@ -3,7 +3,6 @@ FROM ubuntu:22.04
 ARG TARGETPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=12.2.rel1
-ARG ARM_ARCH=x86_64
 
 # Prep basic packages to build STM32 CMake project
 RUN apt-get update && apt-get install -y \
@@ -13,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 	stlink-tools \
 	xz-utils curl
 
-RUN if [ "$TARGETPLATFORM" = "linux/arm64/v8" ]; then export ARM_ARCH=aarch64; \
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
     elif [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then export ARM_ARCH=aarch64; \
     elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
     fi
