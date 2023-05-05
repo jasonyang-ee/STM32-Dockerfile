@@ -2,8 +2,15 @@ name: 'Upload'
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - "*"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
 
 jobs:
   Build_Upload:
