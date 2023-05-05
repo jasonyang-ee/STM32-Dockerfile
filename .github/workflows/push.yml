@@ -15,12 +15,6 @@ jobs:
     steps:
     - name: Checkout project
       uses: actions/checkout@v3
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
       
     - name: Docker meta ubuntu
       id: meta-ubuntu
@@ -65,6 +59,12 @@ jobs:
         registry: ${{ vars.REGISTRY }}
         username: ${{ secrets.USER_GITHUB_PERSONAL }}
         password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
+
+    - name: Set QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set Buildx
+      uses: docker/setup-buildx-action@v2
 
     - name: Build and Upload for Ubuntu
       id: output-ubuntu
