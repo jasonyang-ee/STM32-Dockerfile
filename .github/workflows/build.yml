@@ -3,7 +3,14 @@ name: 'Test'
 on:
   push:
     branches:
-      - '*'
+      - "*"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
 
 env:
   TEST_REPO_URL: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
