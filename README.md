@@ -1,5 +1,5 @@
 [![Build](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/build.yml)
-[![Push](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
+[![Upload](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
 
 
 # Tags
@@ -18,10 +18,11 @@
 - `5.0`: Supports hybrid git repo URL + local mounted compile. This provides completed compile experience.
 - `5.1`: Add Archlinux image and unified tags under stm32-builder. *OLD IMAGES ARE REMOVED*
 - `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
-- `Latest`: `5.2`
+- `5.3`: Add multiplatform support.
+- `Latest`: `5.3`
 
 
-Recommandation: Use `5.1` for light weight and `5.2` when necessary.
+Recommandation: Use `5.1` for light weight and `5.3` when necessary.
 
 ### Table of Content
 
