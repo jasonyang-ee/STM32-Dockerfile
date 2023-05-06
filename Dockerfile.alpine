@@ -12,7 +12,6 @@ RUN apk --no-cache add \
 	stlink \
 	bash curl
 
-
 # Get ARM Toolchain
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
     elif [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then export ARM_ARCH=aarch64; \
@@ -25,6 +24,9 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
 	&& rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \
 	&& rm -rf ${TOOLS_PATH}/share/doc
+
+RUN echo "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz"
+RUN echo "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz" >> /home/link.txt
 
 # Get static analysis tools: clang-format clang-tidy, Lizard, cpplint
 RUN apk --no-cache add \
