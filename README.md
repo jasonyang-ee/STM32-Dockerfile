@@ -26,9 +26,11 @@ Recommandation: Use `5.1` for light weight and `5.3` when necessary.
 
 ### Table of Content
 
+
 - [Tags](#tags)
 		- [Table of Content](#table-of-content)
 - [Docker Container for STM32 CMake \& Ninja Compiling](#docker-container-for-stm32-cmake--ninja-compiling)
+	- [Example Project](#example-project)
 	- [Dockerfile](#dockerfile)
 	- [Docker Image Compiler Environment](#docker-image-compiler-environment)
 - [Basics of This Image](#basics-of-this-image)
@@ -52,7 +54,6 @@ Recommandation: Use `5.1` for light weight and `5.3` when necessary.
 - [Github Action Variables](#github-action-variables)
 
 
-
 # Docker Container for STM32 CMake & Ninja Compiling
 
 -+- TL;DR -+-
@@ -64,11 +65,17 @@ docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:Ubuntu-lates
 
 > ![Run](Doc/img/run_time.gif)
 
+
+## Example Project
+
+For CMake setup, refer to the below STM32 project template.
+
+https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+
+
 ## Dockerfile
 
 Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
-
-Example Project: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 Public Registry:
 > ghcr.io/jasonyang-ee/stm32-builder:Ubuntu-latest
