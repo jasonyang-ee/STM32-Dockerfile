@@ -60,12 +60,18 @@ jobs:
         username: ${{ secrets.USER_GITHUB_PERSONAL }}
         password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
 
+    - name: Set QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set Buildx
+      uses: docker/setup-buildx-action@v2
+
     - name: Build and Upload for Ubuntu
       id: output-ubuntu
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64, linux/riscv64, linux/arm/v7, linux/arm/v6
+        platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         push: true
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
@@ -76,7 +82,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64, linux/riscv64, linux/arm/v7, linux/arm/v6
+        platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
         file: ${{ github.workspace }}/Dockerfile.alpine
         push: true
         tags: ${{ steps.meta-alpine.outputs.tags }}
@@ -87,7 +93,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64, linux/riscv64, linux/arm/v7, linux/arm/v6
+        platforms: linux/amd64
         file: ${{ github.workspace }}/Dockerfile.arch
         push: true
         tags: ${{ steps.meta-arch.outputs.tags }}

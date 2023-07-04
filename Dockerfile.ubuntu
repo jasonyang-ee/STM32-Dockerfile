@@ -1,5 +1,6 @@
 FROM ubuntu:22.04
 
+ARG TARGETPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=12.2.rel1
 
@@ -9,11 +10,15 @@ RUN apt-get update && apt-get install -y \
 	cmake ninja-build \
 	git \
 	stlink-tools \
-	xz-utils curl	
+	xz-utils curl
 
 # Get ARM Toolchain
-RUN mkdir ${TOOLS_PATH} \
-	&& curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-x86_64-arm-none-eabi.tar.xz" \
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
+    elif [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then export ARM_ARCH=aarch64; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
+    fi \
+	&& mkdir ${TOOLS_PATH} \
+	&& curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz" \
 	&& tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C ${TOOLS_PATH} \
 	&& rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \

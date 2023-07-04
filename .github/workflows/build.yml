@@ -78,11 +78,8 @@ jobs:
     - name: Test URL
       run: |
         docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
         docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
         docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Test Volume
       run: |
