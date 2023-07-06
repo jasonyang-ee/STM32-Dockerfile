@@ -19,7 +19,8 @@
 - `5.1`: Add Archlinux image and unified tags under stm32-builder. *OLD IMAGES ARE REMOVED*
 - `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
 - `5.3`: Add multiplatform support.
-- `Latest`: `5.3`
+- `5.4`: Something Something bug fix? I don't know.. don't ask..
+- `Latest`: `5.4`
 
 
 Recommandation: Use `5.1` for light weight and `5.3` when necessary.
