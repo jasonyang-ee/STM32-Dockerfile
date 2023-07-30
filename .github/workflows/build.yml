@@ -58,7 +58,6 @@ jobs:
       with:
         context: .
         file: ${{ github.workspace }}/Dockerfile.ubuntu
-        push: true
         load: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:ubuntu-test
 
@@ -68,7 +67,6 @@ jobs:
       with:
         context: .
         file: ${{ github.workspace }}/Dockerfile.alpine
-        push: true
         load: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:alpine-test
 
@@ -78,7 +76,6 @@ jobs:
       with:
         context: .
         file: ${{ github.workspace }}/Dockerfile.arch
-        push: true
         load: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:arch-test
 
