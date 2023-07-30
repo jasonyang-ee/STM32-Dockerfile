@@ -1,5 +1,7 @@
 FROM archlinux:base-devel
 
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=12.2.rel1
 
