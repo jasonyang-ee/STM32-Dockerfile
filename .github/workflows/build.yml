@@ -119,10 +119,10 @@ jobs:
 
     - name: Test URL
       run: |
-        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }}${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-ubuntu-arm64.outputs.imageid }}${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-alpine-amd64.outputs.imageid }}${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-alpine-arm64.outputs.imageid }}${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-ubuntu-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-alpine-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
 
     - name: Test Volume
