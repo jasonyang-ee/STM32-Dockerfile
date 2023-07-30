@@ -57,6 +57,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        platforms: linux/amd64,linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         load: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:ubuntu-test
@@ -66,6 +67,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        platforms: linux/amd64,linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.alpine
         load: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:alpine-test
