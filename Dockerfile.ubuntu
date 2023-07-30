@@ -1,8 +1,11 @@
-FROM ubuntu:22.04
+FROM --platform=$BUILDPLATFORM ubuntu:22.04
 
 ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=12.2.rel1
+
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
 # Prep basic packages to build STM32 CMake project
 RUN apt-get update && apt-get install -y \
@@ -14,7 +17,6 @@ RUN apt-get update && apt-get install -y \
 
 # Get ARM Toolchain
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
-    elif [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then export ARM_ARCH=aarch64; \
     elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
     fi \
 	&& mkdir ${TOOLS_PATH} \
@@ -22,7 +24,8 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
 	&& tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C ${TOOLS_PATH} \
 	&& rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \
-	&& rm -rf ${TOOLS_PATH}/share/doc
+	&& rm -rf ${TOOLS_PATH}/share/doc \
+	&& echo "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz"
 
 # Get static analysis tools: clang-format clang-tidy, Lizard, cpplint
 RUN apt-get install -y \

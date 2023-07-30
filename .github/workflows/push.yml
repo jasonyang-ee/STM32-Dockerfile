@@ -24,7 +24,7 @@ jobs:
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
           ${{ vars.REGISTRY }}/stm32-builder
         tags: type=ref,event=tag
-        flavor: prefix=Ubuntu-,onlatest=true
+        flavor: prefix=ubuntu-,onlatest=true
 
     - name: Docker meta alpine
       id: meta-alpine
@@ -34,7 +34,7 @@ jobs:
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
           ${{ vars.REGISTRY }}/stm32-builder
         tags: type=ref,event=tag
-        flavor: prefix=Alpine-,onlatest=true
+        flavor: prefix=alpine-,onlatest=true
 
     - name: Docker meta arch
       id: meta-arch
@@ -44,7 +44,7 @@ jobs:
           ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
           ${{ vars.REGISTRY }}/stm32-builder
         tags: type=ref,event=tag
-        flavor: prefix=Arch-,onlatest=true
+        flavor: prefix=arch-,onlatest=true
 
 
     - name: Login to Docker Hub
@@ -71,7 +71,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+        platforms: linux/amd64,linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         push: true
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
@@ -82,7 +82,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
+        platforms: linux/amd64,linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.alpine
         push: true
         tags: ${{ steps.meta-alpine.outputs.tags }}
