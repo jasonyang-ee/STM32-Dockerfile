@@ -20,10 +20,11 @@
 - `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
 - `5.3`: Add multiplatform support.
 - `5.4`: Something Something bug fix? I don't know.. don't ask..
-- `Latest`: `5.4`
+- `5.5`: Name change to stm32-builder:ubuntu-latest, stm32-builder:alpine-latest, stm32-builder:arch-latest. Bug fix.
+- `Latest`: `5.5`
 
 
-Recommandation: Use `5.1` for light weight and `5.3` when necessary.
+Recommandation: Use `5.1` for light weight and `5.5` when running on ARM64 platform.
 
 ### Table of Content
 
