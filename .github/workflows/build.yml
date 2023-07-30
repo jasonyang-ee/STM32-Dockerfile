@@ -60,7 +60,7 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         load: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:ubuntu-test
+        tags: test
 
     - name: Build and Load for Alpine
       id: output-alpine
@@ -70,7 +70,7 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.alpine
         load: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:alpine-test
+        tags: test
 
     - name: Build and Load for Arch
       id: output-arch
@@ -79,7 +79,7 @@ jobs:
         context: .
         file: ${{ github.workspace }}/Dockerfile.arch
         load: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:arch-test
+        tags: test
 
     - name: Test Default
       run: |
