@@ -53,21 +53,41 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Build and Load for Ubuntu
-      id: output-ubuntu
+      id: output-ubuntu-amd64
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64/v8
+        platforms: linux/amd64
+        file: ${{ github.workspace }}/Dockerfile.ubuntu
+        load: true
+        tags: test
+
+    - name: Build and Load for Ubuntu
+      id: output-ubuntu-arm64
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/amd64
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         load: true
         tags: test
 
     - name: Build and Load for Alpine
-      id: output-alpine
+      id: output-alpine-amd64
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64/v8
+        platforms: linux/amd64
+        file: ${{ github.workspace }}/Dockerfile.alpine
+        load: true
+        tags: test
+
+    - name: Build and Load for Alpine
+      id: output-alpine-arm64
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.alpine
         load: true
         tags: test
@@ -83,32 +103,44 @@ jobs:
 
     - name: Test Default
       run: |
-        docker run ${{ steps.output-ubuntu.outputs.imageid }}
-        docker run ${{ steps.output-alpine.outputs.imageid }}
+        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }}
+        docker run ${{ steps.output-ubuntu-arm64.outputs.imageid }}
+        docker run ${{ steps.output-alpine-amd64.outputs.imageid }}
+        docker run ${{ steps.output-alpine-arm64.outputs.imageid }}
         docker run ${{ steps.output-arch.outputs.imageid }}
 
     - name: Test --help
       run: |
-        docker run ${{ steps.output-ubuntu.outputs.imageid }} --help
-        docker run ${{ steps.output-alpine.outputs.imageid }} --help
+        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }} --help
+        docker run ${{ steps.output-ubuntu-arm64.outputs.imageid }} --help
+        docker run ${{ steps.output-alpine-amd64.outputs.imageid }} --help
+        docker run ${{ steps.output-alpine-arm64.outputs.imageid }} --help
         docker run ${{ steps.output-arch.outputs.imageid }} --help
 
     - name: Test URL
       run: |
-        docker run ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }}${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-ubuntu-arm64.outputs.imageid }}${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-alpine-amd64.outputs.imageid }}${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-alpine-arm64.outputs.imageid }}${{ env.TEST_REPO_URL }}
         docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
 
     - name: Test Volume
       run: |
-        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu.outputs.imageid }} /proj
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu-amd64.outputs.imageid }} /proj
         sudo rm -r ${{ github.workspace }}/project/build
-        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine.outputs.imageid }} /proj Debug
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu-arm64.outputs.imageid }} /proj
+        sudo rm -r ${{ github.workspace }}/project/build
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine-amd64.outputs.imageid }} /proj Debug
+        sudo rm -r ${{ github.workspace }}/project/build
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine-arm64.outputs.imageid }} /proj Debug
         sudo rm -r ${{ github.workspace }}/project/build
         docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj Debug
       
     - name: Test Ubuntu Hybrid
       run: |
-        docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
         docker run -v "${{ github.workspace }}/hybrid3":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
