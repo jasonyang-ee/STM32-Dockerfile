@@ -6,11 +6,15 @@
 			"label": "Build Ubuntu",
 			"command": "docker",
 			"args": [
+				"buildx",
 				"build",
+				"--platform",
+				"linux/amd64,linux/arm64,linux/amd64",
 				"-t",
-				"stm32-builder:Ubuntu-latest",
+				"stm32-builder:Ubuntu-test",
 				"-f",
 				"Dockerfile.ubuntu",
+				"--load",
 				"."
 			],
 			"options": {
@@ -23,11 +27,15 @@
 			"label": "Build Alpine",
 			"command": "docker",
 			"args": [
+				"buildx",
 				"build",
+				"--platform",
+				"linux/amd64,linux/arm64,linux/amd64",
 				"-t",
-				"stm32-builder:Alpine-latest",
+				"stm32-builder:Alpine-test",
 				"-f",
 				"Dockerfile.alpine",
+				"--load",
 				"."
 			],
 			"options": {
@@ -40,11 +48,15 @@
 			"label": "Build Arch",
 			"command": "docker",
 			"args": [
+				"buildx",
 				"build",
+				"--platform",
+				"linux/amd64,linux/arm64,linux/amd64",
 				"-t",
-				"stm32-builder:Arch-latest",
+				"stm32-builder:arch-test",
 				"-f",
 				"Dockerfile.arch",
+				"--load",
 				"."
 			],
 			"options": {
