@@ -11,7 +11,7 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 RUN apk --no-cache add \
 	gcompat libc6-compat libstdc++ g++ gcc \
 	make cmake ninja \
-	git \
+	git gnupg \
 	stlink \
 	bash curl
 
