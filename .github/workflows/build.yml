@@ -75,7 +75,27 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        platforms: linux/arm64/v8
+        file: ${{ github.workspace }}/Dockerfile.ubuntu
+        load: true
+        tags: test
+
+    - name: Build and Load for Debian
+      id: output-debian-amd64
+      uses: docker/build-push-action@v4
+      with:
+        context: .
         platforms: linux/amd64
+        file: ${{ github.workspace }}/Dockerfile.ubuntu
+        load: true
+        tags: test
+
+    - name: Build and Load for Debian
+      id: output-debian-arm64
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/arm64/v8
         file: ${{ github.workspace }}/Dockerfile.ubuntu
         load: true
         tags: test
@@ -112,24 +132,29 @@ jobs:
     - name: Test Default
       run: |
         docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }}
+        docker run ${{ steps.output-debian-amd64.outputs.imageid }}
         docker run ${{ steps.output-alpine-amd64.outputs.imageid }}
         docker run ${{ steps.output-arch.outputs.imageid }}
 
     - name: Test --help
       run: |
         docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }} --help
+        docker run ${{ steps.output-debian-amd64.outputs.imageid }} --help
         docker run ${{ steps.output-alpine-amd64.outputs.imageid }} --help
         docker run ${{ steps.output-arch.outputs.imageid }} --help
 
     - name: Test URL
       run: |
         docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run ${{ steps.output-debian-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
 
     - name: Test Volume
       run: |
         docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu-amd64.outputs.imageid }} /proj
+        sudo rm -r ${{ github.workspace }}/project/build
+        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-debian-amd64.outputs.imageid }} /proj
         sudo rm -r ${{ github.workspace }}/project/build
         docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine-amd64.outputs.imageid }} /proj Debug
         sudo rm -r ${{ github.workspace }}/project/build
@@ -138,5 +163,6 @@ jobs:
     - name: Test Ubuntu Hybrid
       run: |
         docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-debian-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
         docker run -v "${{ github.workspace }}/hybrid3":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
