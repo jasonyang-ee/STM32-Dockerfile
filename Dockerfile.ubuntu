@@ -11,7 +11,7 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 RUN apt-get update && apt-get install -y \
 	build-essential \
 	cmake ninja-build \
-	git \
+	git gnupg2 \
 	stlink-tools \
 	xz-utils curl
 
