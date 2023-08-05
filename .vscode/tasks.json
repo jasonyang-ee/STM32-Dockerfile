@@ -11,9 +11,30 @@
 				"--platform",
 				"linux/amd64,linux/arm64,linux/amd64",
 				"-t",
-				"stm32-builder:Ubuntu-test",
+				"stm32-builder:ubuntu-test",
 				"-f",
 				"Dockerfile.ubuntu",
+				"--load",
+				"."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Debian",
+			"command": "docker",
+			"args": [
+				"buildx",
+				"build",
+				"--platform",
+				"linux/amd64,linux/arm64,linux/amd64",
+				"-t",
+				"stm32-builder:debian-test",
+				"-f",
+				"Dockerfile.debian",
 				"--load",
 				"."
 			],
@@ -32,7 +53,7 @@
 				"--platform",
 				"linux/amd64,linux/arm64,linux/amd64",
 				"-t",
-				"stm32-builder:Alpine-test",
+				"stm32-builder:alpine-test",
 				"-f",
 				"Dockerfile.alpine",
 				"--load",

@@ -13,7 +13,7 @@ RUN yes | pacman -Syu
 RUN yes | pacman -Sy \
 	base-devel \
 	make cmake ninja \
-	git \
+	git gnupg \
 	stlink
 
 # Get ARM Toolchain

@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM ubuntu:22.04
+FROM --platform=$BUILDPLATFORM debian:bookworm-slim
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -29,10 +29,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
 
 # Get static analysis tools: clang-format clang-tidy, Lizard, cpplint
 RUN apt-get install -y \
-	clang-format clang-tidy \
-	python3 python3-pip \
-	&& pip install lizard cpplint \
-	&& apt-get clean
+	clang-format clang-tidy
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"

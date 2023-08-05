@@ -17,8 +17,94 @@ env:
   TEST_REPO: jasonyang-ee/STM32-CMAKE-TEMPLATE
 
 jobs:
-  Build_Test:
-    runs-on: ubuntu-latest
+  Build_Test_AMD64_Ubuntu_Debian_Alpine:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        files: [ubuntu, debian, alpine]
+
+    steps:
+    - name: free disk space from docker
+      run: |
+        docker rmi $(docker image ls -aq)
+        df -h
+
+    - name: Checkout project
+      uses: actions/checkout@v3
+
+    - name: Checkout example repo
+      uses: actions/checkout@v3
+      with:
+        repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
+        path: project-${{ matrix.files }}-amd64
+
+    - name: Set QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and Load Ubuntu Debian Alpine
+      id: build3x
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/amd64
+        file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
+        load: true
+        tags: stm32-builder/${{ matrix.files }}-test
+
+    - name: Test AMD64
+      run: |
+        docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-amd64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-amd64
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+
+    - name: Cleanup Folders
+      run: |
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
+
+  Build_Test_ARM64_Ubuntu_Debian_Alpine:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        files: [ubuntu, debian, alpine]
+
+    steps:
+    - name: free disk space from docker
+      run: |
+        docker rmi $(docker image ls -aq)
+        df -h
+
+    - name: Checkout project
+      uses: actions/checkout@v3
+
+    - name: Set QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Ubuntu Debian Alpine
+      id: build3x
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/arm64
+        file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
+        tags: stm32-builder/${{ matrix.files }}-test
+
+  Build_Test_Arch:
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: write
@@ -31,28 +117,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
-        path: project
-    
-    - name: Delete dangling image package
-      uses: actions/delete-package-versions@v4
-      with: 
-        package-name: 'stm32-builder'
-        package-type: 'container'
-        min-versions-to-keep: 0
-        delete-only-untagged-versions: 'true'
-
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Log in to Github Container Registry
-      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-      with:
-        registry: ${{ vars.REGISTRY }}
-        username: ${{ secrets.USER_GITHUB_PERSONAL }}
-        password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
+        path: project-arch
 
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
@@ -60,83 +125,36 @@ jobs:
     - name: Set Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Build and Load for Ubuntu
-      id: output-ubuntu-amd64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/amd64
-        file: ${{ github.workspace }}/Dockerfile.ubuntu
-        load: true
-        tags: test
-
-    - name: Build and Load for Ubuntu
-      id: output-ubuntu-arm64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/amd64
-        file: ${{ github.workspace }}/Dockerfile.ubuntu
-        load: true
-        tags: test
-
-    - name: Build and Load for Alpine
-      id: output-alpine-amd64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/amd64
-        file: ${{ github.workspace }}/Dockerfile.alpine
-        load: true
-        tags: test
-
-    - name: Build and Load for Alpine
-      id: output-alpine-arm64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/arm64/v8
-        file: ${{ github.workspace }}/Dockerfile.alpine
-        load: true
-        tags: test
-
-    - name: Build and Load for Arch
-      id: output-arch
+    - name: Build and Load Arch
+      id: build-arch
       uses: docker/build-push-action@v4
       with:
         context: .
         file: ${{ github.workspace }}/Dockerfile.arch
         load: true
-        tags: test
+        tags: stm32-builder/arch-test
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
-    - name: Test Default
+    - name: Test Arch
       run: |
-        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }}
-        docker run ${{ steps.output-alpine-amd64.outputs.imageid }}
-        docker run ${{ steps.output-arch.outputs.imageid }}
+        docker run --rm ${{ steps.build-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.build-arch.outputs.imageid }} /proj
+        docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.build-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
-    - name: Test --help
+    - name: Cleanup Folders
       run: |
-        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }} --help
-        docker run ${{ steps.output-alpine-amd64.outputs.imageid }} --help
-        docker run ${{ steps.output-arch.outputs.imageid }} --help
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
 
-    - name: Test URL
-      run: |
-        docker run ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-
-    - name: Test Volume
-      run: |
-        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu-amd64.outputs.imageid }} /proj
-        sudo rm -r ${{ github.workspace }}/project/build
-        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine-amd64.outputs.imageid }} /proj Debug
-        sudo rm -r ${{ github.workspace }}/project/build
-        docker run -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj Debug
-      
-    - name: Test Ubuntu Hybrid
-      run: |
-        docker run -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
-        docker run -v "${{ github.workspace }}/hybrid3":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+  Result:
+    runs-on: ubuntu-22.04
+    needs: [Build_Test_Arch, Build_Test_AMD64_Ubuntu_Debian_Alpine, Build_Test_ARM64_Ubuntu_Debian_Alpine]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
