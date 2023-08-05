@@ -13,6 +13,14 @@ jobs:
       packages: write
 
     steps:
+    - name: Delete dangling image package
+      uses: actions/delete-package-versions@v4
+      with: 
+        package-name: 'stm32-builder'
+        package-type: 'container'
+        min-versions-to-keep: 0
+        delete-only-untagged-versions: 'true'
+
     - name: Checkout project
       uses: actions/checkout@v3
       

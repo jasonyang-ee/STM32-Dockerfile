@@ -42,14 +42,6 @@ jobs:
       with:
         repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
         path: project
-    
-    - name: Delete dangling image package
-      uses: actions/delete-package-versions@v4
-      with: 
-        package-name: 'stm32-builder'
-        package-type: 'container'
-        min-versions-to-keep: 0
-        delete-only-untagged-versions: 'true'
 
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
@@ -71,9 +63,9 @@ jobs:
 
     - name: Test All
       run: |
-        docker run --rm stm32-builder/${{ matrix.files }}-test ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" stm32-builder/${{ matrix.files }}-test /proj-${{ matrix.files }}-${{ matrix.aarch }}
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" stm32-builder/${{ matrix.files }}-test ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm stm32-builder@${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" stm32-builder@${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" stm32-builder@${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
