@@ -116,7 +116,7 @@ jobs:
         context: .
         platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
-        push: true
+        load: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -124,13 +124,14 @@ jobs:
     - name: Test ARM64
       uses: pguyot/arm-runner-action@v2
       with:
-        base_image: raspios_lite_arm64:2022-04-04
+        base_image: raspi_4_bullseye:20230102
         commands: |
-          sudo apt-get update
-          sudo apt-get install docker.io -y
           docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
           docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
           docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+
+# sudo apt-get update
+# sudo apt-get install docker.io -y
 
     - name: Cleanup Folders
       run: |
