@@ -103,13 +103,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Log in to Github Container Registry
-      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-      with:
-        registry: ${{ vars.REGISTRY }}
-        username: ${{ secrets.USER_GITHUB_PERSONAL }}
-        password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
-
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
 
@@ -124,8 +117,7 @@ jobs:
         platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         push: true
-        tags: stm32-builder/${{ matrix.files }}-test
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder/${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
