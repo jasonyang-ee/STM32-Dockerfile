@@ -24,13 +24,10 @@ jobs:
       packages: write
 
     steps:
-    # - name: free disk space
-    #   run: |
-    #     sudo swapoff -a
-    #     sudo swapoff /swapfile
-    #     sudo rm -rf /swapfile /usr/share/dotnet /usr/local/lib/android /opt/ghc
-    #     docker rmi $(docker image ls -aq)
-    #     df -h
+    - name: free disk space from docker
+      run: |
+        docker rmi $(docker image ls -aq)
+        df -h
 
     - name: Checkout project
       uses: actions/checkout@v3
