@@ -20,7 +20,7 @@
 - `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
 - `5.3`: Add multiplatform support.
 - `5.4`: Something Something bug fix? I don't know.. don't ask..
-- `5.5`: Name change to stm32-builder:ubuntu-latest, stm32-builder:alpine-latest, stm32-builder:arch-latest. Bug fix.
+- `5.5`: Name change to stm32-builder: ubuntu-latest :alpine-latest :arch-latest. Some Bug fix.
 - `Latest`: `5.5`
 
 
@@ -81,7 +81,7 @@ Dockerfile: https://github.com/jasonyang-ee/STM32-Dockerfile.git
 
 Public Registry:
 > ghcr.io/jasonyang-ee/stm32-builder:ubuntu-latest
-> 
+
 > ghcr.io/jasonyang-ee/stm32-builder:debian-latest
 
 > ghcr.io/jasonyang-ee/stm32-builder:alpine-latest
