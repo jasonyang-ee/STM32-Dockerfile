@@ -57,84 +57,12 @@ jobs:
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
         tags: stm32-builder/${{ matrix.files }}-test
-        labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
     - name: Test AMD64
       run: |
         docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-amd64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-amd64
         docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
-
-    - name: Cleanup Folders
-      run: |
-        sudo rm -r ${{ github.workspace }}/project-*
-        sudo rm -r ${{ github.workspace }}/hybrid-*
-
-  Build_Test_ARM64_Ubuntu_Debian_Alpine:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-      packages: write
-
-    strategy:
-      matrix:
-        files: [ubuntu, debian, alpine]
-
-    steps:
-    - name: free disk space from docker
-      run: |
-        docker rmi $(docker image ls -aq)
-        df -h
-
-    - name: Checkout project
-      uses: actions/checkout@v3
-
-    - name: Checkout example repo
-      uses: actions/checkout@v3
-      with:
-        repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
-        path: project-${{ matrix.files }}-arm64
-
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Set QEMU
-      uses: docker/setup-qemu-action@v2
-
-    - name: Set Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build and Load Ubuntu Debian Alpine
-      id: build3x
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/arm64
-        file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
-        load: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:${{ matrix.files }}-test
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
-
-    - name: Test ARM64
-      uses: pguyot/arm-runner-action@v2
-      with:
-        base_image: raspios_lite_arm64:2022-04-04
-        image_additional_mb: 1024
-        commands: |
-          sudo apt-get update -y
-          sudo apt-get install --no-install-recommends -y curl
-          sudo curl -sSL https://get.docker.com | sh
-          sudo systemctl start docker
-          sudo docker run hello-world
-          sudo docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-          sudo docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
-          sudo docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
@@ -148,11 +76,6 @@ jobs:
       packages: write
 
     steps:
-    - name: free disk space from docker
-      run: |
-        docker rmi $(docker image ls -aq)
-        df -h
-
     - name: Checkout project
       uses: actions/checkout@v3
 
