@@ -115,19 +115,18 @@ jobs:
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
     - name: Test ARM64
-      uses: uraimo/run-on-arch-action@v2
+      uses: pguyot/arm-runner-action@v2
       with:
-        arch: aarch64
-        distro: ubuntu20.04
-        run: |
+        base_image: raspios_lite_arm64:2022-04-04
+        commands: |
           docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
           docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
           docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
-        rm -rf ${{ github.workspace }}/project-*
-        rm -rf ${{ github.workspace }}/hybrid-*
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
 
   Build_Test_Arch:
     runs-on: ubuntu-22.04
@@ -175,5 +174,5 @@ jobs:
 
     - name: Cleanup Folders
       run: |
-        rm -rf ${{ github.workspace }}/project-*
-        rm -rf ${{ github.workspace }}/hybrid-*
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
