@@ -63,9 +63,9 @@ jobs:
 
     - name: Test All
       run: |
-        docker run --rm stm32-builder@${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" stm32-builder@${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" stm32-builder@${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
@@ -100,7 +100,7 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Build and Load Arch
-      id: output-arch
+      id: build-arch
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -112,9 +112,9 @@ jobs:
 
     - name: Test Arch
       run: |
-        docker run --rm stm32-builder/arch-test ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" stm32-builder/arch-test /proj
-        docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" stm32-builder/arch-test ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm ${{ steps.build-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.build-arch.outputs.imageid }} /proj
+        docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.build-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
