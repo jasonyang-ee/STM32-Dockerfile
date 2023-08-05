@@ -19,14 +19,14 @@ env:
 jobs:
   Build_Test:
     runs-on: ubuntu-latest
-    # strategy:
-    #   fail-fast: true
-    #   matrix:
-    #     aarch: [amd64, arm64]
-    #     files: [ubuntu, debian, alpine]
     permissions:
       contents: read
       packages: write
+
+    strategy:
+      matrix:
+        aarch: [amd64, arm64]
+        files: [ubuntu, debian, alpine]
 
     steps:
     - name: free disk space from docker
@@ -80,57 +80,17 @@ jobs:
         load: true
         tags: test
 
-    - name: Build and Load for Ubuntu
-      id: output-ubuntu-arm64
+    - name: Build and Load Ubuntu Debian Alpine
+      id: output-${{ matrix.files }}-${{ matrix.aarch }
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/arm64/v8
-        file: ${{ github.workspace }}/Dockerfile.ubuntu
+        platforms: linux/${{ matrix.aarch }
+        file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
         tags: test
 
-    - name: Build and Load for Debian
-      id: output-debian-amd64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/amd64
-        file: ${{ github.workspace }}/Dockerfile.debian
-        load: true
-        tags: test
-
-    - name: Build and Load for Debian
-      id: output-debian-arm64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/arm64/v8
-        file: ${{ github.workspace }}/Dockerfile.debian
-        load: true
-        tags: test
-
-    - name: Build and Load for Alpine
-      id: output-alpine-amd64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/amd64
-        file: ${{ github.workspace }}/Dockerfile.alpine
-        load: true
-        tags: test
-
-    - name: Build and Load for Alpine
-      id: output-alpine-arm64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/arm64/v8
-        file: ${{ github.workspace }}/Dockerfile.alpine
-        load: true
-        tags: test
-
-    - name: Build and Load for Arch
+    - name: Build and Load Arch
       id: output-arch
       uses: docker/build-push-action@v4
       with:
@@ -139,76 +99,21 @@ jobs:
         load: true
         tags: test
 
-    - name: Test Default amd64
+    - name: Test All
       run: |
-        docker run -rm ${{ steps.output-ubuntu-amd64.outputs.imageid }}
-        docker run -rm ${{ steps.output-debian-amd64.outputs.imageid }}
-        docker run -rm ${{ steps.output-alpine-amd64.outputs.imageid }}
-        docker run -rm ${{ steps.output-arch.outputs.imageid }}
-
-    - name: Test --help amd64
-      run: |
-        docker run -rm ${{ steps.output-ubuntu-amd64.outputs.imageid }} --help
-        docker run -rm ${{ steps.output-debian-amd64.outputs.imageid }} --help
-        docker run -rm ${{ steps.output-alpine-amd64.outputs.imageid }} --help
-        docker run -rm ${{ steps.output-arch.outputs.imageid }} --help
-
-    - name: Test URL amd64
-      run: |
-        docker run -rm ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run -rm ${{ steps.output-debian-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run -rm ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run -rm ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run -rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }":"/proj" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }
+        docker run -rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }":"/home" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run -rm ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run -rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj Debug
+        docker run -rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
-    - name: Test Volume amd64
+    - name: Cleanup Folders
       run: |
-        docker run -rm -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu-amd64.outputs.imageid }} /proj
-        sudo rm -r ${{ github.workspace }}/project/build
-        docker run -rm -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-debian-amd64.outputs.imageid }} /proj
-        sudo rm -r ${{ github.workspace }}/project/build
-        docker run -rm -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine-amd64.outputs.imageid }} /proj Debug
-        sudo rm -r ${{ github.workspace }}/project/build
-        docker run -rm -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj Debug
-      
-    - name: Test Hybrid amd64
-      run: |
-        docker run -rm -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run -rm -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-debian-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run -rm -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine-amd64.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
-        docker run -rm -v "${{ github.workspace }}/hybrid3":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
-
-    - name: Test Default arm64
-      run: |
-        docker run -rm --platform linux/arm64/v8 ${{ steps.output-ubuntu-arm64.outputs.imageid }}
-        docker run -rm --platform linux/arm64/v8 ${{ steps.output-debian-arm64.outputs.imageid }}
-        docker run -rm --platform linux/arm64/v8 ${{ steps.output-alpine-arm64.outputs.imageid }}
-        docker run -rm --platform linux/arm64/v8 ${{ steps.output-arch.outputs.imageid }}
-
-    - name: Test --help arm64
-      run: |
-        docker run -rm --platform linux/arm64/v8 ${{ steps.output-ubuntu-arm64.outputs.imageid }} --help
-        docker run -rm --platform linux/arm64/v8 ${{ steps.output-debian-arm64.outputs.imageid }} --help
-        docker run -rm --platform linux/arm64/v8 ${{ steps.output-alpine-arm64.outputs.imageid }} --help
-
-    - name: Test URL arm64
-      run: |
-        docker run --platform linux/arm64/v8 ${{ steps.output-ubuntu-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --platform linux/arm64/v8 ${{ steps.output-debian-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --platform linux/arm64/v8 ${{ steps.output-alpine-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-
-    - name: Test Volume arm64
-      run: |
-        docker run --platform linux/arm64/v8 -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-ubuntu-arm64.outputs.imageid }} /proj
-        sudo rm -r ${{ github.workspace }}/project/build
-        docker run --platform linux/arm64/v8 -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-debian-arm64.outputs.imageid }} /proj
-        sudo rm -r ${{ github.workspace }}/project/build
-        docker run --platform linux/arm64/v8 -v "${{ github.workspace }}/project":"/proj" ${{ steps.output-alpine-arm64.outputs.imageid }} /proj Debug
-
-    - name: Test Hybrid arm64
-      run: |
-        docker run --platform linux/arm64/v8 -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-ubuntu-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --platform linux/arm64/v8 -v "${{ github.workspace }}/hybrid1":"/home" ${{ steps.output-debian-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --platform linux/arm64/v8 -v "${{ github.workspace }}/hybrid2":"/home" ${{ steps.output-alpine-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        rm -rf ${{ github.workspace }}/project-*
+        rm -rf ${{ github.workspace }}/hybrid-*
+        rm -rf ${{ github.workspace }}/project
+        rm -rf ${{ github.workspace }}/hybrid
 
     - name: Delete dangling image package
       uses: actions/delete-package-versions@v4
