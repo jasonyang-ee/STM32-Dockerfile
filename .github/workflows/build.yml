@@ -126,7 +126,8 @@ jobs:
       with:
         base_image: raspios_lite_arm64:2022-04-04
         commands: |
-          sudo apt install docker.io -y
+          sudo apt-get update
+          sudo apt-get install docker.io -y
           docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
           docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
           docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
