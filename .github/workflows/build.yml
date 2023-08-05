@@ -70,25 +70,15 @@ jobs:
     - name: Set Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Build and Load
-      id: output-ubuntu-amd64
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/amd64
-        file: ${{ github.workspace }}/Dockerfile.ubuntu
-        load: true
-        tags: test
-
     - name: Build and Load Ubuntu Debian Alpine
-      id: output-${{ matrix.files }}-${{ matrix.aarch }}
+      id: build3x
       uses: docker/build-push-action@v4
       with:
         context: .
         platforms: linux/${{ matrix.aarch }}
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
-        tags: test
+        tages: test
 
     - name: Build and Load Arch
       id: output-arch
@@ -101,9 +91,9 @@ jobs:
 
     - name: Test All
       run: |
-        docker run --rm ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }}.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm ${{ steps.output-build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.output-build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.output-build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
         docker run --rm ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj
         docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
