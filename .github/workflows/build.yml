@@ -81,11 +81,11 @@ jobs:
         tags: test
 
     - name: Build and Load Ubuntu Debian Alpine
-      id: output-${{ matrix.files }}-${{ matrix.aarch }
+      id: output-${{ matrix.files }}-${{ matrix.aarch }}
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/${{ matrix.aarch }
+        platforms: linux/${{ matrix.aarch }}
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
         tags: test
