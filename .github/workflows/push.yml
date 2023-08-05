@@ -57,7 +57,7 @@ jobs:
     - name: Set Buildx
       uses: docker/setup-buildx-action@v2
 
-    - if: ${{ matrix.files }} != 'arch'
+    - if: ${{ matrix.files != 'arch'}}
       name: Build and Upload
       uses: docker/build-push-action@v4
       with:
@@ -68,7 +68,7 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
       
-    - if: ${{ matrix.files }} == 'arch'
+    - if: ${{ matrix.files == 'arch'}}
       name: Build and Upload
       uses: docker/build-push-action@v4
       with:
