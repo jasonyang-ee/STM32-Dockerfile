@@ -18,14 +18,13 @@ env:
 
 jobs:
   Build_Test_AMD64_Ubuntu_Debian_Alpine:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: write
 
     strategy:
       matrix:
-        aarch: [amd64]
         files: [ubuntu, debian, alpine]
 
     steps:
@@ -54,18 +53,18 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/${{ matrix.aarch }}
+        platforms: linux/amd64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
         tages: stm32-builder/${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
-    - name: Test All
+    - name: Test AMD64
       run: |
         docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-amd64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-amd64
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
@@ -73,23 +72,16 @@ jobs:
         rm -rf ${{ github.workspace }}/hybrid-*
 
   Build_Test_ARM64_Ubuntu_Debian_Alpine:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: write
 
     strategy:
       matrix:
-        aarch: [arm64]
         files: [ubuntu, debian, alpine]
 
     steps:
-    - name: Build in arm64 container
-      uses: uraimo/run-on-arch-action@v2.1.1
-      with:
-        arch: aarch64
-        distro: ubuntu20.04
-
     - name: free disk space from docker
       run: |
         docker rmi $(docker image ls -aq)
@@ -111,22 +103,26 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Build and Load Ubuntu Debian Alpine
-      id: build3x
+      id: build3x-arm64
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/${{ matrix.aarch }}
+        platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
         tages: stm32-builder/${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
-    - name: Test All
+    - name: Test ARM64
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: aarch64
+        distro: ubuntu20.04
       run: |
-        docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm ${{ steps.build3x-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x-arm64.outputs.imageid }} /proj-${{ matrix.files }}-arm64
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x-arm64.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
@@ -134,7 +130,7 @@ jobs:
         rm -rf ${{ github.workspace }}/hybrid-*
 
   Build_Test_Arch:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: write
