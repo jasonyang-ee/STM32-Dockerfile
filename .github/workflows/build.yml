@@ -124,7 +124,7 @@ jobs:
     - name: Test ARM64
       uses: pguyot/arm-runner-action@v2
       with:
-        base_image: raspi_4_bullseye:20230102
+        base_image: raspios_lite_arm64:2022-04-04
         image_additional_mb: 1024
         commands: |
           # sudo apt-get update -y --allow-releaseinfo-change
