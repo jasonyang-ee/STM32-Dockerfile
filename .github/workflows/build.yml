@@ -65,15 +65,15 @@ jobs:
         platforms: linux/${{ matrix.aarch }}
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
-        tages: test
+        tages: stm32-builder/${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
     - name: Test All
       run: |
-        docker run --rm test@${{ steps.output-build3x.outputs.digest }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" test@${{ steps.output-build3x.outputs.digest }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" test@${{ steps.output-build3x.outputs.digest }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm stm32-builder/${{ matrix.files }}-test ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" stm32-builder/${{ matrix.files }}-test /proj-${{ matrix.files }}-${{ matrix.aarch }}
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" stm32-builder/${{ matrix.files }}-test ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
@@ -114,15 +114,15 @@ jobs:
         context: .
         file: ${{ github.workspace }}/Dockerfile.arch
         load: true
-        tags: test
+        tags: stm32-builder/arch-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
     - name: Test Arch
       run: |
-        docker run --rm ${{ steps.output-arch.outputs.digest }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.output-arch.outputs.digest }} /proj
-        docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.output-arch.outputs.digest }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm stm32-builder/arch-test ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" stm32-builder/arch-test /proj
+        docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" stm32-builder/arch-test ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
