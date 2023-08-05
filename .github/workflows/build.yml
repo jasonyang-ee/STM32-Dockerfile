@@ -87,7 +87,7 @@ jobs:
         platforms: linux/amd64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         push: true
-        tages: ${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -155,7 +155,7 @@ jobs:
         platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         push: true
-        tages: ${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
