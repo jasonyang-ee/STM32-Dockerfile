@@ -92,7 +92,7 @@ jobs:
     - name: Test All
       run: |
         docker run --rm ${{ steps.output-build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.output-build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.output-build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
         docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.output-build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
         docker run --rm ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj
