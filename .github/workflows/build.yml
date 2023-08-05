@@ -146,3 +146,15 @@ jobs:
       run: |
         sudo rm -r ${{ github.workspace }}/project-*
         sudo rm -r ${{ github.workspace }}/hybrid-*
+
+  Result:
+    runs-on: ubuntu-22.04
+    needs: [Build_Test_Arch, Build_Test_AMD64_Ubuntu_Debian_Alpine, Build_Test_ARM64_Ubuntu_Debian_Alpine]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
