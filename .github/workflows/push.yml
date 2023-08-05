@@ -34,6 +34,16 @@ jobs:
         tags: type=ref,event=tag
         flavor: prefix=ubuntu-,onlatest=true
 
+    - name: Docker meta debian
+      id: meta-debian
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
+          ${{ vars.REGISTRY }}/stm32-builder
+        tags: type=ref,event=tag
+        flavor: prefix=debian-,onlatest=true
+
     - name: Docker meta alpine
       id: meta-alpine
       uses: docker/metadata-action@v4
@@ -84,7 +94,7 @@ jobs:
         tags: ${{ steps.meta-ubuntu.outputs.tags }}
         labels: ${{ steps.meta-ubuntu.outputs.labels }}
 
-    - name: Build and Upload for Ubuntu
+    - name: Build and Upload for Debian
       id: output-debian
       uses: docker/build-push-action@v4
       with:
