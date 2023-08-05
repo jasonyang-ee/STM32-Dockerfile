@@ -130,6 +130,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install --no-install-recommends -y curl
           sudo curl -sSL https://get.docker.com | sh
+          sudo systemctl start docker
           sudo docker run hello-world
           sudo docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
           sudo docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
