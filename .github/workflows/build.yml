@@ -33,14 +33,6 @@ jobs:
         docker rmi $(docker image ls -aq)
         df -h
 
-    - name: Delete dangling image package
-      uses: actions/delete-package-versions@v4
-      with: 
-        package-name: 'stm32-builder'
-        package-type: 'container'
-        min-versions-to-keep: 0
-        delete-only-untagged-versions: 'true'
-
     - name: Checkout project
       uses: actions/checkout@v3
 
@@ -118,7 +110,7 @@ jobs:
         context: .
         platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
-        load: true
+        push: true
         tags: stm32-builder/${{ matrix.files }}-test
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=local,src=/tmp/.buildx-cache
@@ -129,6 +121,7 @@ jobs:
       with:
         base_image: raspios_lite_arm64:2022-04-04
         commands: |
+          sudo apt install docker.io -y
           docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
           docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
           docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
