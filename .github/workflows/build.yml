@@ -101,9 +101,9 @@ jobs:
 
     - name: Test All
       run: |
-        docker run --rm ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }":"/proj" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }":"/home" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }}.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.output-${{ matrix.files }}-${{ matrix.aarch }.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
         docker run --rm ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj
         docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
