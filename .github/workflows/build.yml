@@ -117,7 +117,7 @@ jobs:
         platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder/${{ matrix.files }}-test
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder:${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
