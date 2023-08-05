@@ -19,14 +19,14 @@ env:
 jobs:
   Build_Test:
     runs-on: ubuntu-latest
+    # strategy:
+    #   fail-fast: true
+    #   matrix:
+    #     aarch: [amd64, arm64]
+    #     files: [ubuntu, debian, alpine]
     permissions:
       contents: read
       packages: write
-    strategy:
-      fail-fast: true
-      matrix:
-        aarch: [amd64, arm64]
-        files: [ubuntu, debian, alpine, arch]
 
     steps:
     - name: free disk space from docker
@@ -71,7 +71,7 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Build and Load
-      id: output-${{ matrix.files }}-${{ matrix.aarch }}
+      id: output-ubuntu-amd64
       uses: docker/build-push-action@v4
       with:
         context: .
