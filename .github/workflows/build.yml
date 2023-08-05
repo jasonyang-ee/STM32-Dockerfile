@@ -17,7 +17,7 @@ env:
   TEST_REPO: jasonyang-ee/STM32-CMAKE-TEMPLATE
 
 jobs:
-  Build_Test:
+  Build_Test_Ubuntu_Debian_Alpine:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -51,19 +51,6 @@ jobs:
         min-versions-to-keep: 0
         delete-only-untagged-versions: 'true'
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Log in to Github Container Registry
-      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-      with:
-        registry: ${{ vars.REGISTRY }}
-        username: ${{ secrets.USER_GITHUB_PERSONAL }}
-        password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
-
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
 
@@ -79,6 +66,46 @@ jobs:
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         load: true
         tages: test
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+
+    - name: Test All
+      run: |
+        docker run --rm test@${{ steps.output-build3x.outputs.digest }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" test@${{ steps.output-build3x.outputs.digest }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
+        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" test@${{ steps.output-build3x.outputs.digest }} ${{ env.TEST_REPO_URL }} Debug
+
+    - name: Cleanup Folders
+      run: |
+        rm -rf ${{ github.workspace }}/project-*
+        rm -rf ${{ github.workspace }}/hybrid-*
+
+  Build_Test_Arch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: free disk space from docker
+      run: |
+        docker rmi $(docker image ls -aq)
+        df -h
+
+    - name: Checkout project
+      uses: actions/checkout@v3
+
+    - name: Checkout example repo
+      uses: actions/checkout@v3
+      with:
+        repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
+        path: project
+
+    - name: Set QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set Buildx
+      uses: docker/setup-buildx-action@v2
 
     - name: Build and Load Arch
       id: output-arch
@@ -88,32 +115,16 @@ jobs:
         file: ${{ github.workspace }}/Dockerfile.arch
         load: true
         tags: test
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
-    - name: Test All
+    - name: Test Arch
       run: |
-        docker run --rm ${{ steps.output-build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-${{ matrix.aarch }}":"/proj" ${{ steps.output-build3x.outputs.imageid }} /proj-${{ matrix.files }}-${{ matrix.aarch }}
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-${{ matrix.aarch }}":"/home" ${{ steps.output-build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
-        docker run --rm ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.output-arch.outputs.imageid }} /proj
-        docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.output-arch.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm ${{ steps.output-arch.outputs.digest }} ${{ env.TEST_REPO_URL }}
+        docker run --rm -v "${{ github.workspace }}/project-arch":"/proj" ${{ steps.output-arch.outputs.digest }} /proj
+        docker run --rm -v "${{ github.workspace }}/hybrid-arch":"/home" ${{ steps.output-arch.outputs.digest }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
         rm -rf ${{ github.workspace }}/project-*
         rm -rf ${{ github.workspace }}/hybrid-*
-        rm -rf ${{ github.workspace }}/project
-        rm -rf ${{ github.workspace }}/hybrid
-
-    - name: Delete dangling image package
-      uses: actions/delete-package-versions@v4
-      with: 
-        package-name: 'stm32-builder'
-        package-type: 'container'
-        min-versions-to-keep: 0
-        delete-only-untagged-versions: 'true'
-    
-    - name: free disk space from docker
-      run: |
-        docker rmi $(docker image ls -aq)
-        df -h
