@@ -42,6 +42,19 @@ jobs:
         repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
         path: project
 
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Log in to Github Container Registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ vars.REGISTRY }}
+        username: ${{ secrets.USER_GITHUB_PERSONAL }}
+        password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
+
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
 
@@ -55,8 +68,8 @@ jobs:
         context: .
         platforms: linux/amd64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
-        load: true
-        tages: stm32-builder/${{ matrix.files }}-test
+        push: true
+        tages: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder/${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
@@ -68,8 +81,8 @@ jobs:
 
     - name: Cleanup Folders
       run: |
-        rm -rf ${{ github.workspace }}/project-*
-        rm -rf ${{ github.workspace }}/hybrid-*
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
 
   Build_Test_ARM64_Ubuntu_Debian_Alpine:
     runs-on: ubuntu-22.04
@@ -96,6 +109,19 @@ jobs:
         repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
         path: project
 
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Log in to Github Container Registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ vars.REGISTRY }}
+        username: ${{ secrets.USER_GITHUB_PERSONAL }}
+        password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
+
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
 
@@ -109,8 +135,8 @@ jobs:
         context: .
         platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
-        load: true
-        tages: stm32-builder/${{ matrix.files }}-test
+        push: true
+        tages: ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder/${{ matrix.files }}-test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
