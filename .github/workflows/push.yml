@@ -17,14 +17,6 @@ jobs:
         files: [ubuntu, debian, alpine, arch]
 
     steps:
-    - name: Delete dangling image package
-      uses: actions/delete-package-versions@v4
-      with: 
-        package-name: 'stm32-builder'
-        package-type: 'container'
-        min-versions-to-keep: 0
-        delete-only-untagged-versions: 'true'
-
     - name: Checkout project
       uses: actions/checkout@v3
       
@@ -50,7 +42,14 @@ jobs:
         registry: ${{ vars.REGISTRY }}
         username: ${{ secrets.USER_GITHUB_PERSONAL }}
         password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
-
+      
+    - name: Delete dangling image package
+      uses: actions/delete-package-versions@v4
+      with: 
+        package-name: 'stm32-builder'
+        package-type: 'container'
+        min-versions-to-keep: 0
+        delete-only-untagged-versions: 'true'
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
 

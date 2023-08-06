@@ -1,0 +1,700 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>STM32 Docker Dev Container Documentation</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="docs_src/ferris.css">
+        <link rel="stylesheet" href="docs_src/theme/2018-edition.css">
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="Introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="Menu.html"><strong aria-hidden="true">2.</strong> How To</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Menu_Local.html"><strong aria-hidden="true">2.1.</strong> Use Git Repo Link</a></li><li class="chapter-item expanded "><a href="Menu_Mounted.html"><strong aria-hidden="true">2.2.</strong> Use Mount Volume</a></li><li class="chapter-item expanded "><a href="Menu_Hybrid.html"><strong aria-hidden="true">2.3.</strong> Use Hybrid</a></li><li class="chapter-item expanded "><a href="Menu_Github_Action.html"><strong aria-hidden="true">2.4.</strong> Use Online With Github Action</a></li><li class="chapter-item expanded "><a href="Menu_Dev_Container.html"><strong aria-hidden="true">2.5.</strong> Use As Dev Container</a></li><li class="chapter-item expanded "><a href="Menu_Manual.html"><strong aria-hidden="true">2.6.</strong> Use Manually</a></li></ol></li><li class="chapter-item expanded "><a href="WSL.html"><strong aria-hidden="true">3.</strong> WSL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="WSL_USB.html"><strong aria-hidden="true">3.1.</strong> WSL USB Passthrough</a></li><li class="chapter-item expanded "><a href="WSL_STLINK.html"><strong aria-hidden="true">3.2.</strong> WSL ST-LINK</a></li></ol></li><li class="chapter-item expanded "><a href="Docker_Build.html"><strong aria-hidden="true">4.</strong> Build This Dockerfile</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">STM32 Docker Dev Container Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/jasonyang-ee/STM32G431KB" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="docker-container-for-stm32-cmake--ninja-compiling"><a class="header" href="#docker-container-for-stm32-cmake--ninja-compiling">Docker Container for STM32 CMake &amp; Ninja Compiling</a></h1>
+<p>-+- TL;DR -+-</p>
+<p>This docker image auto clone an online git repo and compile the CMake &amp; Ninja supported STM32 project locally on your computer with mounted volume.</p>
+<pre><code class="language-bash">docker run -v &quot;{Local_Full_Path}&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest {Git_Repo_URL}
+</code></pre>
+<p><img src="img/run_time.gif" alt="" /></p>
+<h2 id="example-project"><a class="header" href="#example-project">Example Project</a></h2>
+<p>For CMake setup, refer to the below STM32 project template.</p>
+<p><a href="https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git">https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git</a></p>
+<h2 id="dockerfile"><a class="header" href="#dockerfile">Dockerfile</a></h2>
+<p>Dockerfile: <a href="https://github.com/jasonyang-ee/STM32-Dockerfile.git">https://github.com/jasonyang-ee/STM32-Dockerfile.git</a></p>
+<p>Public Registry:</p>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:ubuntu-latest</p>
+</blockquote>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:debian-latest</p>
+</blockquote>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:alpine-latest</p>
+</blockquote>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:arch-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:ubuntu-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:debian-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:alpine-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:arch-latest</p>
+</blockquote>
+<h2 id="docker-image-compiler-environment"><a class="header" href="#docker-image-compiler-environment">Docker Image Compiler Environment</a></h2>
+<ul>
+<li><a href="https://packages.ubuntu.com/jammy/gcc-arm-none-eabi">ARM GNU x86_64-arm-none-eabi</a></li>
+<li>Ubuntu: <a href="https://packages.ubuntu.com/focal/build-essential">build-essential</a></li>
+<li>Alpine: <a href="https://pkgs.alpinelinux.org/package/edge/community/x86_64/gcompat">gcompat</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/libc6-compat">libc6-compat</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/libstdc++">libstdc++</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/g++">g++</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/gcc">gcc</a></li>
+<li><a href="https://git-scm.com/">git</a></li>
+<li><a href="https://cmake.org/">cmake</a></li>
+<li><a href="https://ninja-build.org/">ninja-build</a></li>
+<li><a href="https://github.com/stlink-org/stlink">stlink-tools</a></li>
+</ul>
+<h2 id="basics-of-this-image"><a class="header" href="#basics-of-this-image">Basics of This Image</a></h2>
+<p>This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.</p>
+<p>The entrypoint bash script executes basically two commands:</p>
+<pre><code class="language-bash">cmake -DCMAKE_BUILD_TYPE=Release -B /home/build/ -G Ninja
+cmake --build /home/build -j 10
+</code></pre>
+<ul>
+<li><code>CMAKE_TOOLCHAIN_FILE</code> must be defined in your project CMakeList.txt file.</li>
+<li>Default build type is <code>Release</code>.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="help-menu"><a class="header" href="#help-menu">Help Menu</a></h1>
+<p>Example usage format can be viewed with <code>--help</code> command.</p>
+<pre><code class="language-bash">docker run jasonyangee/stm32-builder:ubuntu-latest --help
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="use-with-git-link"><a class="header" href="#use-with-git-link">Use With Git Link</a></h1>
+<p>This is intended for testing compile only. It is recommended to <a href="Menu_Hybrid.html">Use Hybrid</a> for getting binary files.</p>
+<h2 id="mechanism"><a class="header" href="#mechanism">Mechanism</a></h2>
+<p>Container will clone the supplied git repo into <code>/home</code> and compile it in <code>/home/build</code>.</p>
+<p>This process exist in container only. No files will be copied out.</p>
+<h2 id="command"><a class="header" href="#command">Command</a></h2>
+<ul>
+<li>
+<p>Format:</p>
+<pre><code class="language-bash">docker run {IMAGE:VERSION} {Git_Repo_URL}
+docker run {IMAGE:VERSION} {Git_Repo_URL} {Build_Type}
+</code></pre>
+</li>
+<li>
+<p>Example:</p>
+<pre><code class="language-bash">docker run --name builder jasonyangee/stm32-builder:ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+docker run --name builder jasonyangee/stm32-builder:ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
+</code></pre>
+</li>
+</ul>
+<h2 id="output"><a class="header" href="#output">Output</a></h2>
+<ul>
+<li>(Optional) You can copy out the binary files:
+<pre><code class="language-bash">docker cp builder:/home/build/{TARGET_NAME}.elf {DEST_PATH}
+docker cp builder:/home/build/{TARGET_NAME}.bin {DEST_PATH}
+docker cp builder:/home/build/{TARGET_NAME}.hex {DEST_PATH}
+</code></pre>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="use-with-mount-volume"><a class="header" href="#use-with-mount-volume">Use With Mount Volume</a></h1>
+<h2 id="mechanism-1"><a class="header" href="#mechanism-1">Mechanism</a></h2>
+<p>Container will mount your existing project folder into <code>/home</code> and compile it in <code>/home/build</code>.</p>
+<ul>
+<li>
+<p><code>Local_Project_Full_Path</code> is the existing project folder path on your local host machine. This folder must contain your source code.</p>
+</li>
+<li>
+<p><code>/home</code> is the folder in docker container.</p>
+</li>
+</ul>
+<p>Repeating <code>/home</code> folder name as 1st argument is necessary to invoke the auto compile process.</p>
+<h2 id="command-1"><a class="header" href="#command-1">Command</a></h2>
+<ul>
+<li>
+<p>Format:</p>
+<pre><code class="language-bash">docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} /home
+docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} /home {Build_Type}
+</code></pre>
+</li>
+<li>
+<p>Example:</p>
+<pre><code class="language-bash">docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest /home
+docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest /home Debug
+</code></pre>
+</li>
+</ul>
+<h2 id="output-1"><a class="header" href="#output-1">Output</a></h2>
+<p>Binary Output <code>.bin</code> <code>.elf</code> <code>.hex</code> <code>.map</code> are located in <code>Local_Project_Full_Path/build</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="use-hybrid-with-mount-volume--git-link"><a class="header" href="#use-hybrid-with-mount-volume--git-link">Use Hybrid With Mount Volume + Git Link</a></h1>
+<h2 id="mechanism-2"><a class="header" href="#mechanism-2">Mechanism</a></h2>
+<p>Container will mount to local folder. Then it will clone the supplied git repo source file into <code>/home</code> and compile it in <code>/home/build</code>.</p>
+<ul>
+<li><code>Local_Project_Full_Path</code> is any empty folder path on local host machine. If no folder existed, one will be created.</li>
+</ul>
+<h2 id="command-2"><a class="header" href="#command-2">Command</a></h2>
+<ul>
+<li>
+<p>Format:</p>
+<pre><code class="language-bash">docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} {Git_Repo_URL}
+docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} {Git_Repo_URL} {Build_Type}
+</code></pre>
+</li>
+<li>
+<p>Example:</p>
+<pre><code class="language-bash">docker run -v &quot;F:\test_compile&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+docker run -v &quot;F:\test_compile&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
+</code></pre>
+</li>
+</ul>
+<h2 id="output-2"><a class="header" href="#output-2">Output</a></h2>
+<p>Binary Output <code>.bin</code> <code>.elf</code> <code>.hex</code> <code>.map</code> are located in <code>Local_Project_Full_Path/build</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="use-online-with-github-action"><a class="header" href="#use-online-with-github-action">Use Online With Github Action</a></h1>
+<h2 id="mechanism-3"><a class="header" href="#mechanism-3">Mechanism</a></h2>
+<p>Using Github Action to load this docker image as base environment. Then run the build script.</p>
+<p>Docker image entrypoint 1st argument will define CMake build_type.</p>
+<h2 id="how-to-use"><a class="header" href="#how-to-use">How To Use</a></h2>
+<p>In the source root, create file <code>.github\workflows\build.yml</code> with the following script.</p>
+<ul>
+<li>
+<p>Short Example:</p>
+<pre><code class="language-yml">- uses: actions/checkout@v3
+- name: BUILD
+  run: build.sh
+</code></pre>
+<pre><code class="language-yml">- uses: actions/checkout@v3
+- name: BUILD
+  run: build.sh Debug
+</code></pre>
+</li>
+<li>
+<p>Full Script:</p>
+<pre><code class="language-yml">name: 'Build with Ubuntu Container'
+on:
+push:
+	branches:
+	- 'main'
+
+jobs:
+  BUILD and RELEASE:
+	runs-on: ubuntu-latest
+	container:
+	  image: 'jasonyangee/stm32-builder:ubuntu-latest'
+	
+	steps:
+	- uses: actions/checkout@v3
+	- name: BUILD
+	  run: build.sh
+
+	- name: Upload Binary .elf
+	  uses: actions/upload-artifact@v2
+	  with:
+	    name: BINARY.elf
+	    path: ${{ github.workspace }}/build/*.elf
+
+	- name: Upload Binary .bin
+	  uses: actions/upload-artifact@v2
+	  with:
+	    name: BINARY.bin
+	    path: ${{ github.workspace }}/build/*.bin
+</code></pre>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="use-as-dev-container"><a class="header" href="#use-as-dev-container">Use As Dev Container</a></h1>
+<h2 id="mechanism-4"><a class="header" href="#mechanism-4">Mechanism</a></h2>
+<p>In case of team usage, it is possible to distribute a fine tuned docker image to standardize an oranization wide compile environment.</p>
+<p>In your project source root, define a <code>.devcontainer/devcontainer.json</code> to configure needed VS Code extensions.</p>
+<p>Once <code>reopend in container</code>, you will be operating in this container OS and be able to consistantly compile binary files while using VS Code to continue the development.</p>
+<h2 id="how-to-use-1"><a class="header" href="#how-to-use-1">How To Use</a></h2>
+<ol>
+<li>
+<p>In VS Code, install extensions:</p>
+<ul>
+<li>Dev Containers <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">(ms-vscode-remote.remote-containers)</a></li>
+<li>Docker <a href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker">(ms-azuretools.vscode-docker)</a></li>
+</ul>
+</li>
+<li>
+<p>Turn on dev container setting: <code>Execute In WSL</code></p>
+</li>
+</ol>
+<blockquote>
+<p><img src="img/container_setting.png" alt="setting" /></p>
+</blockquote>
+<ol>
+<li>
+<p>Attach your hardware usb port as describe below in section <a href="WSL_USB.html">WSL USB Passthrough</a>.</p>
+</li>
+<li>
+<p>Creat folder <code>.devcontainer</code> and add the example <code>devcontainer.json</code> file in project root.</p>
+</li>
+<li>
+<p><code>Ctrl</code> + <code>Shift</code> + <code>p</code> select <code>Dev Containers: Reopen in Container</code>.</p>
+</li>
+<li>
+<p>Build using VS Code Extension or using bash script <code>build.sh .</code>.</p>
+</li>
+<li>
+<p>Flash the device as described in section <a href="WSL_STLINK.html">WSL ST-LINK</a>.</p>
+</li>
+</ol>
+<blockquote>
+<p><img src="img/new_container.gif" alt="" /></p>
+</blockquote>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<ul>
+<li><code>devcontainer.json</code>
+<pre><code class="language-json">{
+	&quot;name&quot;: &quot;STM32&quot;,
+	&quot;image&quot;: &quot;jasonyang-ee/stm32-builder:ubuntu-latest&quot;,
+	&quot;privileged&quot;: true,
+	&quot;customizations&quot;: {
+		&quot;vscode&quot;: {
+			&quot;extensions&quot;: [
+				&quot;dan-c-underwood.arm&quot;,
+				&quot;jeff-hykin.better-cpp-syntax&quot;,
+				&quot;ms-vscode.cpptools&quot;,
+				&quot;akiramiyakoda.cppincludeguard&quot;,
+				&quot;xaver.clang-format&quot;,
+				&quot;twxs.cmake&quot;,
+				&quot;ms-vscode.cmake-tools&quot;,
+				&quot;adpyke.codesnap&quot;,
+				&quot;mcu-debug.debug-tracker-vscode&quot;,
+				&quot;marus25.cortex-debug&quot;,
+				&quot;ms-vscode-remote.remote-containers&quot;,
+				&quot;ms-azuretools.vscode-docker&quot;,
+				&quot;cschlosser.doxdocgen&quot;,
+				&quot;mhutchie.git-graph&quot;,
+				&quot;donjayamanne.githistory&quot;,
+				&quot;eamodio.gitlens&quot;,
+				&quot;zixuanwang.linkerscript&quot;,
+				&quot;bierner.markdown-preview-github-styles&quot;,
+				&quot;mcu-debug.memory-view&quot;,
+				&quot;mcu-debug.rtos-views&quot;,
+				&quot;albert.tabout&quot;,
+				&quot;ms-vscode-remote.remote-wsl&quot;
+			]
+		}
+	}
+}
+</code></pre>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="manual-image-usage"><a class="header" href="#manual-image-usage">Manual Image Usage</a></h1>
+<ul>
+<li>
+<p>Docker using volume mount and override ENTRYPOINT to keep interactive mode live</p>
+<pre><code>docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/home&quot; -it --entrypoint /bin/bash jasonyangee/stm32-builder:ubuntu-latest
+</code></pre>
+</li>
+<li>
+<p>Run build script to invoke auto compiling process.</p>
+<pre><code class="language-bash">build.sh /home
+</code></pre>
+</li>
+<li>
+<p>Or optionally, manualy use CMake commands to compile:</p>
+<pre><code class="language-bash">cmake -B /home/build -G Ninja
+cmake --build /home/build
+</code></pre>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-windows-subsystem-for-linux-wsl"><a class="header" href="#the-windows-subsystem-for-linux-wsl">The Windows Subsystem for Linux (WSL)</a></h1>
+<p>Follow this guide to setup WSL on Windows Environment.</p>
+<p><a href="https://learn.microsoft.com/en-us/windows/wsl/install">https://learn.microsoft.com/en-us/windows/wsl/install</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="wsl-usb-passthrough-to-wsl2"><a class="header" href="#wsl-usb-passthrough-to-wsl2">WSL USB Passthrough to WSL2</a></h1>
+<p>Using Windows machine is difficault to expose USB device to container.</p>
+<p>Using WSL maybe the only option for now.</p>
+<p>Follow this:
+https://learn.microsoft.com/en-us/windows/wsl/connect-usb</p>
+<ul>
+<li>Run cmd (admin mode) on Windows:</li>
+</ul>
+<pre><code class="language-cmd">winget install --interactive --exact dorssel.usbipd-win
+wsl --update
+wsl --shutdown
+</code></pre>
+<ul>
+<li>Run (restart) WSL Ubuntu:</li>
+</ul>
+<pre><code class="language-shell">sudo apt update
+sudo apt install linux-tools-5.4.0-77-generic hwdata
+sudo update-alternatives --install /usr/local/bin/usbip usbip /usr/lib/linux-tools/5.4.0-77-generic/usbip 20
+</code></pre>
+<ul>
+<li>Run cmd (admin mode) on Windows:</li>
+</ul>
+<pre><code class="language-cmd">usbipd list
+</code></pre>
+<blockquote>
+<p><img src="img/bind.png" alt="" /></p>
+</blockquote>
+<ul>
+<li>Note the ST-Link ID and bind it on Windows CMD:</li>
+</ul>
+<pre><code class="language-cmd">usbipd bind --busid 3-5
+usbipd wsl attach --busid 3-5
+usbipd wsl list
+</code></pre>
+<blockquote>
+<p><img src="img/attached.png" alt="" /></p>
+</blockquote>
+<ul>
+<li>Onced a device has been binded, for all future connection, you will only need to attach.</li>
+</ul>
+<pre><code class="language-cmd">usbipd list
+usbipd wsl attach --busid 3-5
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="st-link"><a class="header" href="#st-link">ST-Link</a></h1>
+<p>ST Link Programmer has not yet been automated.</p>
+<h2 id="mechanism-5"><a class="header" href="#mechanism-5">Mechanism</a></h2>
+<p>Once completed <a href="WSL_USB.html">USB Pass Through</a>, you will be able to use <code>st-link</code> to flash the device.</p>
+<ul>
+<li>
+<p>Option 1: <a href="Menu_Manual.html">Manual image usage</a> with adding <code>--privileged</code> interactive mode live.</p>
+</li>
+<li>
+<p>Option 2: <a href="Menu_Dev_Container.html">Dev Container</a> and use VS Code to excute <code>st-link</code> commands.</p>
+</li>
+</ul>
+<h2 id="how-to-use-2"><a class="header" href="#how-to-use-2">How To Use</a></h2>
+<p>Tool Details: <a href="https://github.com/stlink-org/stlink">https://github.com/stlink-org/stlink</a></p>
+<ul>
+<li>
+<p>Confirm Connnection:</p>
+<pre><code class="language-shell">st-info --probe
+</code></pre>
+</li>
+<li>
+<p>Manual Flash:</p>
+<pre><code class="language-shell">st-flash write {TARGET.bin} 0x8000000
+</code></pre>
+</li>
+<li>
+<p>Manual Reset:</p>
+<pre><code class="language-shell">st-flash reset
+</code></pre>
+</li>
+</ul>
+<h2 id="flash-device-with-command-line"><a class="header" href="#flash-device-with-command-line">Flash Device with Command Line</a></h2>
+<ol>
+<li>Attach USB device into WSL from Windows CMD (Admin).</li>
+<li>Start WSL.</li>
+<li>Check for ST Link Connection.</li>
+<li>Overwrite entrypoint and volume mount an existing project on WSL.</li>
+<li>Invoke docker auto build with the mounted volume.</li>
+<li>Flash STM32</li>
+</ol>
+<ul>
+<li>List of Commands:
+<pre><code class="language-shell">usbipd list
+usbipd wsl attach --busid 3-5
+usbipd wsl list
+wsl
+cd {WSL_USER_PATH}
+ls
+sudo st-info --probe
+docker run -v {WSL_PROJECT_PATH}:{CONTAINER_PROJECT_PATH} -it --privileged --entrypoint /bin/bash jasonyangee/stm32-builder:ubuntu-latest
+build.sh {CONTAINER_PROJECT_PATH}
+st-flash write {PATH_TO_TARGET.BIN} 0x8000000
+</code></pre>
+</li>
+</ul>
+<h2 id="flash-device-in-dev-container"><a class="header" href="#flash-device-in-dev-container">Flash Device in Dev Container</a></h2>
+<p>In project root, create file <code>.vscode/tasks.json</code> with the following script.</p>
+<ul>
+<li><code>.vscode/tasks.json</code>
+<pre><code class="language-json">{
+	&quot;version&quot;: &quot;2.0.0&quot;,
+	&quot;tasks&quot;: [
+		{
+			&quot;type&quot;: &quot;shell&quot;,
+			&quot;label&quot;: &quot;Linux: Flash Firmware&quot;,
+			&quot;command&quot;: &quot;st-flash&quot;,
+			&quot;args&quot;: [
+				&quot;--reset&quot;,
+				&quot;write&quot;,
+				&quot;${command:cmake.launchTargetDirectory}/${command:cmake.buildTargetName}.bin&quot;,
+				&quot;0x08000000&quot;
+			],
+			&quot;options&quot;: {
+				&quot;cwd&quot;: &quot;${workspaceFolder}&quot;
+			},
+			&quot;problemMatcher&quot;: []
+		},
+		{
+			&quot;type&quot;: &quot;shell&quot;,
+			&quot;label&quot;: &quot;Linux: Reset Device&quot;,
+			&quot;command&quot;: &quot;st-flash&quot;,
+			&quot;args&quot;: [
+				&quot;reset&quot;
+			],
+			&quot;options&quot;: {
+				&quot;cwd&quot;: &quot;${workspaceFolder}&quot;
+			},
+			&quot;problemMatcher&quot;: []
+		},
+	]
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<p><img src="img/run_wsl.gif" alt="" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="build-this-dockerfile"><a class="header" href="#build-this-dockerfile">Build This Dockerfile</a></h1>
+<p>If you choose to build your own image from Dockerfile.</p>
+<h2 id="manual-build-bash-command-example"><a class="header" href="#manual-build-bash-command-example">Manual Build Bash Command Example</a></h2>
+<ul>
+<li>
+<p>Format</p>
+<pre><code class="language-bash">docker build -t {image_name}:{image_tag} -f Dockerfile.ubuntu .
+docker build -t {image_name}:{image_tag} -f Dockerfile.alpine .
+docker build -t {image_name}:{image_tag} -f Dockerfile.arch .
+docker build -t {image_name}:{image_tag} -f Dockerfile.debian .
+</code></pre>
+</li>
+<li>
+<p>Example</p>
+<pre><code class="language-bash">docker build -t jasonyangee/stm32-builder:ubuntu-latest -f Dockerfile.ubuntu .
+</code></pre>
+</li>
+</ul>
+<h2 id="auto-build-using-vs-code-tasks"><a class="header" href="#auto-build-using-vs-code-tasks">Auto Build Using VS Code Tasks</a></h2>
+<ul>
+<li><code>Ctrl + Shift + p</code> and enter <code>run task</code> and choose the build options: <code>Build Ubuntu</code>.</li>
+<li>Modify the build arguments in <code>.vscode/tasks.json</code> if you wish to have different image name.
+<pre><code>stm32-builder:ubuntu-latest&quot;,
+</code></pre>
+</li>
+</ul>
+<h2 id="user-modifications"><a class="header" href="#user-modifications">User Modifications</a></h2>
+<p><strong>Check ARM releases at here:</strong></p>
+<p><em><a href="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/">https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/</a></em></p>
+<ul>
+<li>
+<p>Modify <code>ARM_VERSION=12.2.rel1</code> for enforcing compiler version.</p>
+</li>
+<li>
+<p>If pulling latest version is desired, insert this line before <code>curl</code> command in dockerfile.</p>
+<pre><code class="language-docker">&amp;&amp; ARM_VERSION=$(curl -s https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads | grep -Po '&lt;h4&gt;Version \K.+(?=&lt;/h4&gt;)') \
+</code></pre>
+</li>
+</ul>
+<h2 id="github-action-variables"><a class="header" href="#github-action-variables">Github Action Variables</a></h2>
+<p>For those who want to setup your own github action to auto publish variation of this dockerfile to your own docker registry. You may copy my action yml file setup and define the following github variables.</p>
+<pre><code class="language-c">vars.REGISTRY			// Github package link (private: &quot;ghcr.io&quot;   organization: &quot;ghcr.io/Org_Name&quot;)
+secrete.DOCKERHUB_TOKEN		// Docker Hub login token
+secrete.DOCKERHUB_USERNAME	// Docker Hub username
+secrete.TOKEN_GITHUB_PERSONAL	// Github package token
+secrete.USER_GITHUB_PERSONAL	// Github package username
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="docs_src/ferris.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
