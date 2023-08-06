@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Use As Dev Container - STM32 Docker Dev Container Documentation</title>
+        <title>Author Page - STM32 Docker Dev Container Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -85,7 +85,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="Introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="Menu.html"><strong aria-hidden="true">2.</strong> How To</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Menu_Local.html"><strong aria-hidden="true">2.1.</strong> Use Git Repo Link</a></li><li class="chapter-item expanded "><a href="Menu_Mounted.html"><strong aria-hidden="true">2.2.</strong> Use Mount Volume</a></li><li class="chapter-item expanded "><a href="Menu_Hybrid.html"><strong aria-hidden="true">2.3.</strong> Use Hybrid</a></li><li class="chapter-item expanded "><a href="Menu_Github_Action.html"><strong aria-hidden="true">2.4.</strong> Use Online With Github Action</a></li><li class="chapter-item expanded "><a href="Menu_Dev_Container.html" class="active"><strong aria-hidden="true">2.5.</strong> Use As Dev Container</a></li><li class="chapter-item expanded "><a href="Menu_Manual.html"><strong aria-hidden="true">2.6.</strong> Use Manually</a></li></ol></li><li class="chapter-item expanded "><a href="WSL.html"><strong aria-hidden="true">3.</strong> WSL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="WSL_USB.html"><strong aria-hidden="true">3.1.</strong> WSL USB Passthrough</a></li><li class="chapter-item expanded "><a href="WSL_STLINK.html"><strong aria-hidden="true">3.2.</strong> WSL ST-LINK</a></li></ol></li><li class="chapter-item expanded "><a href="Docker_Build.html"><strong aria-hidden="true">4.</strong> Build This Dockerfile</a></li><li class="chapter-item expanded "><a href="Author.html"><strong aria-hidden="true">5.</strong> Author Page</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="Introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="Menu.html"><strong aria-hidden="true">2.</strong> How To</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Menu_Local.html"><strong aria-hidden="true">2.1.</strong> Use Git Repo Link</a></li><li class="chapter-item expanded "><a href="Menu_Mounted.html"><strong aria-hidden="true">2.2.</strong> Use Mount Volume</a></li><li class="chapter-item expanded "><a href="Menu_Hybrid.html"><strong aria-hidden="true">2.3.</strong> Use Hybrid</a></li><li class="chapter-item expanded "><a href="Menu_Github_Action.html"><strong aria-hidden="true">2.4.</strong> Use Online With Github Action</a></li><li class="chapter-item expanded "><a href="Menu_Dev_Container.html"><strong aria-hidden="true">2.5.</strong> Use As Dev Container</a></li><li class="chapter-item expanded "><a href="Menu_Manual.html"><strong aria-hidden="true">2.6.</strong> Use Manually</a></li></ol></li><li class="chapter-item expanded "><a href="WSL.html"><strong aria-hidden="true">3.</strong> WSL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="WSL_USB.html"><strong aria-hidden="true">3.1.</strong> WSL USB Passthrough</a></li><li class="chapter-item expanded "><a href="WSL_STLINK.html"><strong aria-hidden="true">3.2.</strong> WSL ST-LINK</a></li></ol></li><li class="chapter-item expanded "><a href="Docker_Build.html"><strong aria-hidden="true">4.</strong> Build This Dockerfile</a></li><li class="chapter-item expanded "><a href="Author.html" class="active"><strong aria-hidden="true">5.</strong> Author Page</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,98 +171,17 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="use-as-dev-container"><a class="header" href="#use-as-dev-container">Use As Dev Container</a></h1>
-<h2 id="mechanism"><a class="header" href="#mechanism">Mechanism</a></h2>
-<p>In case of team usage, it is possible to distribute a fine tuned docker image to standardize an oranization wide compile environment.</p>
-<p>In your project source root, define a <code>.devcontainer/devcontainer.json</code> to configure needed VS Code extensions.</p>
-<p>Once <code>reopend in container</code>, you will be operating in this container OS and be able to consistantly compile binary files while using VS Code to continue the development.</p>
-<h2 id="how-to-use"><a class="header" href="#how-to-use">How To Use</a></h2>
-<ol>
-<li>
-<p>In VS Code, install extensions:</p>
-<ul>
-<li>Dev Containers <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">(ms-vscode-remote.remote-containers)</a></li>
-<li>Docker <a href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker">(ms-azuretools.vscode-docker)</a></li>
-</ul>
-</li>
-<li>
-<p>Turn on dev container setting: <code>Execute In WSL</code></p>
-</li>
-</ol>
-<blockquote>
-<p><img src="img/container_setting.png" alt="setting" /></p>
-</blockquote>
-<ol>
-<li>
-<p>Attach your hardware usb port as describe below in section <a href="WSL_USB.html">WSL USB Passthrough</a>.</p>
-</li>
-<li>
-<p>Creat folder <code>.devcontainer</code> and add the example <code>devcontainer.json</code> file in project root.</p>
-</li>
-<li>
-<p><code>Ctrl</code> + <code>Shift</code> + <code>p</code> select <code>Dev Containers: Reopen in Container</code>.</p>
-</li>
-<li>
-<p>Build using VS Code Extension or using bash script <code>build.sh .</code>.</p>
-</li>
-<li>
-<p>Flash the device as described in section <a href="WSL_STLINK.html">WSL ST-LINK</a>.</p>
-</li>
-</ol>
-<blockquote>
-<p><img src="img/new_container.gif" alt="" /></p>
-</blockquote>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<ul>
-<li><code>devcontainer.json</code>
-<pre><code class="language-json">{
-	&quot;name&quot;: &quot;STM32&quot;,
-	&quot;image&quot;: &quot;jasonyang-ee/stm32-builder:ubuntu-latest&quot;,
-	&quot;privileged&quot;: true,
-	&quot;customizations&quot;: {
-		&quot;vscode&quot;: {
-			&quot;extensions&quot;: [
-				&quot;dan-c-underwood.arm&quot;,
-				&quot;jeff-hykin.better-cpp-syntax&quot;,
-				&quot;ms-vscode.cpptools&quot;,
-				&quot;akiramiyakoda.cppincludeguard&quot;,
-				&quot;xaver.clang-format&quot;,
-				&quot;twxs.cmake&quot;,
-				&quot;ms-vscode.cmake-tools&quot;,
-				&quot;adpyke.codesnap&quot;,
-				&quot;mcu-debug.debug-tracker-vscode&quot;,
-				&quot;marus25.cortex-debug&quot;,
-				&quot;ms-vscode-remote.remote-containers&quot;,
-				&quot;ms-azuretools.vscode-docker&quot;,
-				&quot;cschlosser.doxdocgen&quot;,
-				&quot;mhutchie.git-graph&quot;,
-				&quot;donjayamanne.githistory&quot;,
-				&quot;eamodio.gitlens&quot;,
-				&quot;zixuanwang.linkerscript&quot;,
-				&quot;bierner.markdown-preview-github-styles&quot;,
-				&quot;mcu-debug.memory-view&quot;,
-				&quot;mcu-debug.rtos-views&quot;,
-				&quot;albert.tabout&quot;,
-				&quot;ms-vscode-remote.remote-wsl&quot;
-			]
-		}
-	}
-}
-</code></pre>
-</li>
-</ul>
+                        <h2 id="visit-my-main-page-for-more-projects"><a class="header" href="#visit-my-main-page-for-more-projects">Visit My Main Page for More Projects</a></h2>
+<h2 id="httpsdocjasonyorg"><a class="header" href="#httpsdocjasonyorg"><a href="https://doc.jasony.org">https://doc.jasony.org</a></a></h2>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="Menu_Github_Action.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="Docker_Build.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="Menu_Manual.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -270,13 +189,10 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="Menu_Github_Action.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="Docker_Build.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="Menu_Manual.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
             </nav>
 
         </div>

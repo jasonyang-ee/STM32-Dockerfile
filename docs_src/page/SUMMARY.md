@@ -12,3 +12,4 @@
 	- [WSL USB Passthrough](WSL_USB.md)
 	- [WSL ST-LINK](WSL_STLINK.md)
 - [Build This Dockerfile](Docker_Build.md)
+- [Author Page](Author.md)
