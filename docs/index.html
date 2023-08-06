@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Chapter 1 - STM32G431KB Documentation</title>
+        <title>Introduction - STM32 Docker Dev Container Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -85,7 +85,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html" class="active"><strong aria-hidden="true">1.</strong> Chapter 1</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="Introduction.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="Menu.html"><strong aria-hidden="true">2.</strong> How To</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Menu_Local.html"><strong aria-hidden="true">2.1.</strong> Use Git Repo Link</a></li><li class="chapter-item expanded "><a href="Menu_Mounted.html"><strong aria-hidden="true">2.2.</strong> Use Mount Volume</a></li><li class="chapter-item expanded "><a href="Menu_Hybrid.html"><strong aria-hidden="true">2.3.</strong> Use Hybrid</a></li><li class="chapter-item expanded "><a href="Menu_Github_Action.html"><strong aria-hidden="true">2.4.</strong> Use Online With Github Action</a></li><li class="chapter-item expanded "><a href="Menu_Dev_Container.html"><strong aria-hidden="true">2.5.</strong> Use As Dev Container</a></li><li class="chapter-item expanded "><a href="Menu_Manual.html"><strong aria-hidden="true">2.6.</strong> Use Manually</a></li></ol></li><li class="chapter-item expanded "><a href="WSL.html"><strong aria-hidden="true">3.</strong> WSL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="WSL_USB.html"><strong aria-hidden="true">3.1.</strong> WSL USB Passthrough</a></li><li class="chapter-item expanded "><a href="WSL_STLINK.html"><strong aria-hidden="true">3.2.</strong> WSL ST-LINK</a></li></ol></li><li class="chapter-item expanded "><a href="Docker_Build.html"><strong aria-hidden="true">4.</strong> Build This Dockerfile</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -136,7 +136,7 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">STM32G431KB Documentation</h1>
+                    <h1 class="menu-title">STM32 Docker Dev Container Documentation</h1>
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
@@ -171,13 +171,71 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="chapter-1"><a class="header" href="#chapter-1">Chapter 1</a></h1>
+                        <h1 id="docker-container-for-stm32-cmake--ninja-compiling"><a class="header" href="#docker-container-for-stm32-cmake--ninja-compiling">Docker Container for STM32 CMake &amp; Ninja Compiling</a></h1>
+<p>-+- TL;DR -+-</p>
+<p>This docker image auto clone an online git repo and compile the CMake &amp; Ninja supported STM32 project locally on your computer with mounted volume.</p>
+<pre><code class="language-bash">docker run -v &quot;{Local_Full_Path}&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest {Git_Repo_URL}
+</code></pre>
+<p><img src="img/run_time.gif" alt="" /></p>
+<h2 id="example-project"><a class="header" href="#example-project">Example Project</a></h2>
+<p>For CMake setup, refer to the below STM32 project template.</p>
+<p><a href="https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git">https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git</a></p>
+<h2 id="dockerfile"><a class="header" href="#dockerfile">Dockerfile</a></h2>
+<p>Dockerfile: <a href="https://github.com/jasonyang-ee/STM32-Dockerfile.git">https://github.com/jasonyang-ee/STM32-Dockerfile.git</a></p>
+<p>Public Registry:</p>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:ubuntu-latest</p>
+</blockquote>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:debian-latest</p>
+</blockquote>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:alpine-latest</p>
+</blockquote>
+<blockquote>
+<p>ghcr.io/jasonyang-ee/stm32-builder:arch-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:ubuntu-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:debian-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:alpine-latest</p>
+</blockquote>
+<blockquote>
+<p>jasonyangee/stm32-builder:arch-latest</p>
+</blockquote>
+<h2 id="docker-image-compiler-environment"><a class="header" href="#docker-image-compiler-environment">Docker Image Compiler Environment</a></h2>
+<ul>
+<li><a href="https://packages.ubuntu.com/jammy/gcc-arm-none-eabi">ARM GNU x86_64-arm-none-eabi</a></li>
+<li>Ubuntu: <a href="https://packages.ubuntu.com/focal/build-essential">build-essential</a></li>
+<li>Alpine: <a href="https://pkgs.alpinelinux.org/package/edge/community/x86_64/gcompat">gcompat</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/libc6-compat">libc6-compat</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/libstdc++">libstdc++</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/g++">g++</a> &amp; <a href="https://pkgs.alpinelinux.org/package/edge/main/x86_64/gcc">gcc</a></li>
+<li><a href="https://git-scm.com/">git</a></li>
+<li><a href="https://cmake.org/">cmake</a></li>
+<li><a href="https://ninja-build.org/">ninja-build</a></li>
+<li><a href="https://github.com/stlink-org/stlink">stlink-tools</a></li>
+</ul>
+<h2 id="basics-of-this-image"><a class="header" href="#basics-of-this-image">Basics of This Image</a></h2>
+<p>This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.</p>
+<p>The entrypoint bash script executes basically two commands:</p>
+<pre><code class="language-bash">cmake -DCMAKE_BUILD_TYPE=Release -B /home/build/ -G Ninja
+cmake --build /home/build -j 10
+</code></pre>
+<ul>
+<li><code>CMAKE_TOOLCHAIN_FILE</code> must be defined in your project CMakeList.txt file.</li>
+<li>Default build type is <code>Release</code>.</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
 
+                            <a rel="next" href="Menu.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -186,6 +244,9 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
 
+                    <a rel="next" href="Menu.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
