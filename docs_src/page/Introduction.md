@@ -1,6 +1,8 @@
 # Docker Container for STM32 CMake & Ninja Compiling
 
--+- TL;DR -+-
+Visit [GitHub](https://github.com/jasonyang-ee/STM32G431KB) for source code.
+
+## -+- TL;DR -+-
 
 This docker image auto clone an online git repo and compile the CMake & Ninja supported STM32 project locally on your computer with mounted volume.
 ```bash
@@ -17,11 +19,8 @@ For CMake setup, refer to the below STM32 project template.
 <https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git>
 
 
-## Dockerfile
+## Public Registry:
 
-Dockerfile: <https://github.com/jasonyang-ee/STM32-Dockerfile.git>
-
-Public Registry:
 > ghcr.io/jasonyang-ee/stm32-builder:ubuntu-latest
 
 > ghcr.io/jasonyang-ee/stm32-builder:debian-latest
