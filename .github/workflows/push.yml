@@ -42,13 +42,6 @@ jobs:
         registry: ${{ vars.REGISTRY }}
         username: ${{ secrets.USER_GITHUB_PERSONAL }}
         password: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
-      
-    - name: Delete dangling image package
-      uses: actions/delete-package-versions@v4
-      with: 
-        token: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
-        package-name: 'stm32-builder'
-        package-type: 'container'
         
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
