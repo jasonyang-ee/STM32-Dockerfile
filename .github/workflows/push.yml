@@ -50,6 +50,7 @@ jobs:
         package-type: 'container'
         min-versions-to-keep: 0
         delete-only-untagged-versions: 'true'
+        
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
 
@@ -61,7 +62,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64/v8
+        platforms: linux/amd64,linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}

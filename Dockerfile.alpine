@@ -17,6 +17,8 @@ RUN apk --no-cache add \
 
 # Get ARM Toolchain
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
+	elif [ "$TARGETPLATFORM" = "linux/arm64/v8" ]; then export ARM_ARCH=aarch64; \
+	elif [ "$TARGETPLATFORM" = "linux/aarch64" ]; then export ARM_ARCH=aarch64; \
     elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
     fi \
 	&& mkdir ${TOOLS_PATH} \
