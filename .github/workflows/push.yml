@@ -46,10 +46,9 @@ jobs:
     - name: Delete dangling image package
       uses: actions/delete-package-versions@v4
       with: 
+        token: ${{ secrets.TOKEN_GITHUB_PERSONAL }}
         package-name: 'stm32-builder'
         package-type: 'container'
-        min-versions-to-keep: 0
-        delete-only-untagged-versions: 'true'
         
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
