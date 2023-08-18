@@ -11,13 +11,17 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
 	dpkg --add-architecture arm64 && \
 	touch /etc/apt/sources.list.d/arm-cross-compile-sources.list && \
 	echo "# arm64 repositories" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal restricted" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal main restricted" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main restricted" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal universe" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates universe" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal multiverse" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates multiverse" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal universe" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal multiverse" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security restricted" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security main restricted" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security universe" >> /etc/apt/sources.list && \
 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security multiverse" >> /etc/apt/sources.list; \
