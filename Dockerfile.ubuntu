@@ -7,7 +7,17 @@ ARG ARM_VERSION=12.2.rel1
 
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then dpkg --add-architecture arm64; fi
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+	dpkg --add-architecture arm64 && \
+	touch /etc/apt/sources.list.d/arm-cross-compile-sources.list && \
+	deb [arch=arm64] http://ports.ubuntu.com/ focal main restricted && \
+	deb [arch=arm64] http://ports.ubuntu.com/ focal-updates main restricted && \
+	deb [arch=arm64] http://ports.ubuntu.com/ focal universe && \
+	deb [arch=arm64] http://ports.ubuntu.com/ focal-updates universe && \
+	deb [arch=arm64] http://ports.ubuntu.com/ focal multiverse && \
+	deb [arch=arm64] http://ports.ubuntu.com/ focal-updates multiverse && \
+	deb [arch=arm64] http://ports.ubuntu.com/ focal-backports main restricted universe multiverse; \
+	fi
 
 # Prep basic packages to build STM32 CMake project
 RUN apt-get update && apt-get install -y \
