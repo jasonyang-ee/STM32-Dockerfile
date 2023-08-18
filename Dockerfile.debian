@@ -10,13 +10,17 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
 	dpkg --add-architecture arm64 && \
 	touch /etc/apt/sources.list.d/arm-cross-compile-sources.list && \
-	deb [arch=arm64] http://ports.ubuntu.com/ focal main restricted && \
-	deb [arch=arm64] http://ports.ubuntu.com/ focal-updates main restricted && \
-	deb [arch=arm64] http://ports.ubuntu.com/ focal universe && \
-	deb [arch=arm64] http://ports.ubuntu.com/ focal-updates universe && \
-	deb [arch=arm64] http://ports.ubuntu.com/ focal multiverse && \
-	deb [arch=arm64] http://ports.ubuntu.com/ focal-updates multiverse && \
-	deb [arch=arm64] http://ports.ubuntu.com/ focal-backports main restricted universe multiverse; \
+	echo "# arm64 repositories" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal main restricted" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main restricted" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal universe" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates universe" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal multiverse" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates multiverse" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security main restricted" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security universe" >> /etc/apt/sources.list && \
+	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security multiverse" >> /etc/apt/sources.list; \
 	fi
 
 # Prep basic packages to build STM32 CMake project
