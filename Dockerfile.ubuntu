@@ -7,6 +7,8 @@ ARG ARM_VERSION=12.2.rel1
 
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then dpkg --add-architecture $TARGETPLATFORM; fi
+
 # Prep basic packages to build STM32 CMake project
 RUN apt-get update && apt-get install -y \
 	build-essential \
