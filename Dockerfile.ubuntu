@@ -8,33 +8,43 @@ ARG ARM_VERSION=12.2.rel1
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-	dpkg --add-architecture arm64 && \
-	touch /etc/apt/sources.list.d/arm-cross-compile-sources.list && \
-	echo "# arm64 repositories" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal restricted" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal main restricted" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main restricted" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates universe" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates multiverse" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal universe" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal multiverse" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security restricted" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security main restricted" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security universe" >> /etc/apt/sources.list && \
-	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security multiverse" >> /etc/apt/sources.list && \
-	sed -i -e 's/archive.ubuntu.com\|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list; \
+	dpkg --add-architecture arm64; \
 	fi
+# 	touch /etc/apt/sources.list.d/arm-cross-compile-sources.list && \
+# 	echo "# arm64 repositories" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal restricted" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal main restricted" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main restricted" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates universe" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates multiverse" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal universe" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal multiverse" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security restricted" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security main restricted" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security universe" >> /etc/apt/sources.list && \
+# 	echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security multiverse" >> /etc/apt/sources.list && \
+# 	sed -i -e 's/archive.ubuntu.com\|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list; \
+# 	fi
 
 # Prep basic packages to build STM32 CMake project
-RUN apt-get update && apt-get install -y \
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+	apt-get update && apt-get install -y \
+	build-essential:arm64 \
+	cmake:arm64 ninja-build:arm64 \
+	git:arm64 gnupg2:arm64 \
+	stlink-tools:arm64 \
+	xz-utils:arm64 curl:arm64; \
+	else \
+	apt-get update && apt-get install -y \
 	build-essential \
 	cmake ninja-build \
 	git gnupg2 \
 	stlink-tools \
-	xz-utils curl
+	xz-utils curl; \
+	fi
 
 # Get ARM Toolchain
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARM_ARCH=aarch64; \
