@@ -7,8 +7,6 @@ ARG ARM_VERSION=12.2.rel1
 
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then apk --no-cache add qemu-user-static; fi
-
 # Prep basic packages to build STM32 CMake project
 RUN apk --no-cache add \
 	gcompat libc6-compat libstdc++ g++ gcc \
