@@ -63,7 +63,7 @@ https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 > ghcr.io/jasonyang-ee/stm32-builder:arch-latest
 
 > jasonyangee/stm32-builder:ubuntu-latest
-> 
+
 > jasonyangee/stm32-builder:debian-latest
 
 > jasonyangee/stm32-builder:alpine-latest
