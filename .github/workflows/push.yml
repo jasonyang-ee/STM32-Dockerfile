@@ -57,7 +57,7 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Build and Upload amd64 and arm64
-      if: ${{ matrix.files != 'arch'}} && ${{ matrix.files != 'alpine'}}
+      if: ${{ matrix.files != 'arch' && matrix.files != 'alpine'}}
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -68,7 +68,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
       
     - name: Build and Upload amd64
-      if: ${{ matrix.files == 'arch'}} && ${{ matrix.files == 'alpine'}}
+      if: ${{ matrix.files == 'arch' || matrix.files == 'alpine'}}
       uses: docker/build-push-action@v4
       with:
         context: .
