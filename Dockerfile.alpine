@@ -8,9 +8,9 @@ ARG ARM_VERSION=12.2.rel1
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
 # Prep basic packages to build STM32 CMake project
-RUN apk --no-cache add \
+RUN apk update && apk add --no-cache \
+	alpine-sdk \
 	build-base \
-	gcompat libc6-compat libstdc++ g++ gcc \
 	make cmake ninja \
 	git gnupg \
 	stlink \
