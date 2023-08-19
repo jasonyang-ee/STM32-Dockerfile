@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM archlinux:base-devel
+FROM --platform=$TARGETPLATFORM archlinux:base-devel
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
