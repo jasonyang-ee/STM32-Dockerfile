@@ -1,9 +1,9 @@
-FROM --platform=$TARGETPLATFORM alpine:3.17.2
+FROM --platform=$TARGETPLATFORM alpine:3.17
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
-ARG ARM_VERSION=12.2.rel1
+ARG ARM_VERSION=12.3.rel1
 
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
@@ -12,24 +12,23 @@ RUN apk update && apk add --no-cache \
 	alpine-sdk \
 	build-base \
 	gcompat libc6-compat libstdc++ g++ gcc \
-	gcc-arm-none-eabi \
 	make cmake ninja \
 	git gnupg \
 	stlink \
 	bash curl xz
 
 # Get ARM Toolchain
-# RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
-# 	else export ARM_ARCH=aarch64; \
-#     fi \
-# 	&& echo "Downloading ARM GNU GCC for Platform: $ARM_ARCH" \
-# 	&& mkdir ${TOOLS_PATH} \
-# 	&& curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz" \
-# 	&& tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C ${TOOLS_PATH} \
-# 	&& rm gcc-arm-none-eabi.tar.xz \
-# 	&& rm ${TOOLS_PATH}/*.txt \
-# 	&& rm -rf ${TOOLS_PATH}/share/doc \
-# 	&& echo "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz"
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
+	else export ARM_ARCH=aarch64; \
+    fi \
+	&& echo "Downloading ARM GNU GCC for Platform: $ARM_ARCH" \
+	&& mkdir ${TOOLS_PATH} \
+	&& curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz" \
+	&& tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C ${TOOLS_PATH} \
+	&& rm gcc-arm-none-eabi.tar.xz \
+	&& rm ${TOOLS_PATH}/*.txt \
+	&& rm -rf ${TOOLS_PATH}/share/doc \
+	&& echo "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz"
 
 # Get static analysis tools: clang-format clang-tidy, Lizard, cpplint
 RUN apk --no-cache add \
