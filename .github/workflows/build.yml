@@ -78,7 +78,7 @@ jobs:
 
     strategy:
       matrix:
-        files: [ubuntu, debian, alpine]
+        files: [ubuntu, debian]
 
     steps:
     - name: free disk space from docker
