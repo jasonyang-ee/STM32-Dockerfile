@@ -11,4 +11,4 @@ build-dir = "docs"
 [output.html]
 additional-css = ["docs_src/ferris.css", "docs_src/theme/2018-edition.css"]
 additional-js = ["docs_src/ferris.js"]
-git-repository-url = "https://doc.jasony.org/STM32-Dockerfile"
+git-repository-url = "https://github.com/jasonyang-ee/STM32-Dockerfile"
