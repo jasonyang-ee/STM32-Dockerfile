@@ -8,16 +8,16 @@ ARG ARM_VERSION=12.3.rel1
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
 # Prep basic packages to build STM32 CMake project
-RUN apk update && apk add --no-cache \
+RUN apk add --no-cache 
+RUN apk update && apk add --no-cache --virtual build-dependencies \
 	build-base \
 	clang llvm-static llvm-dev clang-static clang-dev \
 	gcompat libc6-compat libstdc++ g++ gcc \
+	musl-dev \
 	make cmake ninja \
 	git gnupg \
 	stlink \
 	bash curl xz
-
-RUN apk add --no-cache --virtual build-dependencies
 
 # Get ARM Toolchain
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \

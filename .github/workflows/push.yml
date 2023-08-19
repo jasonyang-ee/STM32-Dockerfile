@@ -20,7 +20,7 @@ jobs:
     - name: Checkout project
       uses: actions/checkout@v3
       
-    - name: Docker meta ubuntu
+    - name: Docker meta
       id: meta
       uses: docker/metadata-action@v4
       with:
@@ -56,8 +56,10 @@ jobs:
     - name: Set Buildx
       uses: docker/setup-buildx-action@v2
 
-    - if: ${{ matrix.files != 'arch'}}
-      name: Build and Upload All
+    - if: |
+        ${{ matrix.files != 'arch'}}
+        ${{ matrix.files != 'alpine'}}
+      name: Build and Upload amd64 and arm64
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -67,8 +69,10 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
       
-    - if: ${{ matrix.files == 'arch'}}
-      name: Build and Upload amd64 Only
+    - if: |
+        ${{ matrix.files == 'arch'}}
+        ${{ matrix.files == 'alpine'}}
+      name: Build and Upload amd64
       uses: docker/build-push-action@v4
       with:
         context: .

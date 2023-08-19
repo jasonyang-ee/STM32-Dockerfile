@@ -25,10 +25,11 @@ Visit [Documentation](http://doc.jasony.org/STM32-Dockerfile) for more informati
 - `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
 - `5.3`: Add multiplatform support.
 - `5.8`: Name change to stm32-builder: ubuntu-latest :alpine-latest :arch-latest. Some Bug fix.
-- `Latest`: `5.8`
+- `6.0`: True multiplatform support on Ubuntu and Debian. Alpine and Archlinux for amd64 only.
+- `Latest`: `6.0`
 
 
-Recommandation: Use `5.1` for light weight and `5.5` when running on ARM64 platform.
+Recommandation: Use `5.1` for light weight and `6.0` when running on ARM64 platform.
 
 
 
