@@ -59,7 +59,7 @@ jobs:
         load: true
         tags: stm32-builder/${{ matrix.files }}-test
 
-    - name: Test
+    - name: Test AMD64
       run: |
         docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
         docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-amd64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-amd64
@@ -102,7 +102,23 @@ jobs:
         context: .
         platforms: linux/arm64
         file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
+        load: true
         tags: stm32-builder/${{ matrix.files }}-test
+
+    - name: Test ARM64
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: aarch64
+        distro: ubuntu20.04
+        run: |
+          docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
+          docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
+          docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+
+    - name: Cleanup Folders
+      run: |
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
 
   Result:
     runs-on: ubuntu-22.04
