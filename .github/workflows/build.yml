@@ -62,8 +62,8 @@ jobs:
     - name: Test AMD64
       run: |
         docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-amd64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-amd64
-        docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --rm -v ${{ github.workspace }}/project-${{ matrix.files }}-amd64:/home ${{ steps.build3x.outputs.imageid }} /home
+        docker run --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64:/home ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
@@ -89,6 +89,12 @@ jobs:
     - name: Checkout Project
       uses: actions/checkout@v3
 
+    - name: Checkout Example Repo
+      uses: actions/checkout@v3
+      with:
+        repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
+        path: project-${{ matrix.files }}-arm64
+
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
 
@@ -105,21 +111,11 @@ jobs:
         load: true
         tags: stm32-builder/${{ matrix.files }}-test
 
-    # - name: Test ARM64
-    #   uses: uraimo/run-on-arch-action@v2
-    #   with:
-    #     arch: aarch64
-    #     distro: ubuntu20.04
-    #     run: |
-    #       docker run --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-    #       docker run --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
-    #       docker run --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
-
     - name: Test ARM64
       run: |
         docker run --platform linux/arm64 --rm ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }}
-        docker run --platform linux/arm64 --rm -v "${{ github.workspace }}/project-${{ matrix.files }}-arm64":"/proj" ${{ steps.build3x.outputs.imageid }} /proj-${{ matrix.files }}-arm64
-        docker run --platform linux/arm64 --rm -v "${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64":"/home" ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
+        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}/project-${{ matrix.files }}-arm64:/home ${{ steps.build3x.outputs.imageid }} /home
+        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64:/home ${{ steps.build3x.outputs.imageid }} ${{ env.TEST_REPO_URL }} Debug
 
     - name: Cleanup Folders
       run: |
