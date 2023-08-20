@@ -18,7 +18,17 @@ env:
   TEST_REPO: jasonyang-ee/STM32-CMAKE-TEMPLATE
 
 jobs:
+  Skip_Checking:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+
   Build_Test_AMD64:
+    needs: Skip_Checking
+    if: needs.Skip_Checking.outputs.should_skip != 'true'
     runs-on: ubuntu-22.04
     permissions:
       contents: read
@@ -72,6 +82,8 @@ jobs:
 
   Build_Test_ARM64:
     runs-on: ubuntu-22.04
+    needs: Skip_Checking
+    if: needs.Skip_Checking.outputs.should_skip != 'true'
     permissions:
       contents: read
       packages: write
@@ -127,7 +139,8 @@ jobs:
     needs:
       - Build_Test_AMD64
       - Build_Test_ARM64
-    if: always()
+      - Skip_Checking
+    if: always() && needs.Skip_Checking.outputs.should_skip != 'true'
     steps:
       - name: All Tests Ok
         if: ${{ !(contains(needs.*.result, 'failure')) }}
