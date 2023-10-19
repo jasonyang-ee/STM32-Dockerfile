@@ -42,7 +42,7 @@ This docker image auto clone an online git repo and compile the CMake & Ninja su
 docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:ubuntu-latest {Git_Repo_URL}
 ```
 
-> ![Run](docs_src/page/img/run_time.gif)
+![Run](docs_src/page/img/run_time.gif)
 
 
 ## Example Project
