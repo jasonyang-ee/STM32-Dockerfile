@@ -181,14 +181,15 @@
 <ul>
 <li>
 <p>Format:</p>
-<pre><code class="language-bash">docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} {Git_Repo_URL}
-docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} {Git_Repo_URL} {Build_Type}
+<pre><code class="language-bash">docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} -r {Git_Repo_URL}
+docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
 </code></pre>
 </li>
 <li>
 <p>Example:</p>
-<pre><code class="language-bash">docker run -v &quot;F:\test_compile&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
-docker run -v &quot;F:\test_compile&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git Debug
+<pre><code class="language-bash">docker run -v &quot;F:\test_compile&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+docker run -v &quot;F:\test_compile&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t Debug
+docker run -v &quot;F:\test_compile&quot;:&quot;/custom&quot; jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t Debug -v /custom
 </code></pre>
 </li>
 </ul>

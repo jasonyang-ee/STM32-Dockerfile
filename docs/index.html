@@ -175,7 +175,7 @@
 <p>Visit <a href="https://github.com/jasonyang-ee/STM32-Dockerfile">GitHub</a> for source code.</p>
 <h2 id="---tldr---"><a class="header" href="#---tldr---">-+- TL;DR -+-</a></h2>
 <p>This docker image auto clone an online git repo and compile the CMake &amp; Ninja supported STM32 project locally on your computer with mounted volume.</p>
-<pre><code class="language-bash">docker run -v &quot;{Local_Full_Path}&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest {Git_Repo_URL}
+<pre><code class="language-bash">docker run -v &quot;{Local_Full_Path}&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest -r {Git_Repo_URL}
 </code></pre>
 <p><img src="img/run_time.gif" alt="" /></p>
 <h2 id="example-project"><a class="header" href="#example-project">Example Project</a></h2>
@@ -218,9 +218,9 @@
 </ul>
 <h2 id="basics-of-this-image"><a class="header" href="#basics-of-this-image">Basics of This Image</a></h2>
 <p>This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.</p>
-<p>The entrypoint bash script executes basically two commands:</p>
-<pre><code class="language-bash">cmake -DCMAKE_BUILD_TYPE=Release -B /home/build/ -G Ninja
-cmake --build /home/build -j 10
+<p>The entrypoint bash script executes basically two commands in default:</p>
+<pre><code class="language-bash">cmake -DCMAKE_BUILD_TYPE=Release -S /home -B /home/build/ -G Ninja
+cmake --build /home/build -j$(nproc)
 </code></pre>
 <ul>
 <li><code>CMAKE_TOOLCHAIN_FILE</code> must be defined in your project CMakeList.txt file.</li>

@@ -187,14 +187,16 @@
 <ul>
 <li>
 <p>Format:</p>
-<pre><code class="language-bash">docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} /home
-docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} /home {Build_Type}
+<pre><code class="language-bash">docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} 
+docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/home&quot; {IMAGE:VERSION} -t {Build_Type}
+docker run -v &quot;{Local_Project_Full_Path}&quot;:&quot;/custom&quot; {IMAGE:VERSION} -v /custom
 </code></pre>
 </li>
 <li>
 <p>Example:</p>
-<pre><code class="language-bash">docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest /home
-docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest /home Debug
+<pre><code class="language-bash">docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest
+docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/home&quot; jasonyangee/stm32-builder:ubuntu-latest -t Debug
+docker run -v &quot;F:\Project\STM32-CMAKE-TEMPLATE&quot;:&quot;/custom&quot; jasonyangee/stm32-builder:ubuntu-latest -v /custom
 </code></pre>
 </li>
 </ul>
