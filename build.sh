@@ -1,94 +1,106 @@
 #!/bin/bash
 
-# Check for argument existance
-if [[ $# -ge 1 ]]
-then
-	# If supplying build type, else default to release
-	if [[ $# -eq 2 ]]
-	then
-		TYPE=$2
-	else
-		TYPE=Release
-	fi
-	# Starting to parse 1st argument
-	if [[ $1 == "http"* ]] # Git repo case
-	then
-		cd /home
-		git clone $1 .
-		git config --global http.sslverify false # Accept internal github server with self https certs
-		cmake -DCMAKE_BUILD_TYPE=$TYPE -B /home/build/ -G Ninja
-		cmake --build /home/build/ -j 10
-		if [[ $? -eq 0 ]]
-		then
-			echo '                                            ^'
-			echo 'Build Completed                             |'
-			echo 'Target Binaery in __________________________|'
+# Default values
+TYPE=Release
+VOLUME=/home
+
+# Parse arguments
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+	case $1 in
+	-h | --help)
+		HELP=true
+		shift # past argument
+		;;
+	-t | --type)
+		# Check if has argument value
+		if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+			shift # past argument
 		else
-			exit $?
+			TYPE="$2"
+			shift # past argument
+			shift # past value
 		fi
-	elif [[ -d $1 ]] # Volume mounted case
-	then
-		cmake -DCMAKE_BUILD_TYPE=$TYPE -S $1 -B $1/build/ -G Ninja
-		cmake --build $1/build -j 10
-		if [[ $? -eq 0 ]]
-		then
-			echo '                                            ^'
-			echo 'Build Completed                             |'
-			echo 'Target Binaery in __________________________|'
+		echo "Using $TYPE build type"
+		;;
+	-v | --volume)
+		# Check if has argument value
+		if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+			shift # past argument
 		else
-			exit $?
+			VOLUME="$2"
+			shift # past argument
+			shift # past value
 		fi
-	elif [[ $1 == "--help" ]] # Help menu
-	then
-		echo ''
-		echo '[1] Local Volume Mount Usage Format:'
-		echo '    $ docker run -v "Local_Project_Full_Path":"/build" jasonyangee/stm32_ubuntu:latest' /build
-		echo ''
-		echo '[2] Remote Repo Usage Format:'
-		echo '    $ docker run jasonyangee/stm32_ubuntu:latest {Github_URL}'
-		echo ''
-		echo '[3] Github Action Usage Format:'
-		echo '    container:'
-      	echo '      image: jasonyangee/stm32_ubuntu:latest'
-    	echo '    steps:'
-		echo '    - uses: actions/checkout@v3'
-		echo '    - run: build.sh'
-		echo ''
-		echo '[4] Optonally, 2nd argument supports overwriting default Release build type'
-		echo '    $ docker run jasonyangee/stm32_ubuntu:latest {Github_URL} Debug'
-		echo '    $ docker run -v "Local_Project_Full_Path":"/build" jasonyangee/stm32_ubuntu:latest' /build Debug
-		exit 0
-	else # 1st argument not supported
-		echo ''
-		echo 'Format error. No project found in 1st argument. Use --help to Get More Info.'
-		echo '$ docker run jasonyangee/stm32_ubuntu:latest --help'
-		exit 0
-	fi
-# If using in Github Action
-elif [[ $GITHUB_ACTIONS == true ]]
-then
-	# In github action case, 1st argument is used as build type
-	if [[ $# -eq 1 ]]
-	then
-		TYPE=$2
-	else
-		TYPE=Release
-	fi
-	# Starting of compile
-	cmake -DCMAKE_BUILD_TYPE=$TYPE -B $GITHUB_WORKSPACE/build -G Ninja
-	cmake --build $GITHUB_WORKSPACE/build -j 10
-	if [[ $? -eq 0 ]]
-	then
-		echo '                                            ^'
-		echo 'Build Completed                             |'
-		echo 'Target Binaery in __________________________|'
-	else
-		exit $?
-	fi
-# If no argument supplied
-else
-	echo ''
-	echo 'Format error. Missing arguments. Use --help to Get More Info.'
-	echo '$ docker run jasonyangee/stm32_ubuntu:latest --help'
+		echo "Using $VOLUME as volume mount point"
+		;;
+	-r | --repo)
+		# Check if has argument value
+		if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+			echo "stm32-builder: '$1' missing repository url argument" >&2
+			echo "See '--help' for more information"
+			exit 1
+		else
+			REPO="$2"
+			shift # past argument
+			shift # past value
+		fi
+		;;
+	-* | --*=) # unsupported argument
+		echo "stm32-builder: Unsupported argument '$1'" >&2
+		echo "See '--help' for more information"
+		exit 1
+		;;
+	esac
+done
+
+# Check for help flag
+if [[ $HELP == true ]]; then
+	echo "Usage: build.sh [OPTIONS]"
+	echo "Options:"
+	echo "  -h, --help                            Print this help message"
+	echo "  -t, --type <build type>               default: Release"
+	echo "  -v, --volume <volume mount path>      default: /home"
+	echo "  -r, --repo <repository url>           Clone repository from url"
+	echo ""
+	echo "Example:"
+	echo "  docker run {IMAGE:VERSION} -v /project:/home"
+	echo "  docker run {IMAGE:VERSION} -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git"
+	echo "  docker run {IMAGE:VERSION} -v /project:/home -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t Debug"
+	echo ""
+	echo "Github Action Example:"
+	echo "  - uses: actions/checkout@v3"
+	echo "  - name: Build"
+	echo "    run: build.sh -t Debug"
+	echo "  - name: Upload Binary Artifact"
+	echo "    uses: actions/upload-artifact@v2"
+	echo "    with:"
+	echo "      name: binary.elf"
+	echo "      path: \${{ github.workspace }}/build/*.elf"
 	exit 0
+fi
+
+# Check if running in Github Action
+if [[ $GITHUB_ACTIONS == true ]]; then
+	VOLUME=$GITHUB_WORKSPACE
+else
+	mkdir -p $VOLUME
+fi
+
+# Check for repo
+if [[ ! -z $REPO ]]; then
+	git clone $REPO $VOLUME
+	git config --global http.sslverify false # Accept internal github server with self https certs
+fi
+
+# Start building project
+CORES=$(nproc)
+cmake -DCMAKE_BUILD_TYPE=$TYPE -S $VOLUME -B $VOLUME/build/ -G Ninja
+cmake --build $VOLUME/build/ -j$CORES
+if [[ $? -eq 0 ]]; then
+	echo '                                            ^'
+	echo 'Build Completed                             |'
+	echo 'Target Binaery in __________________________|'
+else
+	exit $?
 fi
