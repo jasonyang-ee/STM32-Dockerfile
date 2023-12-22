@@ -59,9 +59,11 @@ if [[ $HELP == true ]]; then
 	echo "Usage: build.sh [OPTIONS]"
 	echo "Options:"
 	echo "  -h, --help                            Print this help message"
-	echo "  -t, --type <build type>               default: Release"
-	echo "  -v, --volume <volume mount path>      default: /home"
-	echo "  -r, --repo <repository url>           Clone repository from url"
+	echo "  -t, --type <build type>               Set CMake build type"
+	echo "                                        Default: Release"
+	echo "  -v, --volume <volume mount path>      Path to mount project inside of container and cmake will build in this path"
+	echo "										  Default: /home"
+	echo "  -r, --repo <repository url>           Clone repository from url into volume path and build"
 	echo ""
 	echo "Example:"
 	echo "  docker run {IMAGE:VERSION} -v /project:/home"
@@ -91,6 +93,13 @@ fi
 if [[ ! -z $REPO ]]; then
 	git clone $REPO $VOLUME
 	git config --global http.sslverify false # Accept internal github server with self https certs
+fi
+
+# Check if project exists in volume
+if [[ -z "$(ls -A $VOLUME)" ]]; then
+	echo "Volume $VOLUME is empty"
+	echo "Please mount project to volume or supply repository url to clone into"
+	exit 1
 fi
 
 # Start building project
