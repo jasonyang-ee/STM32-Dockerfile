@@ -6,7 +6,7 @@ Visit [GitHub](https://github.com/jasonyang-ee/STM32-Dockerfile) for source code
 
 This docker image auto clone an online git repo and compile the CMake & Ninja supported STM32 project locally on your computer with mounted volume.
 ```bash
-docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:ubuntu-latest {Git_Repo_URL}
+docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:ubuntu-latest -r {Git_Repo_URL}
 ```
 
 ![](img/run_time.gif)
@@ -53,10 +53,10 @@ For CMake setup, refer to the below STM32 project template.
 
 This image is intended for building STM32 Microcontroller C/C++ Project Configured with CMake and Ninja.
 
-The entrypoint bash script executes basically two commands:
+The entrypoint bash script executes basically two commands in default:
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release -B /home/build/ -G Ninja
-cmake --build /home/build -j 10
+cmake -DCMAKE_BUILD_TYPE=Release -S /home -B /home/build/ -G Ninja
+cmake --build /home/build -j$(nproc)
 ```
 
 - `CMAKE_TOOLCHAIN_FILE` must be defined in your project CMakeList.txt file.

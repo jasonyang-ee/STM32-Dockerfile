@@ -7,11 +7,5 @@
 
 - Run build script to invoke auto compiling process.
 	```bash
-	build.sh /home
-	```
-
-- Or optionally, manualy use CMake commands to compile:
-	```bash
-	cmake -B /home/build -G Ninja
-	cmake --build /home/build
+	build.sh
 	```

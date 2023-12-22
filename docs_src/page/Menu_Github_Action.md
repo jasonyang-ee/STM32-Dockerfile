@@ -20,7 +20,7 @@ In the source root, create file `.github\workflows\build.yml` with the following
 	```yml
 	- uses: actions/checkout@v3
 	- name: BUILD
-	  run: build.sh Debug
+	  run: build.sh -t Debug
 	```
 
 - Full Script:
