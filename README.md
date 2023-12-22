@@ -28,10 +28,9 @@
 - `5.3`: Add multiplatform support.
 - `5.8`: Name change to stm32-builder: ubuntu-latest :alpine-latest :arch-latest. Some Bug fix.
 - `6.0`: True multiplatform support on Ubuntu and Debian. Alpine and Archlinux for amd64 only.
-- `Latest`: `6.0`
+- `7.0`: Using better argrument parser. *API NOT COMPATIBLE WITH PREVIOUS VERSION*
+- `Latest`: `7.0`
 
-
-Recommandation: Use `5.1` for light weight and `6.0` when running on ARM64 platform.
 
 
 
