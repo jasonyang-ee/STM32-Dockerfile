@@ -51,6 +51,23 @@ For CMake setup, refer to the below STM32 project template.
 https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
 
 
+## Help Menu
+
+```
+docker run jasonyangee/stm32-builder:ubuntu-latest --help                              
+```
+>```bash
+>Usage: build.sh [OPTIONS]
+>Options:
+>  -h, --help                            Print this help message
+>  -t, --type <build type>               Set CMake build type
+>                                        Default: Release
+>  -v, --volume <volume mount path>      Path to mount project inside of container and cmake will build in this path
+>                                        Default: /home
+>  -r, --repo <repository url>           Clone repository from url into volume path and build
+>```
+
+
 ## Public Registry:
 
 > ghcr.io/jasonyang-ee/stm32-builder:ubuntu-latest

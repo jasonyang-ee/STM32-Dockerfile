@@ -62,7 +62,7 @@ if [[ $HELP == true ]]; then
 	echo "  -t, --type <build type>               Set CMake build type"
 	echo "                                        Default: Release"
 	echo "  -v, --volume <volume mount path>      Path to mount project inside of container and cmake will build in this path"
-	echo "										  Default: /home"
+	echo "                                        Default: /home"
 	echo "  -r, --repo <repository url>           Clone repository from url into volume path and build"
 	echo ""
 	echo "Example:"
