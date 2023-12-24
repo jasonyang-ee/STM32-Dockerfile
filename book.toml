@@ -1,6 +1,6 @@
 [book]
 title = "STM32 Docker Dev Container Documentation"
-authors = ["Jason Teng"]
+authors = ["Jason Yang"]
 language = "en"
 multilingual = false
 src = "docs_src/page"

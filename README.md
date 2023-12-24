@@ -1,5 +1,5 @@
 [![Test](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/test.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/test.yml)
-[![Upload](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
+[![Upload](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/upload.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/upload.yml)
 
 # Docker Container for STM32 CMake & Ninja Compiling
 
@@ -29,7 +29,8 @@
 - `5.8`: Name change to stm32-builder: ubuntu-latest :alpine-latest :arch-latest. Some Bug fix.
 - `6.0`: True multiplatform support on Ubuntu and Debian. Alpine and Archlinux for amd64 only.
 - `7.0`: Using better argrument parser. *API NOT COMPATIBLE WITH PREVIOUS VERSION*
-- `Latest`: `7.0`
+- `7.1`: Bug fixs. Help menu update.
+- `Latest`: `7.1`
 
 
 
@@ -49,6 +50,23 @@ docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:ubuntu-lates
 For CMake setup, refer to the below STM32 project template.
 
 https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+
+
+## Help Menu
+
+```
+docker run jasonyangee/stm32-builder:ubuntu-latest --help                              
+```
+>```bash
+>Usage: build.sh [OPTIONS]
+>Options:
+>  -h, --help                            Print this help message
+>  -t, --type <build type>               Set CMake build type
+>                                        Default: Release
+>  -v, --volume <volume mount path>      Path to mount project inside of container and cmake will build in this path
+>                                        Default: /home
+>  -r, --repo <repository url>           Clone repository from url into volume path and build
+>```
 
 
 ## Public Registry:
