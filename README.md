@@ -1,5 +1,5 @@
 [![Test](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/test.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/test.yml)
-[![Upload](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/push.yml)
+[![Upload](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/upload.yml/badge.svg)](https://github.com/jasonyang-ee/STM32-Dockerfile/actions/workflows/upload.yml)
 
 # Docker Container for STM32 CMake & Ninja Compiling
 
