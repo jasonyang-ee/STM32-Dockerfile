@@ -31,6 +31,7 @@
 - `6.0`: True multiplatform support on Ubuntu and Debian. Alpine and Archlinux for amd64 only.
 - `7.0`: Using better argrument parser. *API NOT COMPATIBLE WITH PREVIOUS VERSION*
 - `7.1`: Bug fixs. Help menu update.
+- `7.2`: Typo fixs.
 - `Latest`: `7.1`
 
 
