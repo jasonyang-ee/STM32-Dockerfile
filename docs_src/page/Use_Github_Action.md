@@ -2,9 +2,13 @@
 
 ## Mechanism
 
-Using Github Action to load this docker image as base environment. Then run the build script.
+Using Github Action to load this docker image as base environment. Then run the `build.sh` script.
 
-Docker image entrypoint 1st argument will define CMake build_type.
+`build.sh` accpets the the same arguments: `-r` `-t` `-v`.
+
+Default `HostPath` is `/github/workspace` and `ContainerPath` is `/home`.
+
+Only `-t` is recommended to be used with Github Action.
 
 ## How To Use
 
@@ -15,12 +19,7 @@ In the source root, create file `.github\workflows\build.yml` with the following
 	```yml
 	- uses: actions/checkout@v3
 	- name: BUILD
-	  run: build.sh
-	```
-	```yml
-	- uses: actions/checkout@v3
-	- name: BUILD
-	  run: build.sh -t Debug
+	  run: build.sh -t MinSizeRel
 	```
 
 - Full Script:
@@ -40,7 +39,7 @@ In the source root, create file `.github\workflows\build.yml` with the following
 		steps:
 		- uses: actions/checkout@v3
 		- name: BUILD
-		  run: build.sh
+		  run: build.sh -t MinSizeRel
 
 		- name: Upload Binary .elf
 		  uses: actions/upload-artifact@v2

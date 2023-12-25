@@ -109,7 +109,7 @@ cmake --build $VOLUME/build/ -j$CORES
 if [[ $? -eq 0 ]]; then
 	echo '                                            ^'
 	echo 'Build Completed                             |'
-	echo 'Target Binaery in __________________________|'
+	echo 'Target Binary in ___________________________|'
 else
 	exit $?
 fi

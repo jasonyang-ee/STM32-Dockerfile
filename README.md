@@ -70,6 +70,16 @@ docker run jasonyangee/stm32-builder:ubuntu-latest --help
 >```
 
 
+## Commands:
+
+```
+docker run -v {HostPath}:/home {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
+```
+```
+docker run -v {HostPath}:{ContainerPath} {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type} -v {ContainerPath}
+```
+
+
 ## Public Registry:
 
 > ghcr.io/jasonyang-ee/stm32-builder:ubuntu-latest

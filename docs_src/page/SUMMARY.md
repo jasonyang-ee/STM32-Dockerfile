@@ -4,13 +4,12 @@
 
 # User Guide
 
-- [How To](Menu.md)
-	- [Use Git Repo Link](Menu_Local.md)
-	- [Use Mount Volume](Menu_Mounted.md)
-	- [Use Hybrid](Menu_Hybrid.md)
-	- [Use Online With Github Action](Menu_Github_Action.md)
-	- [Use As Dev Container](Menu_Dev_Container.md)
-	- [Use Manually](Menu_Manual.md)
+- [How To](Use.md)
+	- [Use Git Repo Link](Use_Repo.md)
+	- [Use Mount Volume](Use_Mounted.md)
+	- [Use Online With Github Action](Use_Github_Action.md)
+	- [Use As Dev Container](Use_Dev_Container.md)
+	- [Use Manually](Use_Manual.md)
 
 
 - [WSL](WSL.md)

@@ -9,3 +9,8 @@
 	```bash
 	build.sh
 	```
+
+- `build.sh` accpets the the same arguments: `-r` `-t` `-v`.
+	```bash
+	build.sh -t MinSizeRel
+	```
