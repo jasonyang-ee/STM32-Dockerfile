@@ -23,7 +23,7 @@ Once `reopend in container`, you will be operating in this container OS and be a
    
 3. `Ctrl` + `Shift` + `p` select `Dev Containers: Reopen in Container`.
 
-4. Build using VS Code Extension or using bash script `build.sh .`.
+4. Build using bash script `build.sh -v $PWD` or using VS Code Extension.
 
 5. Flash the device as described in section [WSL ST-LINK](WSL_STLINK.md).
 
