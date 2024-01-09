@@ -32,7 +32,8 @@
 - `7.0`: Using better argrument parser. *API NOT COMPATIBLE WITH PREVIOUS VERSION*
 - `7.1`: Bug fixs. Help menu update.
 - `7.2`: Typo fixs.
-- `Latest`: `7.1`
+- `7.3`: Move TLS bypass to top and apply to all situations.
+- `Latest`: `7.3`
 
 
 

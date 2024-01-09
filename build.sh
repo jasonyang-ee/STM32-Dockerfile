@@ -82,6 +82,9 @@ if [[ $HELP == true ]]; then
 	exit 0
 fi
 
+# Accept internal github server with self https certs
+git config --global http.sslverify false
+
 # Check if running in Github Action
 if [[ $GITHUB_ACTIONS == true ]]; then
 	VOLUME=$GITHUB_WORKSPACE
@@ -92,7 +95,6 @@ fi
 # Check for repo
 if [[ ! -z $REPO ]]; then
 	git clone $REPO $VOLUME
-	git config --global http.sslverify false # Accept internal github server with self https certs
 fi
 
 # Check if project exists in volume
