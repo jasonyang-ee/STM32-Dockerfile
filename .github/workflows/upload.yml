@@ -25,7 +25,7 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/stm32-builder
+          ${{ secrets.USERNAME_DOCKERHUB }}/stm32-builder
           ghcr.io/${{ github.actor }}/stm32-builder
         tags: type=ref,event=tag
         flavor: prefix=${{ matrix.files }}-,onlatest=true
