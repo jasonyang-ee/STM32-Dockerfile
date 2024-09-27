@@ -33,7 +33,8 @@
 - `7.1`: Bug fixs. Help menu update.
 - `7.2`: Typo fixs.
 - `7.3`: Move TLS bypass to top and apply to all situations.
-- `Latest`: `7.3`
+- `7.4`: Using new ARM GCC 13.3.rel1.
+- `Latest`: `7.4`
 
 
 

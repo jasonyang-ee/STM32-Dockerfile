@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM debian:bookworm-slim
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
-ARG ARM_VERSION=12.3.rel1
+ARG ARM_VERSION=13.3.rel1
 
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 
@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
 # Get ARM Toolchain
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
 	else export ARM_ARCH=aarch64; \
-    fi \
+	fi \
 	&& echo "Downloading ARM GNU GCC for Platform: $ARM_ARCH" \
 	&& mkdir ${TOOLS_PATH} \
 	&& curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz" \
