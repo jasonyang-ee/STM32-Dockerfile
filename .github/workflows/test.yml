@@ -12,6 +12,7 @@ on:
       - main
     paths-ignore:
       - '**.md'
+  workflow_dispatch:
 
 env:
   TEST_REPO_URL: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git

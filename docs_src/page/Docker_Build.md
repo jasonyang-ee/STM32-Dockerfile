@@ -34,7 +34,7 @@ If you choose to build your own image from Dockerfile.
 
 *<https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads/>*
 
-- Modify `ARM_VERSION=12.2.rel1` for enforcing compiler version.
+- Modify `ARM_VERSION=13.3.rel1` for enforcing compiler version.
 
 - If pulling latest version is desired, insert this line before `curl` command in dockerfile.
 
