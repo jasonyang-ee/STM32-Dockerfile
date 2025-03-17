@@ -1,0 +1,116 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build Ubuntu",
+			"command": "docker",
+			"args": [
+				"buildx",
+				"build",
+				"--platform",
+				"linux/amd64,linux/arm64",
+				"-t",
+				"jasonyangee/stm32-builder:ubuntu-test",
+				"-f",
+				"Dockerfile.ubuntu",
+				"--load",
+				"."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Debian",
+			"command": "docker",
+			"args": [
+				"buildx",
+				"build",
+				"--platform",
+				"linux/amd64,linux/arm64",
+				"-t",
+				"jasonyangee/stm32-builder:debian-test",
+				"-f",
+				"Dockerfile.debian",
+				"--load",
+				"."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Alpine",
+			"command": "docker",
+			"args": [
+				"buildx",
+				"build",
+				"--platform",
+				"linux/amd64,linux/arm64",
+				"-t",
+				"jasonyangee/stm32-builder:alpine-test",
+				"-f",
+				"Dockerfile.alpine",
+				"--load",
+				"."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Arch",
+			"command": "docker",
+			"args": [
+				"buildx",
+				"build",
+				"--platform",
+				"linux/amd64",
+				"-t",
+				"jasonyangee/stm32-builder:arch-test",
+				"-f",
+				"Dockerfile.arch",
+				"--load",
+				"."
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Build Book",
+			"command": "mdbook",
+			"args": [
+				"build",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+		},
+		{
+			"type": "shell",
+			"label": "Serve Book",
+			"command": "mdbook",
+			"args": [
+				"serve",
+				"--open",
+				"--port",
+				"8000"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+		}
+	]
+}

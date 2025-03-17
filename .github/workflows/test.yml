@@ -1,0 +1,151 @@
+name: 'Test'
+
+on:
+  push:
+    branches:
+      - "*"
+      - "!main"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+
+env:
+  TEST_REPO_URL: https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+  TEST_REPO: jasonyang-ee/STM32-CMAKE-TEMPLATE
+
+jobs:
+  Skip_Checking:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+
+  Build_Test_AMD64:
+    needs: Skip_Checking
+    if: needs.Skip_Checking.outputs.should_skip != 'true'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        files: [ubuntu, debian, alpine, arch]
+
+    steps:
+    - name: Free Disk Space From Docker
+      run: |
+        docker rmi $(docker image ls -aq)
+        df -h
+
+    - name: Checkout Project
+      uses: actions/checkout@v3
+
+    - name: Checkout Example Repo
+      uses: actions/checkout@v3
+      with:
+        repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
+        path: project-${{ matrix.files }}-amd64
+
+    - name: Set QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and Load
+      id: build3x
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/amd64
+        file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
+        load: true
+        tags: stm32-builder/${{ matrix.files }}-test
+
+    - name: Test AMD64
+      run: |
+        docker run --rm ${{ steps.build3x.outputs.imageid }} -h
+        docker run --rm -v ${{ github.workspace }}/project-${{ matrix.files }}-amd64:/custom ${{ steps.build3x.outputs.imageid }} -v /custom
+        docker run --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64:/home ${{ steps.build3x.outputs.imageid }} -r ${{ env.TEST_REPO_URL }} -t Debug
+
+    - name: Cleanup Folders
+      run: |
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
+
+  Build_Test_ARM64:
+    runs-on: ubuntu-22.04
+    needs: Skip_Checking
+    if: needs.Skip_Checking.outputs.should_skip != 'true'
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        files: [ubuntu, debian]
+
+    steps:
+    - name: Free Disk Space From Docker
+      run: |
+        docker rmi $(docker image ls -aq)
+        df -h
+
+    - name: Checkout Project
+      uses: actions/checkout@v3
+
+    - name: Checkout Example Repo
+      uses: actions/checkout@v3
+      with:
+        repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
+        path: project-${{ matrix.files }}-arm64
+
+    - name: Set QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and Load
+      id: build3x
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/arm64
+        file: ${{ github.workspace }}/Dockerfile.${{ matrix.files }}
+        load: true
+        tags: stm32-builder/${{ matrix.files }}-test
+
+    - name: Test ARM64
+      run: |
+        docker run --platform linux/arm64 --rm ${{ steps.build3x.outputs.imageid }} -h
+        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}/project-${{ matrix.files }}-arm64:/custom ${{ steps.build3x.outputs.imageid }} -v /custom
+        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64:/home ${{ steps.build3x.outputs.imageid }} -r ${{ env.TEST_REPO_URL }} -t Debug
+
+    - name: Cleanup Folders
+      run: |
+        sudo rm -r ${{ github.workspace }}/project-*
+        sudo rm -r ${{ github.workspace }}/hybrid-*
+
+  Result:
+    runs-on: ubuntu-22.04
+    needs:
+      - Build_Test_AMD64
+      - Build_Test_ARM64
+      - Skip_Checking
+    if: always() && needs.Skip_Checking.outputs.should_skip != 'true'
+    steps:
+      - name: All Tests Ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some Tests Failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
