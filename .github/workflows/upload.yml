@@ -43,12 +43,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.TOKEN_GITHUB }}
 
-    # - uses: actions/delete-package-versions@v4
-    #   with: 
-    #     package-name: 'stm32-builder'
-    #     package-type: 'container'
-    #     min-versions-to-keep: 0
-    #     delete-only-untagged-versions: 'true'
+    - uses: actions/delete-package-versions@v5
+      with: 
+        package-name: 'stm32-builder'
+        package-type: 'container'
+        min-versions-to-keep: 0
+        delete-only-untagged-versions: 'false'
 
     - name: Set QEMU
       uses: docker/setup-qemu-action@v2
