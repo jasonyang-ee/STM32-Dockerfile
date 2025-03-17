@@ -12,29 +12,8 @@
 
 ## Tags
 
-- `1.0`: No Entrypoint. All build has to be done manually with docker run -it command.
-- `2.0`: With Entrypoint. Git repo auto import and build implemented. And, Github Action Supported.
-- `3.0`: ARM toolchain downloaded from Linux packages instead. Image size is bigger than v2.0.
-- `3.1`: Reverting back to ARM toolchain direct downloaded from website.
-- `3.2`: Add Github on premise server support. No TLS certification checking for https clone. 
-- `3.3`: Removed args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE:PATH=""
-- `4.0`: Add Local Mounted Volume Support. Add Help Menu.
-- `4.1`: Modify Action Test. Bug Fixs.
-- `4.2`: Modify Action Test. Bug Fixs.
-- `4.3`: Modify Action Test. Bug Fixs.
-- `4.4`: Bug fix of volume mount path as arguments. Now has correct support on mounted project.
-- `5.0`: Supports hybrid git repo URL + local mounted compile. This provides completed compile experience.
-- `5.1`: Add Archlinux image and unified tags under stm32-builder. *OLD IMAGES ARE REMOVED*
-- `5.2`: Add static analysis tool: clang-format clang-tidy, Lizard, cpplint. Use in dev container only.
-- `5.3`: Add multiplatform support.
-- `5.8`: Name change to stm32-builder: ubuntu-latest :alpine-latest :arch-latest. Some Bug fix.
-- `6.0`: True multiplatform support on Ubuntu and Debian. Alpine and Archlinux for amd64 only.
-- `7.0`: Using better argrument parser. *API NOT COMPATIBLE WITH PREVIOUS VERSION*
-- `7.1`: Bug fixs. Help menu update.
-- `7.2`: Typo fixs.
-- `7.3`: Move TLS bypass to top and apply to all situations.
-- `7.4`: Using new ARM GCC 13.3.rel1.
-- `Latest`: `7.4`
+- `1.0`: Using new ARM GCC 13.3.rel1.
+- `Latest`: `1.0`
 
 
 
