@@ -13,7 +13,8 @@
 ## Tags
 
 - `8.0.0`: Using new ARM GCC 13.3.rel1.
-- `Latest`: `8.0.0`
+- `8.1.0`: Using new ARM GCC 14.2.rel1.
+- `Latest`: `8.1.0`
 
 
 

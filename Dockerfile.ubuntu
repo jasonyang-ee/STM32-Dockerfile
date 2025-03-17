@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM ubuntu:22.04
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
-ARG ARM_VERSION=13.3.rel1
+ARG ARM_VERSION=14.2.rel1
 
 
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
