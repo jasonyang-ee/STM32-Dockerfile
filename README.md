@@ -11,10 +11,11 @@
 
 
 ## Tags
-
-- `8.0.0`: Using new ARM GCC 13.3.rel1.
-- `8.1.0`: Using new ARM GCC 14.2.rel1.
-- `Latest`: `8.1.0`
+Postfix with base OS.
+- `-v8.0.0`: Using new ARM GCC 13.3.rel1.
+- `-v8.1.0`: Using new ARM GCC 14.2.rel1.
+- `-latest`: Equal to `-8.1.0`
+> Example: ghcr.io/jasonyang-ee/stm32-builder:debian-v8.1.0
 
 
 
