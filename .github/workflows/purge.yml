@@ -12,7 +12,7 @@ jobs:
         uses: vlaurin/action-ghcr-prune@v0.6.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          container: stm32-dev
+          container: stm32-builder
           dry-run: false
           keep-younger-than: 0
           keep-last: 0
