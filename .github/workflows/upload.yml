@@ -43,22 +43,24 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.TOKEN_GITHUB }}
 
-    # - uses: actions/delete-package-versions@v5
-    #   with: 
-    #     package-name: 'stm32-builder'
-    #     package-type: 'container'
-    #     min-versions-to-keep: 0
-    #     delete-only-untagged-versions: 'true'
-
     - name: Set QEMU
       uses: docker/setup-qemu-action@v3
 
     - name: Set Buildx
       uses: docker/setup-buildx-action@v3
 
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
     - name: Build and Upload AMD64 and ARM64
       if: ${{ matrix.files != 'arch' && matrix.files != 'alpine' }}
       uses: docker/build-push-action@v4
+      id: build_multiarch
       with:
         context: .
         platforms: linux/amd64,linux/arm64
@@ -67,9 +69,30 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
       
+    - name: Scan image for vulnerabilities
+      if: ${{ matrix.files != 'arch' && matrix.files != 'alpine' }}
+      uses: aquasecurity/trivy-action@master
+      id: scan_multiarch
+      with:
+        image-ref: ${{ steps.build_multiarch.outputs.imageid }}
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        severity: 'CRITICAL,HIGH'
+    
+    - name: Job Summary for AMD64 and ARM64 build
+      if: ${{ matrix.files != 'arch' && matrix.files != 'alpine' }}
+      run: |
+        echo "## 🚀 Build and Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Platform**: AMD64 and ARM64" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Distribution**: ${{ matrix.files }}" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Image tags**: ${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Security scan**: Passed" >> $GITHUB_STEP_SUMMARY
+
     - name: Build and Upload AMD64
       if: ${{ matrix.files == 'arch' || matrix.files == 'alpine' }}
       uses: docker/build-push-action@v4
+      id: build_amd64
       with:
         context: .
         platforms: linux/amd64
@@ -77,3 +100,23 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+      
+    - name: Scan image for vulnerabilities
+      if: ${{ matrix.files == 'arch' || matrix.files == 'alpine' }}
+      uses: aquasecurity/trivy-action@master
+      id: scan_amd64
+      with:
+        image-ref: ${{ steps.build_amd64.outputs.imageid }}
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        severity: 'CRITICAL,HIGH'
+        
+    - name: Job Summary for AMD64 build
+      if: ${{ matrix.files == 'arch' || matrix.files == 'alpine' }}
+      run: |
+        echo "## 🚀 Build and Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Platform**: AMD64" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Distribution**: ${{ matrix.files }}" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Image tags**: ${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Security scan**: Passed" >> $GITHUB_STEP_SUMMARY

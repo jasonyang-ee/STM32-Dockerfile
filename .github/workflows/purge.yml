@@ -1,0 +1,22 @@
+name: Purge Container Registry
+
+on:
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  purge:
+    name: Delete untagged images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete untagged Docker images
+        uses: snok/container-retention-policy@v2
+        with:
+          image-names: stm32-dev*
+          cut-off: 0 seconds ago  # Delete all untagged images immediately
+          account-type: personal
+          keep-at-least: 0  # Delete all untagged images regardless of count
+          skip-tags: true  # Skip tagged images, only delete untagged ones
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Job summary
+        run: echo "✅ Untagged container images have been removed from the registry"

@@ -6,15 +6,12 @@ ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=14.2.rel1
 
 # Prep basic packages
-RUN pacman -Syy
-
-RUN yes | pacman -Syu
-
-RUN yes | pacman -Sy \
-	base-devel \
-	make cmake ninja \
-	git gnupg \
-	stlink
+RUN pacman -Syyu --noconfirm && \
+    pacman -S --noconfirm \
+    base-devel \
+    make cmake ninja \
+    git gnupg \
+    stlink
 
 # Get ARM Toolchain
 RUN mkdir ${TOOLS_PATH} \

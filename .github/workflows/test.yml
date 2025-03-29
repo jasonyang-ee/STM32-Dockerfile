@@ -142,6 +142,22 @@ jobs:
       - Skip_Checking
     if: always() && needs.Skip_Checking.outputs.should_skip != 'true'
     steps:
+      - name: Create Job Summary
+        run: |
+          echo "# STM32 Docker Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Build Status" >> $GITHUB_STEP_SUMMARY
+          echo "- AMD64 Tests: ${{ needs.Build_Test_AMD64.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ARM64 Tests: ${{ needs.Build_Test_ARM64.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            echo "## :x: Some tests failed!" >> $GITHUB_STEP_SUMMARY
+            echo "See individual job logs for more details." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## :white_check_mark: All tests passed successfully!" >> $GITHUB_STEP_SUMMARY
+          fi
+          
       - name: All Tests Ok
         if: ${{ !(contains(needs.*.result, 'failure')) }}
         run: exit 0
