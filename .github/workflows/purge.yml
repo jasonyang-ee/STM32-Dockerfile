@@ -12,9 +12,10 @@ jobs:
         uses: vlaurin/action-ghcr-prune@v0.6.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          user: ${{ github.actor }}
           container: stm32-builder
           dry-run: false
-          keep-younger-than: 0
+          keep-younger-than: 1
           keep-last: 0
           prune-untagged: true
           
