@@ -8,15 +8,15 @@ jobs:
     name: Delete untagged images
     runs-on: ubuntu-latest
     steps:
-      - name: Delete untagged Docker images
-        uses: snok/container-retention-policy@v2
+      - name: Prune container images
+        uses: vlaurin/action-ghcr-prune@v0.6.0
         with:
-          image-names: stm32-dev*
-          cut-off: 0 seconds ago  # Delete all untagged images immediately
-          account-type: personal
-          keep-at-least: 0  # Delete all untagged images regardless of count
-          skip-tags: true  # Skip tagged images, only delete untagged ones
           token: ${{ secrets.GITHUB_TOKEN }}
+          container: stm32-dev
+          dry-run: false
+          keep-younger-than: 0
+          keep-last: 0
+          prune-untagged: true
           
       - name: Job summary
-        run: echo "✅ Untagged container images have been removed from the registry"
+        run: echo "✅ Container images have been pruned according to retention policy"
