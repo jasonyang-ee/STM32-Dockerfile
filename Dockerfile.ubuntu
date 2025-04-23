@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM --platform=$TARGETPLATFORM ubuntu:22.04
 
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=14.2.rel1

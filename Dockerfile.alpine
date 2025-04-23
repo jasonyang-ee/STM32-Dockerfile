@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM --platform=$TARGETPLATFORM alpine:3.17
 
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=14.2.rel1
