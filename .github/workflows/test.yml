@@ -72,8 +72,7 @@ jobs:
     - name: Test AMD64
       run: |
         docker run --rm ${{ steps.build3x.outputs.imageid }} -h
-        docker run --rm -v ${{ github.workspace }}/project-${{ matrix.files }}-amd64:/custom ${{ steps.build3x.outputs.imageid }} -v /custom
-        docker run --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64:/home ${{ steps.build3x.outputs.imageid }} -r ${{ env.TEST_REPO_URL }} -t Debug
+        docker run --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-amd64:/app ${{ steps.build3x.outputs.imageid }} -r ${{ env.TEST_REPO_URL }} -t Debug
 
     - name: Cleanup Folders
       run: |
@@ -126,8 +125,7 @@ jobs:
     - name: Test ARM64
       run: |
         docker run --platform linux/arm64 --rm ${{ steps.build3x.outputs.imageid }} -h
-        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}/project-${{ matrix.files }}-arm64:/custom ${{ steps.build3x.outputs.imageid }} -v /custom
-        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64:/home ${{ steps.build3x.outputs.imageid }} -r ${{ env.TEST_REPO_URL }} -t Debug
+        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}/hybrid-${{ matrix.files }}-arm64:/app ${{ steps.build3x.outputs.imageid }} -r ${{ env.TEST_REPO_URL }} -t Debug
 
     - name: Cleanup Folders
       run: |
