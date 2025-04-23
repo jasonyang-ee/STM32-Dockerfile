@@ -11,7 +11,7 @@
 				"--platform",
 				"linux/amd64,linux/arm64",
 				"-t",
-				"jasonyangee/stm32-builder:ubuntu-test",
+				"${input:registryName}/${input:imageName}:ubuntu-${input:buildType}",
 				"-f",
 				"Dockerfile.ubuntu",
 				"--load",
@@ -32,7 +32,7 @@
 				"--platform",
 				"linux/amd64,linux/arm64",
 				"-t",
-				"jasonyangee/stm32-builder:debian-test",
+				"${input:registryName}/${input:imageName}:debian-${input:buildType}",
 				"-f",
 				"Dockerfile.debian",
 				"--load",
@@ -53,7 +53,7 @@
 				"--platform",
 				"linux/amd64,linux/arm64",
 				"-t",
-				"jasonyangee/stm32-builder:alpine-test",
+				"${input:registryName}/${input:imageName}:alpine-${input:buildType}",
 				"-f",
 				"Dockerfile.alpine",
 				"--load",
@@ -74,7 +74,7 @@
 				"--platform",
 				"linux/amd64",
 				"-t",
-				"jasonyangee/stm32-builder:arch-test",
+				"${input:registryName}/${input:imageName}:arch-${input:buildType}",
 				"-f",
 				"Dockerfile.arch",
 				"--load",
@@ -111,6 +111,31 @@
 				"cwd": "${workspaceFolder}"
 			},
 			"problemMatcher": [],
+		}
+	],
+	"inputs": [
+		{
+			"type": "promptString",
+			"id": "registryName",
+			"description": "Enter the registry name",
+			"default": "jasonyangee",
+		},
+		{
+			"type": "promptString",
+			"id": "imageName",
+			"description": "Enter the image name",
+			"default": "stm32-builder"
+		},
+		{
+			"type": "pickString",
+			"id": "buildType",
+			"description": "Enter the tag postfix name",
+			"default": "test",
+			"options": [
+				"test",
+				"latest",
+				"local"
+			]
 		}
 	]
 }

@@ -1,7 +1,5 @@
-FROM --platform=$TARGETPLATFORM debian:bookworm-slim
+FROM debian:bookworm-slim
 
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=14.2.rel1
 
@@ -27,10 +25,6 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
 	&& rm ${TOOLS_PATH}/*.txt \
 	&& rm -rf ${TOOLS_PATH}/share/doc \
 	&& echo "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_VERSION}/binrel/arm-gnu-toolchain-${ARM_VERSION}-${ARM_ARCH}-arm-none-eabi.tar.xz"
-
-# Get static analysis tools: clang-format clang-tidy, Lizard, cpplint
-RUN apt-get install -y \
-	clang-format clang-tidy
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"

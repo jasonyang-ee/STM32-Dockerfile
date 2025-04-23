@@ -1,7 +1,5 @@
-FROM --platform=$TARGETPLATFORM archlinux:base-devel
+FROM archlinux:base-devel
 
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
 ARG TOOLS_PATH=/opt/gcc-arm-none-eabi
 ARG ARM_VERSION=14.2.rel1
 
@@ -20,10 +18,6 @@ RUN mkdir ${TOOLS_PATH} \
 	&& rm gcc-arm-none-eabi.tar.xz \
 	&& rm ${TOOLS_PATH}/*.txt \
 	&& rm -rf ${TOOLS_PATH}/share/doc
-
-# Get static analysis tools: clang-format clang-tidy, Lizard, cpplint
-RUN yes | pacman -Sy clang python-pip python-pipx \
-	&& pipx install lizard
 
 # Add Toolchain to PATH
 ENV PATH="$PATH:${TOOLS_PATH}/bin"

@@ -14,9 +14,11 @@
 Postfix with base OS.
 - `v8.0.0`: Using new ARM GCC 13.3.rel1.
 - `v8.1.0`: Using new ARM GCC 14.2.rel1.
-- `latest`: Equal to `v8.1.0`
+- `v8.2.0`: Reduced image size by removing static analysis tools. Renamed container volume path. Removed `-v` option in build script.
+- `latest`: Equal to `v8.2.0`
 
-> Example: ghcr.io/jasonyang-ee/stm32-builder:debian-v8.1.0
+> Example: ghcr.io/jasonyang-ee/stm32-builder:debian-v8.2.0
+> Example: ghcr.io/jasonyang-ee/stm32-builder:debian-latest
 
 
 
@@ -25,7 +27,7 @@ Postfix with base OS.
 
 This docker image auto clone an online git repo and compile the CMake & Ninja supported STM32 project locally on your computer with mounted volume.
 ```bash
-docker run -v "{Local_Full_Path}":"/home" jasonyangee/stm32-builder:ubuntu-latest -r {Git_Repo_URL}
+docker run -v "{Local_Full_Path}":"/app" jasonyangee/stm32-builder:ubuntu-latest -r {Git_Repo_URL}
 ```
 
 ![Run](docs_src/page/img/run_time.gif)
@@ -47,21 +49,15 @@ docker run jasonyangee/stm32-builder:ubuntu-latest --help
 >Usage: build.sh [OPTIONS]
 >Options:
 >  -h, --help                            Print this help message
->  -t, --type <build type>               Set CMake build type
->                                        Default: Release
->  -v, --volume <volume mount path>      Path to mount project inside of container and cmake will build in this path
->                                        Default: /home
->  -r, --repo <repository url>           Clone repository from url into volume path and build
+>  -t, --type <build type>               CMake build type -- Default: Release
+>  -r, --repo <repository url>           Clone repository from url and build
 >```
 
 
 ## Commands:
 
 ```
-docker run -v {HostPath}:/home {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
-```
-```
-docker run -v {HostPath}:{ContainerPath} {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type} -v {ContainerPath}
+docker run -v {HostPath}:/app {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
 ```
 
 

@@ -2,7 +2,7 @@
 
 # Default values
 TYPE=Release
-VOLUME=/home
+VOLUME=/app
 
 # Parse arguments
 POSITIONAL_ARGS=()
@@ -22,17 +22,6 @@ while [[ $# -gt 0 ]]; do
 			shift # past value
 		fi
 		echo "Using $TYPE build type"
-		;;
-	-v | --volume)
-		# Check if has argument value
-		if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
-			shift # past argument
-		else
-			VOLUME="$2"
-			shift # past argument
-			shift # past value
-		fi
-		echo "Using $VOLUME as volume mount point"
 		;;
 	-r | --repo)
 		# Check if has argument value
@@ -59,10 +48,7 @@ if [[ $HELP == true ]]; then
 	echo "Usage: build.sh [OPTIONS]"
 	echo "Options:"
 	echo "  -h, --help                            Print this help message"
-	echo "  -t, --type <build type>               Set CMake build type"
-	echo "                                        Default: Release"
-	echo "  -v, --volume <volume mount path>      Path to mount project inside of container and cmake will build in this path"
-	echo "                                        Default: /home"
+	echo "  -t, --type <build type>               Set CMake build type -- Default: Releas"
 	echo "  -r, --repo <repository url>           Clone repository from url into volume path and build"
 	echo ""
 	echo "Example:"
