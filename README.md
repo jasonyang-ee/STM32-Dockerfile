@@ -18,6 +18,7 @@ Postfix with base OS.
 - `latest`: Equal to `v8.2.0`
 
 > Example: ghcr.io/jasonyang-ee/stm32-builder:debian-v8.2.0
+
 > Example: ghcr.io/jasonyang-ee/stm32-builder:debian-latest
 
 
@@ -49,8 +50,8 @@ docker run jasonyangee/stm32-builder:ubuntu-latest --help
 >Usage: build.sh [OPTIONS]
 >Options:
 >  -h, --help                            Print this help message
->  -t, --type <build type>               CMake build type -- Default: Release
->  -r, --repo <repository url>           Clone repository from url and build
+>  -t, --type <build type>               Change CMake build type -- Default: Release
+>  -r, --repo <repository url>           Clone repository from url and build [Optional]
 >```
 
 
