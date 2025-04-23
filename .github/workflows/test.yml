@@ -47,10 +47,10 @@ jobs:
         df -h
 
     - name: Checkout Project
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Checkout Example Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: jasonyang-ee/STM32-CMAKE-TEMPLATE
         path: project-${{ matrix.files }}-amd64
