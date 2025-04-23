@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM debian:bookworm-slim
+FROM debian:bookworm-slim
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM

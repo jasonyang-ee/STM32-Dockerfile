@@ -10,14 +10,14 @@ Container will mount to local folder as working directory. Then it will clone th
 
 - Format:
 	```bash
-	docker run -v "{HostPath}":"/app" {IMAGE:VERSION} -r {Git_Repo_URL}
-	docker run -v "{HostPath}":"/app" {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
+	docker run -v "{HostEmptyPath}":"/app" {IMAGE:VERSION} -r {Git_Repo_URL}
+	docker run -v "{HostEmptyPath}":"/app" {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
 	```
 
 - Example:
 	```bash
-	docker run -v "F:\test_compile":"/app" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
-	docker run -v "F:\test_compile":"/app" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t MinSizeRel
+	docker run -v "F:\EmptyPath":"/app" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+	docker run -v "F:\EmptyPath":"/app" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t MinSizeRel
 	```
 
 ## Output

@@ -28,7 +28,7 @@ Postfix with base OS.
 
 This docker image auto clone an online git repo and compile the CMake & Ninja supported STM32 project locally on your computer with mounted volume.
 ```bash
-docker run -v "{Local_Full_Path}":"/app" jasonyangee/stm32-builder:ubuntu-latest -r {Git_Repo_URL}
+docker run -v "{HostEmptyPath}":"/app" jasonyangee/stm32-builder:ubuntu-latest -r {Git_Repo_URL}
 ```
 
 ![Run](docs_src/page/img/run_time.gif)
