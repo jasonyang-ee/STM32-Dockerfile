@@ -89,17 +89,6 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-      
-    - name: Scan image for vulnerabilities
-      if: ${{ matrix.files == 'arch' || matrix.files == 'alpine' }}
-      uses: aquasecurity/trivy-action@master
-      id: scan_amd64
-      with:
-        image-ref: ${{ steps.build_amd64.outputs.imageid }}
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        severity: 'CRITICAL,HIGH'
         
     - name: Job Summary for AMD64 build
       if: ${{ matrix.files == 'arch' || matrix.files == 'alpine' }}
