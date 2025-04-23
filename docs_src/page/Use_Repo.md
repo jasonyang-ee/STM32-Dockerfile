@@ -2,26 +2,22 @@
 
 ## Mechanism
 
-Container will mount to local folder as working directory. Then it will clone the supplied git repo source file into `/home` and compile it in `/home/build`.
+Container will mount to local folder as working directory. Then it will clone the supplied git repo source file into `/app` and compile it in `/app/build`.
 
 - `HostPath` is any empty folder path on local host machine. If no folder existed, one will be created.
-
-- `ContainerPath` is the path inside of container. Default is `/home`.
 
 ## Command
 
 - Format:
 	```bash
-	docker run -v "{HostPath}":"/home" {IMAGE:VERSION} -r {Git_Repo_URL}
-	docker run -v "{HostPath}":"/home" {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
-	docker run -v "{HostPath}":"{ContainerPath}" {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type} -v {ContainerPath}
+	docker run -v "{HostPath}":"/app" {IMAGE:VERSION} -r {Git_Repo_URL}
+	docker run -v "{HostPath}":"/app" {IMAGE:VERSION} -r {Git_Repo_URL} -t {Build_Type}
 	```
 
 - Example:
 	```bash
-	docker run -v "F:\test_compile":"/home" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
-	docker run -v "F:\test_compile":"/home" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t MinSizeRel
-	docker run -v "F:\test_compile":"/custom" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t Debug -v /custom
+	docker run -v "F:\test_compile":"/app" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git
+	docker run -v "F:\test_compile":"/app" jasonyangee/stm32-builder:ubuntu-latest -r https://github.com/jasonyang-ee/STM32-CMAKE-TEMPLATE.git -t MinSizeRel
 	```
 
 ## Output
